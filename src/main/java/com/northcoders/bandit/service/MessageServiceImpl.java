@@ -12,7 +12,7 @@ import java.util.List;
 public class MessageServiceImpl implements MessageService {
 
     @Autowired
-    MessageRepository messageRepository;
+    private MessageRepository messageRepository;
 
     @Override
     public Message saveMessage(MessageDTO message) {
