@@ -3,7 +3,7 @@ package com.northcoders.bandit.model;
 import jakarta.persistence.*;
 
 import java.time.Instant;
-
+@Table(name = "messages")
 @Entity
 public class Message {
 
