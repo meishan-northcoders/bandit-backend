@@ -10,11 +10,11 @@ public class Profile {
     @Id
     private long id;
 
-    public Profile(){
+    public Profile() {
 
     }
 
-    public Profile(long id){
+    public Profile(long id) {
         this.id = id;
     }
 
