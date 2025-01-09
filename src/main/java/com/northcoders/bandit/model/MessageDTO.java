@@ -6,8 +6,8 @@ import java.time.Instant;
 
 public class MessageDTO {
 
-    private Long senderId;
-    private Long receiverId;
+    private String senderId;
+    private String receiverId;
     private String messageBody;
     //Is instant the best date time data type to use?
     private Instant createdDate;
@@ -15,26 +15,26 @@ public class MessageDTO {
     public MessageDTO() {
     }
 
-    public MessageDTO(Long senderId, Long receiverId, String messageBody, Instant createdDate) {
+    public MessageDTO(String senderId, String receiverId, String messageBody, Instant createdDate) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.messageBody = messageBody;
         this.createdDate = createdDate;
     }
 
-    public Long getSenderId() {
+    public String getSenderId() {
         return senderId;
     }
 
-    public void setSenderId(Long senderId) {
+    public void setSenderId(String senderId) {
         this.senderId = senderId;
     }
 
-    public Long getReceiverId() {
+    public String getReceiverId() {
         return receiverId;
     }
 
-    public void setReceiverId(Long receiverId) {
+    public void setReceiverId(String receiverId) {
         this.receiverId = receiverId;
     }
 
