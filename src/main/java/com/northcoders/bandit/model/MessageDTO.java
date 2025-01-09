@@ -6,7 +6,7 @@ import java.time.Instant;
 
 public class MessageDTO {
 
-    private String senderId;
+    //Sender id taken from context i.e. is the current user
     private String receiverId;
     private String messageBody;
     //Is instant the best date time data type to use?
