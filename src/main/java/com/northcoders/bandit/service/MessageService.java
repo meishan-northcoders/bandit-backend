@@ -9,5 +9,5 @@ public interface MessageService {
 
     Message saveMessage(MessageDTO message);
 
-    List<Message> getAllMessagesBetweenUsers (Long userId1, Long userId2);
+    List<Message> getAllMessagesBetweenUsers (String activeUserId, String correspondentId);
 }
