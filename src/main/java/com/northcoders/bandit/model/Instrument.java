@@ -12,7 +12,7 @@ public class Instrument {
 
     //long - not nullable, Long - nullable
     @Id
-    private long id;
+    private long instrument_id;
 
     @Column
     private InstType instType;
@@ -24,8 +24,8 @@ public class Instrument {
 
     }
 
-    public Instrument(long id, InstType instType, Set<Profile> profiles) {
-        this.id = id;
+    public Instrument(long instrument_id, InstType instType, Set<Profile> profiles) {
+        this.instrument_id = instrument_id;
         this.instType = instType;
     }
 }

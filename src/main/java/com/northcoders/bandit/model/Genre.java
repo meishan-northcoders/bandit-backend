@@ -11,7 +11,7 @@ import java.util.Set;
 public class Genre {
 
     @Id
-    private long id;
+    private long genre_id;
 
     @Column
     private GenreType genre;
@@ -21,7 +21,7 @@ public class Genre {
     private Set<Profile> profiles;
 
     public Genre(long id, GenreType genre, Set<Profile> profiles) {
-        this.id = id;
+        this.genre_id = id;
         this.genre = genre;
         this.profiles = profiles;
     }
