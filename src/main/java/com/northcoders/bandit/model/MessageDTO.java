@@ -15,19 +15,10 @@ public class MessageDTO {
     public MessageDTO() {
     }
 
-    public MessageDTO(String senderId, String receiverId, String messageBody, Instant createdDate) {
-        this.senderId = senderId;
+    public MessageDTO(String receiverId, String messageBody, Instant createdDate) {
         this.receiverId = receiverId;
         this.messageBody = messageBody;
         this.createdDate = createdDate;
-    }
-
-    public String getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(String senderId) {
-        this.senderId = senderId;
     }
 
     public String getReceiverId() {
