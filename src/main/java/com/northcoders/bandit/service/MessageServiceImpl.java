@@ -20,7 +20,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getAllMessagesBetweenUsers(Long userId1, Long userId2) {
+    public List<Message> getAllMessagesBetweenUsers(String activeUserId, String correspondentId) {
         return List.of();
     }
+
 }
