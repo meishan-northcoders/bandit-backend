@@ -1,5 +1,7 @@
 package com.northcoders.bandit.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -17,6 +19,7 @@ public class Genre {
     private GenreType genre;
 
     //A set allows no duplicate elements e.g. the same profile twice attached to the same genre.
+    @JsonIgnore
     @ManyToMany(mappedBy = "genres")
     private Set<Profile> profiles;
 
@@ -27,5 +30,29 @@ public class Genre {
     }
 
     public Genre() {
+    }
+
+    public long getGenre_id() {
+        return genre_id;
+    }
+
+    public void setGenre_id(long genre_id) {
+        this.genre_id = genre_id;
+    }
+
+    public GenreType getGenre() {
+        return genre;
+    }
+
+    public void setGenre(GenreType genre) {
+        this.genre = genre;
+    }
+
+    public Set<Profile> getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(Set<Profile> profiles) {
+        this.profiles = profiles;
     }
 }

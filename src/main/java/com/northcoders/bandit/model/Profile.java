@@ -1,5 +1,6 @@
 package com.northcoders.bandit.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -55,6 +56,95 @@ public class Profile {
         this.lon = lon;
         this.max_distance = max_distance;
         this.genres = genres;
+        this.instruments = instruments;
+    }
+
+
+
+    public long getProfile_id() {
+        return profile_id;
+    }
+
+    public void setProfile_id(long profile_id) {
+        this.profile_id = profile_id;
+    }
+
+    public String getImg_url() {
+        return img_url;
+    }
+
+    public void setImg_url(String img_url) {
+        this.img_url = img_url;
+    }
+
+    public boolean isBand_or_musician() {
+        return band_or_musician;
+    }
+
+    public void setBand_or_musician(boolean band_or_musician) {
+        this.band_or_musician = band_or_musician;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public float getLat() {
+        return lat;
+    }
+
+    public void setLat(float lat) {
+        this.lat = lat;
+    }
+
+    public float getLon() {
+        return lon;
+    }
+
+    public void setLon(float lon) {
+        this.lon = lon;
+    }
+
+    public float getMax_distance() {
+        return max_distance;
+    }
+
+    public void setMax_distance(float max_distance) {
+        this.max_distance = max_distance;
+    }
+
+    @Override
+    public String toString() {
+        return "Profile{" +
+                "profile_id=" + profile_id +
+                ", img_url='" + img_url + '\'' +
+                ", band_or_musician=" + band_or_musician +
+                ", description='" + description + '\'' +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", max_distance=" + max_distance +
+                ", genres=" + genres +
+                ", instruments=" + instruments +
+                '}';
+    }
+
+    public Set<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Set<Genre> genres) {
+        this.genres = genres;
+    }
+
+    public Set<Instrument> getInstruments() {
+        return instruments;
+    }
+
+    public void setInstruments(Set<Instrument> instruments) {
         this.instruments = instruments;
     }
 }
