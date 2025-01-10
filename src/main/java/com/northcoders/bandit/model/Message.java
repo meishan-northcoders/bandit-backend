@@ -10,7 +10,7 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(updatable = false, nullable = false)
-    private String id;
+    private Long id;
 
     //Do we need something to say that senderId and receiverId are foreign keys? They aren't really foreign keys in our PostgreSQL database, because they are the primary keys from the Firebase database of users
     @Column(name = "sender_id", updatable = false, nullable = false)
@@ -29,7 +29,7 @@ public class Message {
     public Message() {
     }
 
-    public Message(String id, String senderId, String receiverId, String messageBody, Instant createdDate) {
+    public Message(Long id, String senderId, String receiverId, String messageBody, Instant createdDate) {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
@@ -37,11 +37,11 @@ public class Message {
         this.createdDate = createdDate;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
