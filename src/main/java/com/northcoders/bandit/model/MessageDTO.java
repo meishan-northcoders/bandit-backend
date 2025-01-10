@@ -13,7 +13,7 @@ public class MessageDTO {
     public MessageDTO() {
     }
 
-    public MessageDTO(String receiverId, String messageBody, Instant createdDate) {
+    public MessageDTO(String receiverId, String messageBody) {
         this.receiverId = receiverId;
         this.messageBody = messageBody;
     }
