@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MessageService {
 
-    Message saveMessage(MessageDTO message);
+    Message saveMessage(MessageDTO messageDTO);
 
     List<Message> getAllMessagesBetweenUsers (CorrespondentDTO correspondentDTO);
 }
