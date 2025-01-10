@@ -20,12 +20,22 @@ public class MessageController {
 
     @PostMapping
     public ResponseEntity<Message> saveMessage(@RequestBody MessageDTO messageDTO) {
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        try {
+            Message savedMessage = messageService.saveMessage(messageDTO);
+            return new ResponseEntity<>(savedMessage, HttpStatus.OK);
+        } catch (NullPointerException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     @GetMapping
     public ResponseEntity<List<Message>> getMessagesBetweenUsers(@RequestBody CorrespondentDTO correspondentDTO) {
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        try {
+            List<Message> messagesBetweenUsers = messageService.getAllMessagesBetweenUsers(correspondentDTO);
+            return new ResponseEntity<>(messagesBetweenUsers, HttpStatus.OK);
+        } catch (NullPointerException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
 }
