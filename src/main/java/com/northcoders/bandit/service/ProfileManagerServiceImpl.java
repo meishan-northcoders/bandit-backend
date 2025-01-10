@@ -1,5 +1,6 @@
 package com.northcoders.bandit.service;
 
+import com.northcoders.bandit.model.Genre;
 import com.northcoders.bandit.model.Instrument;
 import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.repository.GenreManagerRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 @Service
 public class ProfileManagerServiceImpl implements ProfileManagerService {
@@ -27,13 +29,34 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     public Profile postProfile(Profile profile) {
         System.out.println(profile.toString());
 
+        //To prevent duplicate GenreType field in Genre table
+        //If the genre is already present under a different id, use the existing genre/id combination
+        //and add the new profile to the list of profiles connected to that genre.
         if(profile.getGenres() != null){
-            System.out.printf("Genres in profile");
-            profile.getGenres().forEach(genreManagerRepository::save);
+            profile.getGenres().forEach(genre -> {
+                        if(genreManagerRepository.findByGenre(genre.getGenre()).isPresent()){
+                            Genre existingGenre = genreManagerRepository.findByGenre(genre.getGenre()).get();
+                            genre.setGenre_id(existingGenre.getGenre_id());
+                            genre.setGenre(existingGenre.getGenre());
+                            genreManagerRepository.save(genre);
+                        }
+                        else{
+                            genreManagerRepository.save(genre);
+                        }
+                    });
         }
         if(profile.getInstruments() != null){
-            System.out.println("Insts in profile");
-            profile.getInstruments().forEach(instrumentManagerRepository::save);
+            profile.getInstruments().forEach(inst -> {
+                if(instrumentManagerRepository.findByInstType(inst.getInstType()).isPresent()){
+                    Instrument existingInstrument = instrumentManagerRepository.findByInstType(inst.getInstType()).get();
+                    inst.setInstrument_id(existingInstrument.getInstrument_id());
+                    inst.setInstType(existingInstrument.getInstType());
+                    instrumentManagerRepository.save(inst);
+                }
+                else{
+                    instrumentManagerRepository.save(inst);
+                }
+            });
         }
         return profileManagerRepository.save(profile);
     }
