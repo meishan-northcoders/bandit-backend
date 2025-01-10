@@ -17,7 +17,7 @@ public class Profile {
     private String img_url;
 
     @Column
-    private boolean band_or_musician;
+    private ProfileType band_or_musician;
 
     @Column
     private String description;
@@ -48,7 +48,7 @@ public class Profile {
     }
 
 
-    public Profile(long profile_id, String img_url, boolean band_or_musician, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
+    public Profile(long profile_id, String img_url, ProfileType band_or_musician, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
         this.profile_id = profile_id;
         this.img_url = img_url;
         this.band_or_musician = band_or_musician;
@@ -78,11 +78,11 @@ public class Profile {
         this.img_url = img_url;
     }
 
-    public boolean isBand_or_musician() {
+    public ProfileType isBand_or_musician() {
         return band_or_musician;
     }
 
-    public void setBand_or_musician(boolean band_or_musician) {
+    public void setBand_or_musician(ProfileType band_or_musician) {
         this.band_or_musician = band_or_musician;
     }
 
