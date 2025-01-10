@@ -1,5 +1,6 @@
 package com.northcoders.bandit.service;
 
+import com.northcoders.bandit.model.CorrespondentDTO;
 import com.northcoders.bandit.model.Message;
 import com.northcoders.bandit.model.MessageDTO;
 import com.northcoders.bandit.repository.MessageRepository;
@@ -20,7 +21,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getAllMessagesBetweenUsers(String activeUserId, String correspondentId) {
+    public List<Message> getAllMessagesBetweenUsers(CorrespondentDTO correspondentDTO) {
         return List.of();
     }
 

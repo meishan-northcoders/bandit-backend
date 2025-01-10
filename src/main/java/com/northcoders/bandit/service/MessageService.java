@@ -1,5 +1,6 @@
 package com.northcoders.bandit.service;
 
+import com.northcoders.bandit.model.CorrespondentDTO;
 import com.northcoders.bandit.model.Message;
 import com.northcoders.bandit.model.MessageDTO;
 
@@ -9,5 +10,5 @@ public interface MessageService {
 
     Message saveMessage(MessageDTO message);
 
-    List<Message> getAllMessagesBetweenUsers (String activeUserId, String correspondentId);
+    List<Message> getAllMessagesBetweenUsers (CorrespondentDTO correspondentDTO);
 }
