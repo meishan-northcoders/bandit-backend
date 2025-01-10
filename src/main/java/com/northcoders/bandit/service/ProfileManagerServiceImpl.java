@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -67,5 +68,17 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
         ArrayList<Profile> profiles = new ArrayList<>();
         profileManagerRepository.findAll().forEach(profiles::add);
         return profiles;
+    }
+
+    @Override
+    public Profile deleteById(long id) {
+        Optional<Profile> profileOptional = profileManagerRepository.findById(id);
+        if(profileOptional.isPresent()){
+            profileManagerRepository.deleteById(id);
+            return profileOptional.get();
+        }
+        else{
+            return null;
+        }
     }
 }

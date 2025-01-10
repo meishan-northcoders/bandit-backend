@@ -25,5 +25,14 @@ public class ProfileManagerController {
         return new ResponseEntity<>(profileManagerService.postProfile(profile), HttpStatus.OK);
     }
 
+    @DeleteMapping
+    public ResponseEntity<Profile> deleteProfile(@RequestParam(value = "id") long id){
+        Profile profile = profileManagerService.deleteById(id);
+        if(profile!= null){
+            return new ResponseEntity<>(profile, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+    }
+
 
 }

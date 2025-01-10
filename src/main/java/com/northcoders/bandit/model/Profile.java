@@ -31,13 +31,13 @@ public class Profile {
     @Column
     private float max_distance;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "profile_genre",
     joinColumns = @JoinColumn(name = "profile_id"),
     inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private Set<Genre> genres;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER) //I don't really understand FetchType but this prevents HttpMessageNotWritableException for Delete mapping
     @JoinTable(name = "profile_instrument",
             joinColumns = @JoinColumn(name = "profile_id"),
             inverseJoinColumns = @JoinColumn(name = "instrument_id"))

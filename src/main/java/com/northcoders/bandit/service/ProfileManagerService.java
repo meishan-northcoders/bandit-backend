@@ -9,4 +9,6 @@ public interface ProfileManagerService {
     Profile postProfile(Profile profile);
 
     ArrayList<Profile> getAllProfiles();
+
+    Profile deleteById(long id);
  }
