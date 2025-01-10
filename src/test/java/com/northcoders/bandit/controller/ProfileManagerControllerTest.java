@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -90,5 +91,20 @@ class ProfileManagerControllerTest {
                         .content(mapper.writeValueAsString(profile)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
+    }
+
+
+    @Test
+    @DisplayName("Tests delete profile returns posted profile")
+    void deleteProfile() throws Exception {
+        Profile profile = ProfileTestUtils.createTestProfile(1L);
+
+        when(profileManagerService.deleteById(1L)).thenReturn(profile);
+
+        this.mockMvcController.perform(delete("/profile?id=1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(profile)))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
     }
 }
