@@ -10,5 +10,6 @@ public interface ProfileManagerService {
 
     ArrayList<Profile> getAllProfiles();
 
+    //TODO refactor to use firebase id
     Profile deleteById(long id);
  }

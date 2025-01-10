@@ -25,6 +25,7 @@ public class ProfileManagerController {
         return new ResponseEntity<>(profileManagerService.postProfile(profile), HttpStatus.OK);
     }
 
+    //TODO refactor to use firebase id
     @DeleteMapping
     public ResponseEntity<Profile> deleteProfile(@RequestParam(value = "id") long id){
         Profile profile = profileManagerService.deleteById(id);
