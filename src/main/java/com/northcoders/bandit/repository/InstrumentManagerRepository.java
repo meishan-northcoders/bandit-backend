@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface InstrumentManagerRepository extends CrudRepository<Instrument, Long> {
 
-    Optional<Instrument> findByInstType(InstType instType);
+    Optional<Instrument> findByInstType(String instType);
 }

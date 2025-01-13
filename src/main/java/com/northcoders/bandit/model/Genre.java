@@ -13,15 +13,16 @@ public class Genre {
     @Id
     private long genre_id;
 
+    //TODO refactor into string for hashtag style extension in frontend
     @Column
-    private GenreType genre;
+    private String genre;
 
     //A set allows no duplicate elements e.g. the same profile twice attached to the same genre.
     @JsonIgnore
     @ManyToMany(mappedBy = "genres")
     private Set<Profile> profiles;
 
-    public Genre(long id, GenreType genre, Set<Profile> profiles) {
+    public Genre(long id, String genre, Set<Profile> profiles) {
         this.genre_id = id;
         this.genre = genre;
         this.profiles = profiles;
@@ -38,11 +39,11 @@ public class Genre {
         this.genre_id = genre_id;
     }
 
-    public GenreType getGenre() {
+    public String getGenre() {
         return genre;
     }
 
-    public void setGenre(GenreType genre) {
+    public void setGenre(String genre) {
         this.genre = genre;
     }
 

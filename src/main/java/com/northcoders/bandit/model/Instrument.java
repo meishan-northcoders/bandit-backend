@@ -15,8 +15,9 @@ public class Instrument {
     @Id
     private long instrument_id;
 
+    //TODO refactor into string for hashtag style extension in frontend
     @Column
-    private InstType instType;
+    private String instType;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "instruments")
@@ -26,7 +27,7 @@ public class Instrument {
 
     }
 
-    public Instrument(long instrument_id, InstType instType, Set<Profile> profiles) {
+    public Instrument(long instrument_id, String instType, Set<Profile> profiles) {
         this.instrument_id = instrument_id;
         this.instType = instType;
         this.profiles = profiles;
@@ -40,11 +41,11 @@ public class Instrument {
         this.instrument_id = instrument_id;
     }
 
-    public InstType getInstType() {
+    public String getInstType() {
         return instType;
     }
 
-    public void setInstType(InstType instType) {
+    public void setInstType(String instType) {
         this.instType = instType;
     }
 

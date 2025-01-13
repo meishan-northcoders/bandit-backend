@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface GenreManagerRepository extends CrudRepository<Genre, Long> {
 
-    Optional<Genre> findByGenre(GenreType genreType);
+    Optional<Genre> findByGenre(String genreType);
 }
