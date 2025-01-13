@@ -23,18 +23,18 @@ public class Message {
     private String messageBody;
 
     //Is instant the best date time data type to use?
-    @Column(name = "created_date")
-    private Instant createdDate;
+    @Column(name = "created_at")
+    private Instant createdAt;
 
     public Message() {
     }
 
-    public Message(Long id, String senderId, String receiverId, String messageBody, Instant createdDate) {
+    public Message(Long id, String senderId, String receiverId, String messageBody, Instant createdAt) {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.messageBody = messageBody;
-        this.createdDate = createdDate;
+        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -69,11 +69,11 @@ public class Message {
         this.messageBody = messageBody;
     }
 
-    public Instant getCreatedDate() {
-        return createdDate;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 }
