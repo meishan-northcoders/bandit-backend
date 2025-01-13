@@ -2,6 +2,7 @@ package com.northcoders.bandit.controller;
 
 import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.service.ProfileManagerService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,13 @@ public class ProfileManagerController {
             return new ResponseEntity<>(profile, HttpStatus.OK);
         }
         return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+    }
+
+    //TODO discuss name scheme for filtered profiles (e.g. the recommended profiles based on service layer algorithm)
+    //I have kept no request param as filtering will take place using the user's firebase id entirely in backend service layer
+    @GetMapping("/filtered")
+    public ResponseEntity<ArrayList<Profile>> getFilteredProfiles(){
+        return new ResponseEntity<>(profileManagerService.getFilteredProfiles(), HttpStatus.OK);
     }
 
 
