@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,9 +31,9 @@ public class MessageServiceImpl implements MessageService {
         String senderId = getActiveUserId();
         String receiverId = messageDTO.getReceiverId();
         String messageBody = messageDTO.getMessageBody();
-        Instant createdDate = Instant.now();
+        Instant createdAt = Instant.now();
 
-        Message message = new Message(null, senderId,receiverId , messageBody, createdDate);
+        Message message = new Message(null, senderId,receiverId , messageBody, createdAt);
 
         return messageRepository.save(message);
     }
@@ -48,17 +47,13 @@ public class MessageServiceImpl implements MessageService {
 
         //TODO throw exception if not mutual favourites
 
-        String correspondendId = correspondentDTO.getCorrespondentId();
+        String correspondentId = correspondentDTO.getCorrespondentId();
         String activeUserId = getActiveUserId();
 
-        List<Message> messagesActToCor = messageRepository.findBySenderIdAndReceiverId(activeUserId, correspondendId);
-        List<Message> messagesCorToAct = messageRepository.findBySenderIdAndReceiverId(correspondendId, activeUserId);
+        List<String> senderIds = List.of(activeUserId, correspondentId);
+        List<String> receiverIds = List.of(activeUserId, correspondentId);
 
-        List<Message> combinedMessages = new ArrayList<>();
-        combinedMessages.addAll(messagesActToCor);
-        combinedMessages.addAll(messagesCorToAct);
-
-        return combinedMessages;
+        return messageRepository.findAllBySenderIdInAndReceiverIdInOrderByCreatedAtDesc(senderIds, receiverIds);
     }
 
     private String getActiveUserId() {
