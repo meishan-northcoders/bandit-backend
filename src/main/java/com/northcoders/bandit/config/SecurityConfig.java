@@ -20,11 +20,10 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/public/**").permitAll() // replace with wildcard to permit
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(firebaseAuthFilter(),UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 }

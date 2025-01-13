@@ -7,11 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 @Configuration
+//initialize firebase bean with firebase admin sdk(generated from firebase console)
 public class FirebaseConfig {
     @Bean
     public FirebaseApp firebaseApp() throws IOException {

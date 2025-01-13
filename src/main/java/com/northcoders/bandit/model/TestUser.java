@@ -1,9 +1,9 @@
 package com.northcoders.bandit.model;
 
-public class Profile  {
+public class TestUser {
     private String userName;
 
-    public Profile(String userName) {
+    public TestUser(String userName) {
         this.userName = userName;
     }
 
