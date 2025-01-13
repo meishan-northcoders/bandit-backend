@@ -1,6 +1,5 @@
 package com.northcoders.bandit.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -17,7 +16,7 @@ public class Profile {
     private String img_url;
 
     @Column
-    private ProfileType band_or_musician;
+    private ProfileType profile_type;
 
     @Column
     private String description;
@@ -48,10 +47,10 @@ public class Profile {
     }
 
 
-    public Profile(long profile_id, String img_url, ProfileType band_or_musician, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
+    public Profile(long profile_id, String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
         this.profile_id = profile_id;
         this.img_url = img_url;
-        this.band_or_musician = band_or_musician;
+        this.profile_type = profile_type;
         this.description = description;
         this.lat = lat;
         this.lon = lon;
@@ -78,12 +77,12 @@ public class Profile {
         this.img_url = img_url;
     }
 
-    public ProfileType isBand_or_musician() {
-        return band_or_musician;
+    public ProfileType getProfile_type() {
+        return profile_type;
     }
 
-    public void setBand_or_musician(ProfileType band_or_musician) {
-        this.band_or_musician = band_or_musician;
+    public void setProfile_type(ProfileType profile_type) {
+        this.profile_type = profile_type;
     }
 
     public String getDescription() {
@@ -123,7 +122,7 @@ public class Profile {
         return "Profile{" +
                 "profile_id=" + profile_id +
                 ", img_url='" + img_url + '\'' +
-                ", band_or_musician=" + band_or_musician +
+                ", band_or_musician=" + profile_type +
                 ", description='" + description + '\'' +
                 ", lat=" + lat +
                 ", lon=" + lon +

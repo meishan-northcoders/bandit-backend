@@ -11,7 +11,7 @@ public class ProfileTestUtils {
     public static Profile createTestProfile(long id){
         Profile test = new Profile();
         test.setProfile_id(id);
-        test.setBand_or_musician(ProfileType.MUSICIAN);
+        test.setProfile_type(ProfileType.MUSICIAN);
         test.setDescription("test");
         test.setImg_url("testurl");
         test.setLat(100f);
