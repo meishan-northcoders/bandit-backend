@@ -19,10 +19,10 @@ public class ProfileTestUtils {
         test.setMax_distance(100f);
 
         Set<Genre> genres = new HashSet<>();
-        genres.add(new Genre(1, GenreType.ROCK, null));
+        genres.add(new Genre(1, "Rock", null));
         test.setGenres(genres);
         Set<Instrument> instruments = new HashSet<>();
-        instruments.add(new Instrument(1, InstType.BASS, null));
+        instruments.add(new Instrument(1, "Bass", null));
         test.setInstruments(instruments);
         return test;
     }
