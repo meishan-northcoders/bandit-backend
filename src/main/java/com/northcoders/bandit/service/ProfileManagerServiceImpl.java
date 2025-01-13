@@ -75,15 +75,15 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
     //TODO refactor to use firebase id assigned here
     @Override
-    public Profile deleteById(long id) {
+    public boolean deleteById(long id) {
         Optional<Profile> profileOptional = profileManagerRepository.findById(id);
         if(profileOptional.isPresent()){
             profileManagerRepository.deleteById(id);
-            return profileOptional.get();
+            return true;
         }
-        else{
-            return null;
-        }
+
+            return false;
+
     }
 
     @Override

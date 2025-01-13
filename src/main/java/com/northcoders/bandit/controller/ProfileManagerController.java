@@ -28,12 +28,12 @@ public class ProfileManagerController {
 
     //TODO refactor to use firebase id
     @DeleteMapping
-    public ResponseEntity<Profile> deleteProfile(@RequestParam(value = "id") long id){
-        Profile profile = profileManagerService.deleteById(id);
-        if(profile!= null){
-            return new ResponseEntity<>(profile, HttpStatus.OK);
+    public ResponseEntity<String> deleteProfile(@RequestParam(value = "id") long id){
+        boolean isDeleted = profileManagerService.deleteById(id);
+        if(isDeleted){
+            return new ResponseEntity<>("Successfully deleted profile with id :" + id, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Failed to delete profile with id :" + id,HttpStatus.NOT_FOUND);
     }
 
     //TODO discuss name scheme for filtered profiles (e.g. the recommended profiles based on service layer algorithm)
