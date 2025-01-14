@@ -2,10 +2,10 @@ package com.northcoders.bandit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.northcoders.bandit.model.CorrespondentDTO;
+import com.northcoders.bandit.model.CorrespondentRequestDTO;
 import com.northcoders.bandit.model.Message;
-import com.northcoders.bandit.model.MessageDTO;
-import com.northcoders.bandit.service.MessageService;
+import com.northcoders.bandit.model.MessageRequestDTO;
+import com.northcoders.bandit.model.MessageResponseDTO;
 import com.northcoders.bandit.service.MessageServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,30 +57,30 @@ class MessageControllerTest {
     private Instant instant5 = Instant.now();
     private Instant instant6 = Instant.now();
 
-    private MessageDTO messageDTO1 = new MessageDTO("receiverId1", "valid message");
-    private MessageDTO messageDTO1NullSenderId = new MessageDTO(null, "valid message");
-    private MessageDTO messageDTO1NullMessageBody = new MessageDTO("receiverId1", null);
-    private MessageDTO messageDTO1AllNull = new MessageDTO(null, null);
+    private MessageRequestDTO messageRequestDTO1 = new MessageRequestDTO("receiverId1", "valid message");
+    private MessageRequestDTO messageRequestDTO1NullSenderId = new MessageRequestDTO(null, "valid message");
+    private MessageRequestDTO messageRequestDTO1NullMessageBody = new MessageRequestDTO("receiverId1", null);
+    private MessageRequestDTO messageRequestDTO1AllNull = new MessageRequestDTO(null, null);
 
-    private Message message1 = new Message(1L, "senderId1", "receiverId1", "valid message", instant1);
+    private MessageResponseDTO messageResponseDTO1= new MessageResponseDTO("senderId1", "receiverId1", "valid message",instant1);
 
     private String activeUser1 = "activeUserId1";
 
-    private CorrespondentDTO correspondentDTO1 = new CorrespondentDTO("correspondentId1");
-    private CorrespondentDTO correspondentDTO1NullCorrespondentId = new CorrespondentDTO(null);
+    private CorrespondentRequestDTO correspondentRequestDTO1 = new CorrespondentRequestDTO("correspondentId1");
+    private CorrespondentRequestDTO correspondentRequestDTO1NullCorrespondentId = new CorrespondentRequestDTO(null);
 
-    private Message messageActToCor1 = new Message(1L, "activeUserId1", "correspondentId1", "valid message", instant1);
-    private Message messageActToCor2 = new Message(2L, "activeUserId1", "correspondentId1", "valid message", instant2);
-    private Message messageActToCor3 = new Message(3L, "activeUserId1", "correspondentId1", "valid message", instant3);
+    private MessageResponseDTO messageResponseDTOActToCor1 = new MessageResponseDTO("activeUserId1", "correspondentId1", "valid message", instant1);
+    private MessageResponseDTO messageResponseDTOActToCor2 = new MessageResponseDTO("activeUserId1", "correspondentId1", "valid message", instant2);
+    private MessageResponseDTO messageResponseDTOActToCor3 = new MessageResponseDTO("activeUserId1", "correspondentId1", "valid message", instant3);
 
-    private Message messageCorToAct1 = new Message(4L, "correspondentId1", "activeUserId1", "valid message", instant4);
-    private Message messageCorToAct2 = new Message(5L, "correspondentId1", "activeUserId1", "valid message", instant5);
-    private Message messageCorToAct3 = new Message(6L, "correspondentId1", "activeUserId1", "valid message", instant6);
+    private MessageResponseDTO messageResponseDTOCorToAct1 = new MessageResponseDTO("correspondentId1", "activeUserId1", "valid message", instant4);
+    private MessageResponseDTO messageResponseDTOCorToAct2 = new MessageResponseDTO("correspondentId1", "activeUserId1", "valid message", instant5);
+    private MessageResponseDTO messageResponseDTOCorToAct3 = new MessageResponseDTO("correspondentId1", "activeUserId1", "valid message", instant6);
 
-    private List<Message> messagesOneEachWay = new ArrayList<>(
-            List.of(messageActToCor1, messageCorToAct1));
-    private List<Message> messagesMultipleEachWay = new ArrayList<>(
-            List.of(messageActToCor1, messageActToCor2, messageActToCor3, messageCorToAct1, messageCorToAct2, messageCorToAct3));
+    private List<MessageResponseDTO> messageResponseDTOsOneEachWay = new ArrayList<>(
+            List.of(messageResponseDTOActToCor1, messageResponseDTOCorToAct1));
+    private List<MessageResponseDTO> messageResponseDTOsMultipleEachWay = new ArrayList<>(
+            List.of(messageResponseDTOActToCor1, messageResponseDTOActToCor2, messageResponseDTOActToCor3, messageResponseDTOCorToAct1, messageResponseDTOCorToAct2, messageResponseDTOCorToAct3));
 
 
     @BeforeEach
@@ -94,51 +94,50 @@ class MessageControllerTest {
     @DisplayName("saveMessage returns http 200 and saved message when passed valid message")
     public void testSaveMessageWhenValid() throws Exception {
         //Arrange
-        when(this.mockMessageService.saveMessage(Mockito.any(MessageDTO.class))).thenReturn(message1);
+        when(this.mockMessageService.saveMessage(Mockito.any(MessageRequestDTO.class))).thenReturn(messageResponseDTO1);
 
         //Act & Assert
         mockMvcController.perform(
                         post(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(messageDTO1)))
+                                .content(mapper.writeValueAsString(messageRequestDTO1)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(message1.getId()))
-                .andExpect(jsonPath("$.senderId").value(message1.getSenderId()))
-                .andExpect(jsonPath("$.receiverId").value(messageDTO1.getReceiverId()))
-                .andExpect(jsonPath("$.messageBody").value(messageDTO1.getMessageBody()))
-                .andExpect(jsonPath("$.createdAt").value(message1.getCreatedAt().getEpochSecond()));
+                .andExpect(jsonPath("$.senderId").value(messageResponseDTO1.getSenderId()))
+                .andExpect(jsonPath("$.receiverId").value(messageRequestDTO1.getReceiverId()))
+                .andExpect(jsonPath("$.messageBody").value(messageRequestDTO1.getMessageBody()))
+                .andExpect(jsonPath("$.createdAt").value(messageResponseDTO1.getCreatedAt().getEpochSecond()));
 
-        verify(mockMessageService, times(1)).saveMessage(Mockito.any(MessageDTO.class));
+        verify(mockMessageService, times(1)).saveMessage(Mockito.any(MessageRequestDTO.class));
     }
 
     @Test
     @DisplayName("saveMessage returns 406 when passed message with null values")
     public void testSaveMessage() throws Exception {
         //Arrange
-        when(mockMessageService.saveMessage(Mockito.any(MessageDTO.class))).thenThrow(NullPointerException.class);
+        when(mockMessageService.saveMessage(Mockito.any(MessageRequestDTO.class))).thenThrow(NullPointerException.class);
 
         //Act & Assert
         mockMvcController.perform(
                         post(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(messageDTO1NullSenderId)))
+                                .content(mapper.writeValueAsString(messageRequestDTO1NullSenderId)))
                 .andExpect(status().isNotAcceptable());
 
         mockMvcController.perform(
                         post(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(messageDTO1NullMessageBody)))
+                                .content(mapper.writeValueAsString(messageRequestDTO1NullMessageBody)))
                 .andExpect(status().isNotAcceptable());
 
         mockMvcController.perform(
                         post(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(messageDTO1AllNull)))
+                                .content(mapper.writeValueAsString(messageRequestDTO1AllNull)))
                 .andExpect(status().isNotAcceptable());
     }
 
     @Test
-    @DisplayName("saveMessage returns http 403 when passed messageDTO when users are not mutual favourites")
+    @DisplayName("saveMessage returns http 403 when passed messageRequestDTO when users are not mutual favourites")
     void saveMessageWhenNotMutualFavourites() {
         //Arrange
         //TODO need to mock messageService.getAllMessagesBetweenUsers throws exception when sender and receiver are not mutually favourited
@@ -151,98 +150,90 @@ class MessageControllerTest {
     @DisplayName("getAllMessagesBetweenUsers returns http 200 and both messages when mutual message each way exists in database")
     void getAllMessagesBetweenUsersWhenValidOneMessage() throws Exception {
         //Arrange
-        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentDTO.class))).thenReturn(messagesOneEachWay);
+        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentRequestDTO.class))).thenReturn(messageResponseDTOsOneEachWay);
 
         //Act & Assert
         mockMvcController.perform(
                         get(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(correspondentDTO1)))
+                                .content(mapper.writeValueAsString(correspondentRequestDTO1)))
                 .andExpect(status().isOk())
 
-                .andExpect(jsonPath("$[0].id").value(messageActToCor1.getId()))
-                .andExpect(jsonPath("$[0].senderId").value(messageActToCor1.getSenderId()))
-                .andExpect(jsonPath("$[0].receiverId").value(messageActToCor1.getReceiverId()))
-                .andExpect(jsonPath("$[0].messageBody").value(messageActToCor1.getMessageBody()))
-                .andExpect(jsonPath("$[0].createdAt").value(messageActToCor1.getCreatedAt().getEpochSecond()))
+                .andExpect(jsonPath("$[0].senderId").value(messageResponseDTOActToCor1.getSenderId()))
+                .andExpect(jsonPath("$[0].receiverId").value(messageResponseDTOActToCor1.getReceiverId()))
+                .andExpect(jsonPath("$[0].messageBody").value(messageResponseDTOActToCor1.getMessageBody()))
+                .andExpect(jsonPath("$[0].createdAt").value(messageResponseDTOActToCor1.getCreatedAt().getEpochSecond()))
 
-                .andExpect(jsonPath("$[1].id").value(messageCorToAct1.getId()))
-                .andExpect(jsonPath("$[1].senderId").value(messageCorToAct1.getSenderId()))
-                .andExpect(jsonPath("$[1].receiverId").value(messageCorToAct1.getReceiverId()))
-                .andExpect(jsonPath("$[1].messageBody").value(messageCorToAct1.getMessageBody()))
-                .andExpect(jsonPath("$[1].createdAt").value(messageCorToAct1.getCreatedAt().getEpochSecond()));
+                .andExpect(jsonPath("$[1].senderId").value(messageResponseDTOCorToAct1.getSenderId()))
+                .andExpect(jsonPath("$[1].receiverId").value(messageResponseDTOCorToAct1.getReceiverId()))
+                .andExpect(jsonPath("$[1].messageBody").value(messageResponseDTOCorToAct1.getMessageBody()))
+                .andExpect(jsonPath("$[1].createdAt").value(messageResponseDTOCorToAct1.getCreatedAt().getEpochSecond()));
 
-        verify(mockMessageService, times(1)).getAllMessagesBetweenUsers(Mockito.any(CorrespondentDTO.class));
+        verify(mockMessageService, times(1)).getAllMessagesBetweenUsers(Mockito.any(CorrespondentRequestDTO.class));
     }
 
     @Test
     @DisplayName("getAllMessagesBetweenUsers returns http 200 and all messages when multiple mutual message each way exists in database")
     void getAllMessagesBetweenUsersWhenValidMultipleMessages() throws Exception {
         //Arrange
-        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentDTO.class))).thenReturn(messagesMultipleEachWay);
+        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentRequestDTO.class))).thenReturn(messageResponseDTOsMultipleEachWay);
 
         //Act & Assert
         mockMvcController.perform(
                         get(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(correspondentDTO1)))
+                                .content(mapper.writeValueAsString(correspondentRequestDTO1)))
                 .andExpect(status().isOk())
 
-                .andExpect(jsonPath("$[0].id").value(messageActToCor1.getId()))
-                .andExpect(jsonPath("$[0].senderId").value(messageActToCor1.getSenderId()))
-                .andExpect(jsonPath("$[0].receiverId").value(messageActToCor1.getReceiverId()))
-                .andExpect(jsonPath("$[0].messageBody").value(messageActToCor1.getMessageBody()))
-                .andExpect(jsonPath("$[0].createdAt").value(messageActToCor1.getCreatedAt().getEpochSecond()))
+                .andExpect(jsonPath("$[0].senderId").value(messageResponseDTOActToCor1.getSenderId()))
+                .andExpect(jsonPath("$[0].receiverId").value(messageResponseDTOActToCor1.getReceiverId()))
+                .andExpect(jsonPath("$[0].messageBody").value(messageResponseDTOActToCor1.getMessageBody()))
+                .andExpect(jsonPath("$[0].createdAt").value(messageResponseDTOActToCor1.getCreatedAt().getEpochSecond()))
 
-                .andExpect(jsonPath("$[1].id").value(messageActToCor2.getId()))
-                .andExpect(jsonPath("$[1].senderId").value(messageActToCor2.getSenderId()))
-                .andExpect(jsonPath("$[1].receiverId").value(messageActToCor2.getReceiverId()))
-                .andExpect(jsonPath("$[1].messageBody").value(messageActToCor2.getMessageBody()))
-                .andExpect(jsonPath("$[1].createdAt").value(messageActToCor2.getCreatedAt().getEpochSecond()))
+                .andExpect(jsonPath("$[1].senderId").value(messageResponseDTOActToCor2.getSenderId()))
+                .andExpect(jsonPath("$[1].receiverId").value(messageResponseDTOActToCor2.getReceiverId()))
+                .andExpect(jsonPath("$[1].messageBody").value(messageResponseDTOActToCor2.getMessageBody()))
+                .andExpect(jsonPath("$[1].createdAt").value(messageResponseDTOActToCor2.getCreatedAt().getEpochSecond()))
 
-                .andExpect(jsonPath("$[2].id").value(messageActToCor3.getId()))
-                .andExpect(jsonPath("$[2].senderId").value(messageActToCor3.getSenderId()))
-                .andExpect(jsonPath("$[2].receiverId").value(messageActToCor3.getReceiverId()))
-                .andExpect(jsonPath("$[2].messageBody").value(messageActToCor3.getMessageBody()))
-                .andExpect(jsonPath("$[2].createdAt").value(messageActToCor3.getCreatedAt().getEpochSecond()))
+                .andExpect(jsonPath("$[2].senderId").value(messageResponseDTOActToCor3.getSenderId()))
+                .andExpect(jsonPath("$[2].receiverId").value(messageResponseDTOActToCor3.getReceiverId()))
+                .andExpect(jsonPath("$[2].messageBody").value(messageResponseDTOActToCor3.getMessageBody()))
+                .andExpect(jsonPath("$[2].createdAt").value(messageResponseDTOActToCor3.getCreatedAt().getEpochSecond()))
 
-                .andExpect(jsonPath("$[3].id").value(messageCorToAct1.getId()))
-                .andExpect(jsonPath("$[3].senderId").value(messageCorToAct1.getSenderId()))
-                .andExpect(jsonPath("$[3].receiverId").value(messageCorToAct1.getReceiverId()))
-                .andExpect(jsonPath("$[3].messageBody").value(messageCorToAct1.getMessageBody()))
-                .andExpect(jsonPath("$[3].createdAt").value(messageCorToAct1.getCreatedAt().getEpochSecond()))
+                .andExpect(jsonPath("$[3].senderId").value(messageResponseDTOCorToAct1.getSenderId()))
+                .andExpect(jsonPath("$[3].receiverId").value(messageResponseDTOCorToAct1.getReceiverId()))
+                .andExpect(jsonPath("$[3].messageBody").value(messageResponseDTOCorToAct1.getMessageBody()))
+                .andExpect(jsonPath("$[3].createdAt").value(messageResponseDTOCorToAct1.getCreatedAt().getEpochSecond()))
 
-                .andExpect(jsonPath("$[4].id").value(messageCorToAct2.getId()))
-                .andExpect(jsonPath("$[4].senderId").value(messageCorToAct2.getSenderId()))
-                .andExpect(jsonPath("$[4].receiverId").value(messageCorToAct2.getReceiverId()))
-                .andExpect(jsonPath("$[4].messageBody").value(messageCorToAct2.getMessageBody()))
-                .andExpect(jsonPath("$[4].createdAt").value(messageCorToAct2.getCreatedAt().getEpochSecond()))
+                .andExpect(jsonPath("$[4].senderId").value(messageResponseDTOCorToAct2.getSenderId()))
+                .andExpect(jsonPath("$[4].receiverId").value(messageResponseDTOCorToAct2.getReceiverId()))
+                .andExpect(jsonPath("$[4].messageBody").value(messageResponseDTOCorToAct2.getMessageBody()))
+                .andExpect(jsonPath("$[4].createdAt").value(messageResponseDTOCorToAct2.getCreatedAt().getEpochSecond()))
+                
+                .andExpect(jsonPath("$[5].senderId").value(messageResponseDTOCorToAct3.getSenderId()))
+                .andExpect(jsonPath("$[5].receiverId").value(messageResponseDTOCorToAct3.getReceiverId()))
+                .andExpect(jsonPath("$[5].messageBody").value(messageResponseDTOCorToAct3.getMessageBody()))
+                .andExpect(jsonPath("$[5].createdAt").value(messageResponseDTOCorToAct3.getCreatedAt().getEpochSecond()));
 
-                .andExpect(jsonPath("$[5].id").value(messageCorToAct3.getId()))
-                .andExpect(jsonPath("$[5].senderId").value(messageCorToAct3.getSenderId()))
-                .andExpect(jsonPath("$[5].receiverId").value(messageCorToAct3.getReceiverId()))
-                .andExpect(jsonPath("$[5].messageBody").value(messageCorToAct3.getMessageBody()))
-                .andExpect(jsonPath("$[5].createdAt").value(messageCorToAct3.getCreatedAt().getEpochSecond()));
-
-        verify(mockMessageService, times(1)).getAllMessagesBetweenUsers(Mockito.any(CorrespondentDTO.class));
+        verify(mockMessageService, times(1)).getAllMessagesBetweenUsers(Mockito.any(CorrespondentRequestDTO.class));
     }
 
     @Test
-    @DisplayName("getAllMessagesBetweenUsers returns 406 when passed CorrespondentDTO with null fields")
+    @DisplayName("getAllMessagesBetweenUsers returns 406 when passed CorrespondentRequestDTO with null fields")
     void getAllMessagesBetweenUsersWhenNull() throws Exception{
         //Arrange
-        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentDTO.class))).thenThrow(NullPointerException.class);
+        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentRequestDTO.class))).thenThrow(NullPointerException.class);
 
         //Act & Assert
         mockMvcController.perform(
                         get(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(correspondentDTO1NullCorrespondentId)))
+                                .content(mapper.writeValueAsString(correspondentRequestDTO1NullCorrespondentId)))
                 .andExpect(status().isNotAcceptable());
     }
 
     @Test
-    @DisplayName("getAllMessagesBetweenUsers returns http 403 when passed correspondentDTO when users are not mutual favourites")
+    @DisplayName("getAllMessagesBetweenUsers returns http 403 when passed correspondentRequestDTO when users are not mutual favourites")
     void getAllMessagesBetweenUsersWhenNotMutualFavourites() {
         //Arrange
         //TODO need to mock messageService.getAllMessagesBetweenUsers throws exception when sender and receiver are not mutually favourited
