@@ -3,6 +3,7 @@ package com.northcoders.bandit.controller;
 import com.northcoders.bandit.model.CorrespondentRequestDTO;
 import com.northcoders.bandit.model.Message;
 import com.northcoders.bandit.model.MessageRequestDTO;
+import com.northcoders.bandit.model.MessageResponseDTO;
 import com.northcoders.bandit.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,20 +20,20 @@ public class MessageController {
     private MessageService messageService;
 
     @PostMapping
-    public ResponseEntity<Message> saveMessage(@RequestBody MessageRequestDTO messageRequestDTO) {
+    public ResponseEntity<MessageResponseDTO> saveMessage(@RequestBody MessageRequestDTO messageRequestDTO) {
         try {
-            Message savedMessage = messageService.saveMessage(messageRequestDTO);
-            return new ResponseEntity<>(savedMessage, HttpStatus.OK);
+            MessageResponseDTO savedMessageResponseDTO = messageService.saveMessage(messageRequestDTO);
+            return new ResponseEntity<>(savedMessageResponseDTO, HttpStatus.OK);
         } catch (NullPointerException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<Message>> getMessagesBetweenUsers(@RequestBody CorrespondentRequestDTO correspondentRequestDTO) {
+    public ResponseEntity<List<MessageResponseDTO>> getMessagesBetweenUsers(@RequestBody CorrespondentRequestDTO correspondentRequestDTO) {
         try {
-            List<Message> messagesBetweenUsers = messageService.getAllMessagesBetweenUsers(correspondentRequestDTO);
-            return new ResponseEntity<>(messagesBetweenUsers, HttpStatus.OK);
+            List<MessageResponseDTO> messageResponseDTOsBetweenUsers = messageService.getAllMessagesBetweenUsers(correspondentRequestDTO);
+            return new ResponseEntity<>(messageResponseDTOsBetweenUsers, HttpStatus.OK);
         } catch (NullPointerException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         }
