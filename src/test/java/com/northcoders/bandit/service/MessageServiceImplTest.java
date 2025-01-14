@@ -1,5 +1,6 @@
 package com.northcoders.bandit.service;
 
+import com.northcoders.bandit.exception.InvalidDTOException;
 import com.northcoders.bandit.model.CorrespondentRequestDTO;
 import com.northcoders.bandit.model.Message;
 import com.northcoders.bandit.model.MessageRequestDTO;
@@ -90,10 +91,10 @@ class MessageServiceImplTest {
 
         //Act & Assert
         assertAll(
-                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.saveMessage(null)),
-                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.saveMessage(messageRequestDTO1NullSenderId)),
-                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.saveMessage(messageRequestDTO1NullMessageBody)),
-                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.saveMessage(messageRequestDTO1AllNull))
+                () -> assertThrows(InvalidDTOException.class, () -> messageServiceImpl.saveMessage(null)),
+                () -> assertThrows(InvalidDTOException.class, () -> messageServiceImpl.saveMessage(messageRequestDTO1NullSenderId)),
+                () -> assertThrows(InvalidDTOException.class, () -> messageServiceImpl.saveMessage(messageRequestDTO1NullMessageBody)),
+                () -> assertThrows(InvalidDTOException.class, () -> messageServiceImpl.saveMessage(messageRequestDTO1AllNull))
         );
     }
 
@@ -192,8 +193,8 @@ class MessageServiceImplTest {
 
         //Act & Assert
         assertAll(
-                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.getAllMessagesBetweenUsers(null)),
-                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.getAllMessagesBetweenUsers(correspondentRequestDTO1NullCorrespondentId))
+                () -> assertThrows(InvalidDTOException.class, () -> messageServiceImpl.getAllMessagesBetweenUsers(null)),
+                () -> assertThrows(InvalidDTOException.class, () -> messageServiceImpl.getAllMessagesBetweenUsers(correspondentRequestDTO1NullCorrespondentId))
         );
     }
 
