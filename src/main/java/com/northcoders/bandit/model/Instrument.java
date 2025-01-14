@@ -1,7 +1,5 @@
 package com.northcoders.bandit.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -11,13 +9,10 @@ import java.util.Set;
 @Table(name = "instrument")
 public class Instrument {
 
-    //long - not nullable, Long - nullable
-    @Id
-    private long instrument_id;
 
     //TODO refactor into string for hashtag style extension in frontend
-    @Column
-    private String instType;
+    @Id
+    private String instrument;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "instruments")
@@ -27,26 +22,18 @@ public class Instrument {
 
     }
 
-    public Instrument(long instrument_id, String instType, Set<Profile> profiles) {
-        this.instrument_id = instrument_id;
-        this.instType = instType;
+    public Instrument( String instType, Set<Profile> profiles) {
+        this.instrument = instType;
         this.profiles = profiles;
     }
 
-    public long getInstrument_id() {
-        return instrument_id;
+
+    public String getInstrument() {
+        return instrument;
     }
 
-    public void setInstrument_id(long instrument_id) {
-        this.instrument_id = instrument_id;
-    }
-
-    public String getInstType() {
-        return instType;
-    }
-
-    public void setInstType(String instType) {
-        this.instType = instType;
+    public void setInstrument(String instrument) {
+        this.instrument = instrument;
     }
 
     public Set<Profile> getProfiles() {

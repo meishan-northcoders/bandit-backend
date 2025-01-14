@@ -11,32 +11,18 @@ import java.util.Set;
 public class Genre {
 
     @Id
-    private long genre_id;
-
-    //TODO refactor into string for hashtag style extension in frontend
-    @Column
     private String genre;
 
-    //A set allows no duplicate elements e.g. the same profile twice attached to the same genre.
     @JsonIgnore
     @ManyToMany(mappedBy = "genres")
     private Set<Profile> profiles;
 
-    public Genre(long id, String genre, Set<Profile> profiles) {
-        this.genre_id = id;
+    public Genre(String genre, Set<Profile> profiles) {
         this.genre = genre;
         this.profiles = profiles;
     }
 
     public Genre() {
-    }
-
-    public long getGenre_id() {
-        return genre_id;
-    }
-
-    public void setGenre_id(long genre_id) {
-        this.genre_id = genre_id;
     }
 
     public String getGenre() {

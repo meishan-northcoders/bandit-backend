@@ -10,8 +10,7 @@ public interface ProfileManagerService {
 
     ArrayList<Profile> getAllProfiles();
 
-    //TODO refactor to use firebase id
-    boolean deleteById(long id);
+    boolean deleteById(String id);
 
     ArrayList<Profile> getFilteredProfiles();
  }

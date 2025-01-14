@@ -7,7 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface InstrumentManagerRepository extends CrudRepository<Instrument, Long> {
-
-    Optional<Instrument> findByInstType(String instType);
+public interface InstrumentManagerRepository extends CrudRepository<Instrument, String> {
 }

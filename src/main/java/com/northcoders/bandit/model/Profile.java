@@ -1,6 +1,7 @@
 package com.northcoders.bandit.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.util.Set;
 
@@ -8,9 +9,9 @@ import java.util.Set;
 @Table(name = "profile")
 public class Profile {
 
-    //Firebase will generate this id
+    //Firebase will generate this id as a STRING
     @Id
-    private long profile_id;
+    private String profile_id;
 
     @Column
     private String img_url;
@@ -31,15 +32,17 @@ public class Profile {
     private float max_distance;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinTable(name = "profile_genre",
     joinColumns = @JoinColumn(name = "profile_id"),
-    inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    inverseJoinColumns = @JoinColumn(name = "genre"))
     private Set<Genre> genres;
 
     @ManyToMany(fetch = FetchType.EAGER) //I don't really understand FetchType but this prevents HttpMessageNotWritableException for Delete mapping
     @JoinTable(name = "profile_instrument",
             joinColumns = @JoinColumn(name = "profile_id"),
             inverseJoinColumns = @JoinColumn(name = "instrument_id"))
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Set<Instrument> instruments;
 
     public Profile() {
@@ -47,7 +50,7 @@ public class Profile {
     }
 
 
-    public Profile(long profile_id, String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
+    public Profile(String profile_id, String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
         this.profile_id = profile_id;
         this.img_url = img_url;
         this.profile_type = profile_type;
@@ -61,11 +64,11 @@ public class Profile {
 
 
 
-    public long getProfile_id() {
+    public String getProfile_id() {
         return profile_id;
     }
 
-    public void setProfile_id(long profile_id) {
+    public void setProfile_id(String profile_id) {
         this.profile_id = profile_id;
     }
 

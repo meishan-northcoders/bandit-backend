@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping("/profile")
+@RequestMapping("api/v1/profiles")
 public class ProfileManagerController {
 
     @Autowired
@@ -28,7 +28,7 @@ public class ProfileManagerController {
 
     //TODO refactor to use firebase id
     @DeleteMapping
-    public ResponseEntity<String> deleteProfile(@RequestParam(value = "id") long id){
+    public ResponseEntity<String> deleteProfile(@RequestParam(value = "id") String id){
         boolean isDeleted = profileManagerService.deleteById(id);
         if(isDeleted){
             return new ResponseEntity<>("Successfully deleted profile with id :" + id, HttpStatus.OK);

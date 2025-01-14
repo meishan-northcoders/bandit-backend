@@ -7,7 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface GenreManagerRepository extends CrudRepository<Genre, Long> {
-
-    Optional<Genre> findByGenre(String genreType);
+public interface GenreManagerRepository extends CrudRepository<Genre, String> {
 }
