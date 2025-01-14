@@ -1,5 +1,6 @@
 package com.northcoders.bandit.controller;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.northcoders.bandit.mapper.ProfileRequestDTOMapper;
 import com.northcoders.bandit.mapper.ProfileResponseDTOMapper;
 import com.northcoders.bandit.model.Profile;
@@ -34,9 +35,18 @@ public class ProfileManagerController {
 
     @PostMapping
     public ResponseEntity<ProfileResponseDTO> postProfile(@RequestBody ProfileRequestDTO profileRequestDTO){
-        Profile profile = ProfileRequestDTOMapper.DTOToProfile(profileRequestDTO);
+        Profile profile = ProfileRequestDTOMapper.DTOToProfile(profileRequestDTO); //the profile will contain the id.
 
         return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.postProfile(profile)), HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<ProfileResponseDTO> putProfile(@RequestBody ProfileRequestDTO profileRequestDTO){
+
+        Profile profile = ProfileRequestDTOMapper.DTOToProfile(profileRequestDTO);
+
+        return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.updateProfile(profile)), HttpStatus.OK);
+
     }
 
     //TODO refactor to use firebase id

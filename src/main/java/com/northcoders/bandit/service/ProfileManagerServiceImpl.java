@@ -45,6 +45,42 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     }
 
     @Override
+    public Profile updateProfile(Profile profile) {
+
+        //not sure if this is necessary but have added anyway in case - merges the new and existing if any fields in new are null.
+        Optional<Profile> existingOpt = profileManagerRepository.findById(profile.getProfile_id());
+        if(existingOpt.isPresent()){
+            Profile existing = existingOpt.get();
+            if(profile.getProfile_type() == null){
+                profile.setProfile_type(existing.getProfile_type());
+            }
+            if(profile.getDescription() == null){
+                profile.setDescription(existing.getDescription());
+            }
+            if (profile.getImg_url() == null) {
+                profile.setImg_url(existing.getImg_url());
+            }
+            if(profile.getLat() == 0){
+                profile.setLon(existing.getLon());
+            }
+            if(profile.getLon() == 0){
+                profile.setLon(existing.getLon());
+            }
+            if(profile.getMax_distance() == 0){
+                profile.setMax_distance(existing.getMax_distance());
+            }
+            if(profile.getGenres() == null){
+                profile.setGenres(existing.getGenres());
+            }
+            if(profile.getInstruments() == null){
+                profile.setInstruments(existing.getInstruments());
+            }
+        }
+
+        return profileManagerRepository.save(profile);
+    }
+
+    @Override
     public boolean deleteById(String id) {
         Optional<Profile> profileOptional = profileManagerRepository.findById(id);
         if(profileOptional.isPresent()){
