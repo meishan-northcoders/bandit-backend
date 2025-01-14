@@ -1,34 +1,29 @@
 package com.northcoders.bandit.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table
-@IdClass(FavouritesId.class)
+
 public class Favourites {
 
     @Id
-    Long interestedUser;
-    @Id
-    Long userOfInterest;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(updatable = false, nullable = false)
+    Long favId;
+
+    @Column
+    private String profileId;
+    @Column
+    private String yrFavProfileId;
 
     public Favourites() {
     }
 
-    public Long getInterestedUser() {
-        return interestedUser;
-    }
-    public Long getUserOfInterest(){
-        return userOfInterest;
-    }
-    public void setUserOfInterest(Long interestedUser) {
-        this.interestedUser = interestedUser;
+    public Favourites(String profileId, String yrFavProfileId) {
+        this.profileId = profileId;
+        this.yrFavProfileId = yrFavProfileId;
     }
 
-    public void setInterestedUser(Long interestedUser) {
-        this.interestedUser = interestedUser;
-    }
+
 }

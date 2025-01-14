@@ -1,16 +1,25 @@
 package com.northcoders.bandit.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
 import java.io.Serializable;
 
 public class FavouritesId implements Serializable {
 
-    private Long interestedUser;
-    private Long userOfInterest;
+    @Id
+    @GeneratedValue
+    Long favId;
+    @Column
+    private String profileId;
+    @Column
+    private String yrFavProfileId;
 
 
-    public FavouritesId(Long interestedUser, Long userOfInterest){
-        this.userOfInterest = userOfInterest;
-        this.interestedUser = interestedUser;
+    public FavouritesId(String profileId, String yrFavProfileId){
+        this.profileId = profileId;
+        this.yrFavProfileId = yrFavProfileId;
     }
 
 
