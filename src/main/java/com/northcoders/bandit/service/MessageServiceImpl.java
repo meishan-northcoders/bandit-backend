@@ -1,6 +1,6 @@
 package com.northcoders.bandit.service;
 
-import com.northcoders.bandit.model.CorrespondentDTO;
+import com.northcoders.bandit.model.CorrespondentRequestDTO;
 import com.northcoders.bandit.model.Message;
 import com.northcoders.bandit.model.MessageRequestDTO;
 import com.northcoders.bandit.repository.MessageRepository;
@@ -39,15 +39,15 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getAllMessagesBetweenUsers(CorrespondentDTO correspondentDTO) {
+    public List<Message> getAllMessagesBetweenUsers(CorrespondentRequestDTO correspondentRequestDTO) {
         //Check if null or null attributes
-        if (correspondentDTO == null || correspondentDTO.getCorrespondentId() == null) {
-            throw new NullPointerException("CorrespondentDTO cannot be null or have null attributes");
+        if (correspondentRequestDTO == null || correspondentRequestDTO.getCorrespondentId() == null) {
+            throw new NullPointerException("CorrespondentRequestDTO cannot be null or have null attributes");
         }
 
         //TODO throw exception if not mutual favourites
 
-        String correspondentId = correspondentDTO.getCorrespondentId();
+        String correspondentId = correspondentRequestDTO.getCorrespondentId();
         String activeUserId = getActiveUserId();
 
         List<String> senderIds = List.of(activeUserId, correspondentId);

@@ -1,6 +1,6 @@
 package com.northcoders.bandit.service;
 
-import com.northcoders.bandit.model.CorrespondentDTO;
+import com.northcoders.bandit.model.CorrespondentRequestDTO;
 import com.northcoders.bandit.model.Message;
 import com.northcoders.bandit.model.MessageRequestDTO;
 import com.northcoders.bandit.repository.MessageRepository;
@@ -43,11 +43,11 @@ class MessageServiceImplTest {
     private Message message1 = new Message(1L, "senderId1", "receiverId1", "valid message", instant1);
 
     private String activeUser1 = "activeUserId1";
-    private CorrespondentDTO correspondentDTO1 = new CorrespondentDTO("correspondentId1");
-    private CorrespondentDTO correspondentDTO1NullCorrespondentId = new CorrespondentDTO(null);
+    private CorrespondentRequestDTO correspondentRequestDTO1 = new CorrespondentRequestDTO("correspondentId1");
+    private CorrespondentRequestDTO correspondentRequestDTO1NullCorrespondentId = new CorrespondentRequestDTO(null);
 
-    private List<String> senderIds = List.of(activeUser1, correspondentDTO1.getCorrespondentId());
-    private List<String> receiverIds = List.of(activeUser1, correspondentDTO1.getCorrespondentId());
+    private List<String> senderIds = List.of(activeUser1, correspondentRequestDTO1.getCorrespondentId());
+    private List<String> receiverIds = List.of(activeUser1, correspondentRequestDTO1.getCorrespondentId());
 
     private Message messageActToCor1 = new Message(1L, "activeUserId1", "correspondentId1", "valid message", instant1);
     private Message messageActToCor2 = new Message(2L, "activeUserId1", "correspondentId1", "valid message", instant2);
@@ -118,7 +118,7 @@ class MessageServiceImplTest {
         //TODO mock when: mutual favourites repository check is made, returns acceptable
 
         //Act
-        List<Message> actualMessageList = messageServiceImpl.getAllMessagesBetweenUsers(correspondentDTO1);
+        List<Message> actualMessageList = messageServiceImpl.getAllMessagesBetweenUsers(correspondentRequestDTO1);
 
         //Assert
         assertAll(
@@ -149,7 +149,7 @@ class MessageServiceImplTest {
         //TODO mock when: mutual favourites repository check is made, returns acceptable
 
         //Act
-        List<Message> actualMessageList = messageServiceImpl.getAllMessagesBetweenUsers(correspondentDTO1);
+        List<Message> actualMessageList = messageServiceImpl.getAllMessagesBetweenUsers(correspondentRequestDTO1);
 
         //Assert
         assertAll(
@@ -194,19 +194,19 @@ class MessageServiceImplTest {
     }
 
     @Test
-    @DisplayName("getAllMessagesBetweenUsers throws exception when passed null CorrespondentDTO or CorrespondentDTO with null fields")
+    @DisplayName("getAllMessagesBetweenUsers throws exception when passed null CorrespondentRequestDTO or CorrespondentRequestDTO with null fields")
     void getAllMessagesBetweenUsersWhenNull() {
         //Arrange
 
         //Act & Assert
         assertAll(
                 () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.getAllMessagesBetweenUsers(null)),
-                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.getAllMessagesBetweenUsers(correspondentDTO1NullCorrespondentId))
+                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.getAllMessagesBetweenUsers(correspondentRequestDTO1NullCorrespondentId))
         );
     }
 
     @Test
-    @DisplayName("getAllMessagesBetweenUsers throws exception when passed correspondentDTO when users are not mutual favourites")
+    @DisplayName("getAllMessagesBetweenUsers throws exception when passed correspondenRequestDTO when users are not mutual favourites")
     void getAllMessagesBetweenUsersWhenNotMutualFavourites() {
         //Arrange
         //TODO need to mock a query to favourites table for sender and receiver but this has not been built yet

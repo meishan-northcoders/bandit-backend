@@ -1,6 +1,6 @@
 package com.northcoders.bandit.controller;
 
-import com.northcoders.bandit.model.CorrespondentDTO;
+import com.northcoders.bandit.model.CorrespondentRequestDTO;
 import com.northcoders.bandit.model.Message;
 import com.northcoders.bandit.model.MessageRequestDTO;
 import com.northcoders.bandit.service.MessageService;
@@ -29,9 +29,9 @@ public class MessageController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Message>> getMessagesBetweenUsers(@RequestBody CorrespondentDTO correspondentDTO) {
+    public ResponseEntity<List<Message>> getMessagesBetweenUsers(@RequestBody CorrespondentRequestDTO correspondentRequestDTO) {
         try {
-            List<Message> messagesBetweenUsers = messageService.getAllMessagesBetweenUsers(correspondentDTO);
+            List<Message> messagesBetweenUsers = messageService.getAllMessagesBetweenUsers(correspondentRequestDTO);
             return new ResponseEntity<>(messagesBetweenUsers, HttpStatus.OK);
         } catch (NullPointerException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);

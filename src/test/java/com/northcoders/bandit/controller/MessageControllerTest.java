@@ -2,7 +2,7 @@ package com.northcoders.bandit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.northcoders.bandit.model.CorrespondentDTO;
+import com.northcoders.bandit.model.CorrespondentRequestDTO;
 import com.northcoders.bandit.model.Message;
 import com.northcoders.bandit.model.MessageRequestDTO;
 import com.northcoders.bandit.service.MessageServiceImpl;
@@ -65,8 +65,8 @@ class MessageControllerTest {
 
     private String activeUser1 = "activeUserId1";
 
-    private CorrespondentDTO correspondentDTO1 = new CorrespondentDTO("correspondentId1");
-    private CorrespondentDTO correspondentDTO1NullCorrespondentId = new CorrespondentDTO(null);
+    private CorrespondentRequestDTO correspondentRequestDTO1 = new CorrespondentRequestDTO("correspondentId1");
+    private CorrespondentRequestDTO correspondentRequestDTO1NullCorrespondentId = new CorrespondentRequestDTO(null);
 
     private Message messageActToCor1 = new Message(1L, "activeUserId1", "correspondentId1", "valid message", instant1);
     private Message messageActToCor2 = new Message(2L, "activeUserId1", "correspondentId1", "valid message", instant2);
@@ -150,13 +150,13 @@ class MessageControllerTest {
     @DisplayName("getAllMessagesBetweenUsers returns http 200 and both messages when mutual message each way exists in database")
     void getAllMessagesBetweenUsersWhenValidOneMessage() throws Exception {
         //Arrange
-        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentDTO.class))).thenReturn(messagesOneEachWay);
+        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentRequestDTO.class))).thenReturn(messagesOneEachWay);
 
         //Act & Assert
         mockMvcController.perform(
                         get(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(correspondentDTO1)))
+                                .content(mapper.writeValueAsString(correspondentRequestDTO1)))
                 .andExpect(status().isOk())
 
                 .andExpect(jsonPath("$[0].id").value(messageActToCor1.getId()))
@@ -171,20 +171,20 @@ class MessageControllerTest {
                 .andExpect(jsonPath("$[1].messageBody").value(messageCorToAct1.getMessageBody()))
                 .andExpect(jsonPath("$[1].createdAt").value(messageCorToAct1.getCreatedAt().getEpochSecond()));
 
-        verify(mockMessageService, times(1)).getAllMessagesBetweenUsers(Mockito.any(CorrespondentDTO.class));
+        verify(mockMessageService, times(1)).getAllMessagesBetweenUsers(Mockito.any(CorrespondentRequestDTO.class));
     }
 
     @Test
     @DisplayName("getAllMessagesBetweenUsers returns http 200 and all messages when multiple mutual message each way exists in database")
     void getAllMessagesBetweenUsersWhenValidMultipleMessages() throws Exception {
         //Arrange
-        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentDTO.class))).thenReturn(messagesMultipleEachWay);
+        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentRequestDTO.class))).thenReturn(messagesMultipleEachWay);
 
         //Act & Assert
         mockMvcController.perform(
                         get(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(correspondentDTO1)))
+                                .content(mapper.writeValueAsString(correspondentRequestDTO1)))
                 .andExpect(status().isOk())
 
                 .andExpect(jsonPath("$[0].id").value(messageActToCor1.getId()))
@@ -223,25 +223,25 @@ class MessageControllerTest {
                 .andExpect(jsonPath("$[5].messageBody").value(messageCorToAct3.getMessageBody()))
                 .andExpect(jsonPath("$[5].createdAt").value(messageCorToAct3.getCreatedAt().getEpochSecond()));
 
-        verify(mockMessageService, times(1)).getAllMessagesBetweenUsers(Mockito.any(CorrespondentDTO.class));
+        verify(mockMessageService, times(1)).getAllMessagesBetweenUsers(Mockito.any(CorrespondentRequestDTO.class));
     }
 
     @Test
-    @DisplayName("getAllMessagesBetweenUsers returns 406 when passed CorrespondentDTO with null fields")
+    @DisplayName("getAllMessagesBetweenUsers returns 406 when passed CorrespondentRequestDTO with null fields")
     void getAllMessagesBetweenUsersWhenNull() throws Exception{
         //Arrange
-        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentDTO.class))).thenThrow(NullPointerException.class);
+        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentRequestDTO.class))).thenThrow(NullPointerException.class);
 
         //Act & Assert
         mockMvcController.perform(
                         get(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(correspondentDTO1NullCorrespondentId)))
+                                .content(mapper.writeValueAsString(correspondentRequestDTO1NullCorrespondentId)))
                 .andExpect(status().isNotAcceptable());
     }
 
     @Test
-    @DisplayName("getAllMessagesBetweenUsers returns http 403 when passed correspondentDTO when users are not mutual favourites")
+    @DisplayName("getAllMessagesBetweenUsers returns http 403 when passed correspondentRequestDTO when users are not mutual favourites")
     void getAllMessagesBetweenUsersWhenNotMutualFavourites() {
         //Arrange
         //TODO need to mock messageService.getAllMessagesBetweenUsers throws exception when sender and receiver are not mutually favourited
