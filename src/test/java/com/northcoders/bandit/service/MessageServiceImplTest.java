@@ -3,6 +3,7 @@ package com.northcoders.bandit.service;
 import com.northcoders.bandit.model.CorrespondentRequestDTO;
 import com.northcoders.bandit.model.Message;
 import com.northcoders.bandit.model.MessageRequestDTO;
+import com.northcoders.bandit.model.MessageResponseDTO;
 import com.northcoders.bandit.repository.MessageRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -71,11 +72,10 @@ class MessageServiceImplTest {
         //TODO mock when: mutual favourites repository check is made, returns acceptable
 
         //Act
-        Message savedMessage = messageServiceImpl.saveMessage(messageRequestDTO1);
+        MessageResponseDTO savedMessage = messageServiceImpl.saveMessage(messageRequestDTO1);
 
         //Assert
         assertAll(
-                () -> assertEquals(message1.getId(), savedMessage.getId()),
                 () -> assertEquals(message1.getSenderId(), savedMessage.getSenderId()),
                 () -> assertEquals(message1.getReceiverId(), savedMessage.getReceiverId()),
                 () -> assertEquals(message1.getMessageBody(), savedMessage.getMessageBody()),
@@ -118,19 +118,17 @@ class MessageServiceImplTest {
         //TODO mock when: mutual favourites repository check is made, returns acceptable
 
         //Act
-        List<Message> actualMessageList = messageServiceImpl.getAllMessagesBetweenUsers(correspondentRequestDTO1);
+        List<MessageResponseDTO> actualMessageList = messageServiceImpl.getAllMessagesBetweenUsers(correspondentRequestDTO1);
 
         //Assert
         assertAll(
                 () -> assertEquals(2, actualMessageList.size()),
 
-                () -> assertEquals(messagesOneEachWay.get(0).getId(), actualMessageList.get(0).getId()),
                 () -> assertEquals(messagesOneEachWay.get(0).getSenderId(), actualMessageList.get(0).getSenderId()),
                 () -> assertEquals(messagesOneEachWay.get(0).getReceiverId(), actualMessageList.get(0).getReceiverId()),
                 () -> assertEquals(messagesOneEachWay.get(0).getMessageBody(), actualMessageList.get(0).getMessageBody()),
                 () -> assertEquals(messagesOneEachWay.get(0).getCreatedAt(), actualMessageList.get(0).getCreatedAt()),
 
-                () -> assertEquals(messagesOneEachWay.get(1).getId(), actualMessageList.get(1).getId()),
                 () -> assertEquals(messagesOneEachWay.get(1).getSenderId(), actualMessageList.get(1).getSenderId()),
                 () -> assertEquals(messagesOneEachWay.get(1).getReceiverId(), actualMessageList.get(1).getReceiverId()),
                 () -> assertEquals(messagesOneEachWay.get(1).getMessageBody(), actualMessageList.get(1).getMessageBody()),
@@ -149,43 +147,37 @@ class MessageServiceImplTest {
         //TODO mock when: mutual favourites repository check is made, returns acceptable
 
         //Act
-        List<Message> actualMessageList = messageServiceImpl.getAllMessagesBetweenUsers(correspondentRequestDTO1);
+        List<MessageResponseDTO> actualMessageList = messageServiceImpl.getAllMessagesBetweenUsers(correspondentRequestDTO1);
 
         //Assert
         assertAll(
                 () -> assertEquals(6, actualMessageList.size()),
 
-                () -> assertEquals(messagesMultipleEachWay.get(0).getId(), actualMessageList.get(0).getId()),
                 () -> assertEquals(messagesMultipleEachWay.get(0).getSenderId(), actualMessageList.get(0).getSenderId()),
                 () -> assertEquals(messagesMultipleEachWay.get(0).getReceiverId(), actualMessageList.get(0).getReceiverId()),
                 () -> assertEquals(messagesMultipleEachWay.get(0).getMessageBody(), actualMessageList.get(0).getMessageBody()),
                 () -> assertEquals(messagesMultipleEachWay.get(0).getCreatedAt(), actualMessageList.get(0).getCreatedAt()),
 
-                () -> assertEquals(messagesMultipleEachWay.get(1).getId(), actualMessageList.get(1).getId()),
                 () -> assertEquals(messagesMultipleEachWay.get(1).getSenderId(), actualMessageList.get(1).getSenderId()),
                 () -> assertEquals(messagesMultipleEachWay.get(1).getReceiverId(), actualMessageList.get(1).getReceiverId()),
                 () -> assertEquals(messagesMultipleEachWay.get(1).getMessageBody(), actualMessageList.get(1).getMessageBody()),
                 () -> assertEquals(messagesMultipleEachWay.get(1).getCreatedAt(), actualMessageList.get(1).getCreatedAt()),
 
-                () -> assertEquals(messagesMultipleEachWay.get(2).getId(), actualMessageList.get(2).getId()),
                 () -> assertEquals(messagesMultipleEachWay.get(2).getSenderId(), actualMessageList.get(2).getSenderId()),
                 () -> assertEquals(messagesMultipleEachWay.get(2).getReceiverId(), actualMessageList.get(2).getReceiverId()),
                 () -> assertEquals(messagesMultipleEachWay.get(2).getMessageBody(), actualMessageList.get(2).getMessageBody()),
                 () -> assertEquals(messagesMultipleEachWay.get(2).getCreatedAt(), actualMessageList.get(2).getCreatedAt()),
 
-                () -> assertEquals(messagesMultipleEachWay.get(3).getId(), actualMessageList.get(3).getId()),
                 () -> assertEquals(messagesMultipleEachWay.get(3).getSenderId(), actualMessageList.get(3).getSenderId()),
                 () -> assertEquals(messagesMultipleEachWay.get(3).getReceiverId(), actualMessageList.get(3).getReceiverId()),
                 () -> assertEquals(messagesMultipleEachWay.get(3).getMessageBody(), actualMessageList.get(3).getMessageBody()),
                 () -> assertEquals(messagesMultipleEachWay.get(3).getCreatedAt(), actualMessageList.get(3).getCreatedAt()),
 
-                () -> assertEquals(messagesMultipleEachWay.get(4).getId(), actualMessageList.get(4).getId()),
                 () -> assertEquals(messagesMultipleEachWay.get(4).getSenderId(), actualMessageList.get(4).getSenderId()),
                 () -> assertEquals(messagesMultipleEachWay.get(4).getReceiverId(), actualMessageList.get(4).getReceiverId()),
                 () -> assertEquals(messagesMultipleEachWay.get(4).getMessageBody(), actualMessageList.get(4).getMessageBody()),
                 () -> assertEquals(messagesMultipleEachWay.get(4).getCreatedAt(), actualMessageList.get(4).getCreatedAt()),
 
-                () -> assertEquals(messagesMultipleEachWay.get(5).getId(), actualMessageList.get(5).getId()),
                 () -> assertEquals(messagesMultipleEachWay.get(5).getSenderId(), actualMessageList.get(5).getSenderId()),
                 () -> assertEquals(messagesMultipleEachWay.get(5).getReceiverId(), actualMessageList.get(5).getReceiverId()),
                 () -> assertEquals(messagesMultipleEachWay.get(5).getMessageBody(), actualMessageList.get(5).getMessageBody()),
