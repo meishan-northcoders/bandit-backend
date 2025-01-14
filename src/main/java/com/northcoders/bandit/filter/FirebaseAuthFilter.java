@@ -18,7 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Component
+//@Component
 public class FirebaseAuthFilter extends OncePerRequestFilter {
 
     //can be removed depending on further changes

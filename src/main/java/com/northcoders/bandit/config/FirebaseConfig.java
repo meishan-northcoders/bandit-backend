@@ -10,7 +10,7 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.io.InputStream;
 
-@Configuration
+//@Configuration
 //initialize firebase bean with firebase admin sdk(generated from firebase console)
 public class FirebaseConfig {
     @Bean
