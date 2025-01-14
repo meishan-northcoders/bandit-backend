@@ -1,5 +1,6 @@
 package com.northcoders.bandit.service;
 
+import com.northcoders.bandit.exception.InvalidDTOException;
 import com.northcoders.bandit.model.CorrespondentRequestDTO;
 import com.northcoders.bandit.model.Message;
 import com.northcoders.bandit.model.MessageRequestDTO;
@@ -23,7 +24,7 @@ public class MessageServiceImpl implements MessageService {
     public MessageResponseDTO saveMessage(MessageRequestDTO messageRequestDTO) {
         //check if null or null attributes
         if (messageRequestDTO == null || messageRequestDTO.getReceiverId() == null || messageRequestDTO.getMessageBody() == null) {
-            throw new NullPointerException("MessageRequestDTO cannot be null or have null attributes");
+            throw new InvalidDTOException("MessageRequestDTO cannot be null or have null attributes");
         }
 
         //TODO throw exception if not mutual favourites
@@ -53,7 +54,7 @@ public class MessageServiceImpl implements MessageService {
     public List<MessageResponseDTO> getAllMessagesBetweenUsers(CorrespondentRequestDTO correspondentRequestDTO) {
         //Check if null or null attributes
         if (correspondentRequestDTO == null || correspondentRequestDTO.getCorrespondentId() == null) {
-            throw new NullPointerException("CorrespondentRequestDTO cannot be null or have null attributes");
+            throw new InvalidDTOException("CorrespondentRequestDTO cannot be null or have null attributes");
         }
 
         //TODO throw exception if not mutual favourites

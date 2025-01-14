@@ -21,22 +21,14 @@ public class MessageController {
 
     @PostMapping
     public ResponseEntity<MessageResponseDTO> saveMessage(@RequestBody MessageRequestDTO messageRequestDTO) {
-        try {
             MessageResponseDTO savedMessageResponseDTO = messageService.saveMessage(messageRequestDTO);
             return new ResponseEntity<>(savedMessageResponseDTO, HttpStatus.OK);
-        } catch (NullPointerException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-        }
     }
 
     @GetMapping
     public ResponseEntity<List<MessageResponseDTO>> getMessagesBetweenUsers(@RequestBody CorrespondentRequestDTO correspondentRequestDTO) {
-        try {
             List<MessageResponseDTO> messageResponseDTOsBetweenUsers = messageService.getAllMessagesBetweenUsers(correspondentRequestDTO);
             return new ResponseEntity<>(messageResponseDTOsBetweenUsers, HttpStatus.OK);
-        } catch (NullPointerException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-        }
     }
 
 }

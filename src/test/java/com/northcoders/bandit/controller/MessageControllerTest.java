@@ -2,6 +2,7 @@ package com.northcoders.bandit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.northcoders.bandit.exception.InvalidDTOException;
 import com.northcoders.bandit.model.CorrespondentRequestDTO;
 import com.northcoders.bandit.model.Message;
 import com.northcoders.bandit.model.MessageRequestDTO;
@@ -114,7 +115,7 @@ class MessageControllerTest {
     @DisplayName("saveMessage returns 406 when passed message with null values")
     public void testSaveMessage() throws Exception {
         //Arrange
-        when(mockMessageService.saveMessage(Mockito.any(MessageRequestDTO.class))).thenThrow(NullPointerException.class);
+        when(mockMessageService.saveMessage(Mockito.any(MessageRequestDTO.class))).thenThrow(InvalidDTOException.class);
 
         //Act & Assert
         mockMvcController.perform(
@@ -222,7 +223,7 @@ class MessageControllerTest {
     @DisplayName("getAllMessagesBetweenUsers returns 406 when passed CorrespondentRequestDTO with null fields")
     void getAllMessagesBetweenUsersWhenNull() throws Exception{
         //Arrange
-        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentRequestDTO.class))).thenThrow(NullPointerException.class);
+        when(mockMessageService.getAllMessagesBetweenUsers(Mockito.any(CorrespondentRequestDTO.class))).thenThrow(InvalidDTOException.class);
 
         //Act & Assert
         mockMvcController.perform(
