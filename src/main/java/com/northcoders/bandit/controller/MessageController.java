@@ -2,7 +2,7 @@ package com.northcoders.bandit.controller;
 
 import com.northcoders.bandit.model.CorrespondentDTO;
 import com.northcoders.bandit.model.Message;
-import com.northcoders.bandit.model.MessageDTO;
+import com.northcoders.bandit.model.MessageRequestDTO;
 import com.northcoders.bandit.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,9 +19,9 @@ public class MessageController {
     private MessageService messageService;
 
     @PostMapping
-    public ResponseEntity<Message> saveMessage(@RequestBody MessageDTO messageDTO) {
+    public ResponseEntity<Message> saveMessage(@RequestBody MessageRequestDTO messageRequestDTO) {
         try {
-            Message savedMessage = messageService.saveMessage(messageDTO);
+            Message savedMessage = messageService.saveMessage(messageRequestDTO);
             return new ResponseEntity<>(savedMessage, HttpStatus.OK);
         } catch (NullPointerException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);

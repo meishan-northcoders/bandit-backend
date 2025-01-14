@@ -2,7 +2,7 @@ package com.northcoders.bandit.service;
 
 import com.northcoders.bandit.model.CorrespondentDTO;
 import com.northcoders.bandit.model.Message;
-import com.northcoders.bandit.model.MessageDTO;
+import com.northcoders.bandit.model.MessageRequestDTO;
 import com.northcoders.bandit.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,18 +19,18 @@ public class MessageServiceImpl implements MessageService {
 
 
     @Override
-    public Message saveMessage(MessageDTO messageDTO) {
+    public Message saveMessage(MessageRequestDTO messageRequestDTO) {
         //check if null or null attributes
-        if (messageDTO == null || messageDTO.getReceiverId() == null || messageDTO.getMessageBody() == null) {
-            throw new NullPointerException("MessageDTO cannot be null or have null attributes");
+        if (messageRequestDTO == null || messageRequestDTO.getReceiverId() == null || messageRequestDTO.getMessageBody() == null) {
+            throw new NullPointerException("MessageRequestDTO cannot be null or have null attributes");
         }
 
         //TODO throw exception if not mutual favourites
 
-        //Convert MessageDTO to Message
+        //Convert MessageRequestDTO to Message
         String senderId = getActiveUserId();
-        String receiverId = messageDTO.getReceiverId();
-        String messageBody = messageDTO.getMessageBody();
+        String receiverId = messageRequestDTO.getReceiverId();
+        String messageBody = messageRequestDTO.getMessageBody();
         Instant createdAt = Instant.now();
 
         Message message = new Message(null, senderId,receiverId , messageBody, createdAt);

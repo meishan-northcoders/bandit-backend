@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.northcoders.bandit.model.CorrespondentDTO;
 import com.northcoders.bandit.model.Message;
-import com.northcoders.bandit.model.MessageDTO;
-import com.northcoders.bandit.service.MessageService;
+import com.northcoders.bandit.model.MessageRequestDTO;
 import com.northcoders.bandit.service.MessageServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,10 +56,10 @@ class MessageControllerTest {
     private Instant instant5 = Instant.now();
     private Instant instant6 = Instant.now();
 
-    private MessageDTO messageDTO1 = new MessageDTO("receiverId1", "valid message");
-    private MessageDTO messageDTO1NullSenderId = new MessageDTO(null, "valid message");
-    private MessageDTO messageDTO1NullMessageBody = new MessageDTO("receiverId1", null);
-    private MessageDTO messageDTO1AllNull = new MessageDTO(null, null);
+    private MessageRequestDTO messageRequestDTO1 = new MessageRequestDTO("receiverId1", "valid message");
+    private MessageRequestDTO messageRequestDTO1NullSenderId = new MessageRequestDTO(null, "valid message");
+    private MessageRequestDTO messageRequestDTO1NullMessageBody = new MessageRequestDTO("receiverId1", null);
+    private MessageRequestDTO messageRequestDTO1AllNull = new MessageRequestDTO(null, null);
 
     private Message message1 = new Message(1L, "senderId1", "receiverId1", "valid message", instant1);
 
@@ -94,51 +93,51 @@ class MessageControllerTest {
     @DisplayName("saveMessage returns http 200 and saved message when passed valid message")
     public void testSaveMessageWhenValid() throws Exception {
         //Arrange
-        when(this.mockMessageService.saveMessage(Mockito.any(MessageDTO.class))).thenReturn(message1);
+        when(this.mockMessageService.saveMessage(Mockito.any(MessageRequestDTO.class))).thenReturn(message1);
 
         //Act & Assert
         mockMvcController.perform(
                         post(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(messageDTO1)))
+                                .content(mapper.writeValueAsString(messageRequestDTO1)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(message1.getId()))
                 .andExpect(jsonPath("$.senderId").value(message1.getSenderId()))
-                .andExpect(jsonPath("$.receiverId").value(messageDTO1.getReceiverId()))
-                .andExpect(jsonPath("$.messageBody").value(messageDTO1.getMessageBody()))
+                .andExpect(jsonPath("$.receiverId").value(messageRequestDTO1.getReceiverId()))
+                .andExpect(jsonPath("$.messageBody").value(messageRequestDTO1.getMessageBody()))
                 .andExpect(jsonPath("$.createdAt").value(message1.getCreatedAt().getEpochSecond()));
 
-        verify(mockMessageService, times(1)).saveMessage(Mockito.any(MessageDTO.class));
+        verify(mockMessageService, times(1)).saveMessage(Mockito.any(MessageRequestDTO.class));
     }
 
     @Test
     @DisplayName("saveMessage returns 406 when passed message with null values")
     public void testSaveMessage() throws Exception {
         //Arrange
-        when(mockMessageService.saveMessage(Mockito.any(MessageDTO.class))).thenThrow(NullPointerException.class);
+        when(mockMessageService.saveMessage(Mockito.any(MessageRequestDTO.class))).thenThrow(NullPointerException.class);
 
         //Act & Assert
         mockMvcController.perform(
                         post(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(messageDTO1NullSenderId)))
+                                .content(mapper.writeValueAsString(messageRequestDTO1NullSenderId)))
                 .andExpect(status().isNotAcceptable());
 
         mockMvcController.perform(
                         post(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(messageDTO1NullMessageBody)))
+                                .content(mapper.writeValueAsString(messageRequestDTO1NullMessageBody)))
                 .andExpect(status().isNotAcceptable());
 
         mockMvcController.perform(
                         post(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(messageDTO1AllNull)))
+                                .content(mapper.writeValueAsString(messageRequestDTO1AllNull)))
                 .andExpect(status().isNotAcceptable());
     }
 
     @Test
-    @DisplayName("saveMessage returns http 403 when passed messageDTO when users are not mutual favourites")
+    @DisplayName("saveMessage returns http 403 when passed messageRequestDTO when users are not mutual favourites")
     void saveMessageWhenNotMutualFavourites() {
         //Arrange
         //TODO need to mock messageService.getAllMessagesBetweenUsers throws exception when sender and receiver are not mutually favourited

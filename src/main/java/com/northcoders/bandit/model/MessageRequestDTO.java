@@ -1,19 +1,15 @@
 package com.northcoders.bandit.model;
 
-import jakarta.persistence.*;
-
-import java.time.Instant;
-
-public class MessageDTO {
+public class MessageRequestDTO {
 
     //Sender id taken from context i.e. is the current user
     private String receiverId;
     private String messageBody;
 
-    public MessageDTO() {
+    public MessageRequestDTO() {
     }
 
-    public MessageDTO(String receiverId, String messageBody) {
+    public MessageRequestDTO(String receiverId, String messageBody) {
         this.receiverId = receiverId;
         this.messageBody = messageBody;
     }

@@ -2,7 +2,7 @@ package com.northcoders.bandit.service;
 
 import com.northcoders.bandit.model.CorrespondentDTO;
 import com.northcoders.bandit.model.Message;
-import com.northcoders.bandit.model.MessageDTO;
+import com.northcoders.bandit.model.MessageRequestDTO;
 import com.northcoders.bandit.repository.MessageRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,10 +35,10 @@ class MessageServiceImplTest {
     private Instant instant5 = Instant.now();
     private Instant instant6 = Instant.now();
 
-    private MessageDTO messageDTO1 = new MessageDTO("receiverId1", "valid message");
-    private MessageDTO messageDTO1NullSenderId = new MessageDTO(null, "valid message");
-    private MessageDTO messageDTO1NullMessageBody = new MessageDTO("receiverId1", null);
-    private MessageDTO messageDTO1AllNull = new MessageDTO(null, null);
+    private MessageRequestDTO messageRequestDTO1 = new MessageRequestDTO("receiverId1", "valid message");
+    private MessageRequestDTO messageRequestDTO1NullSenderId = new MessageRequestDTO(null, "valid message");
+    private MessageRequestDTO messageRequestDTO1NullMessageBody = new MessageRequestDTO("receiverId1", null);
+    private MessageRequestDTO messageRequestDTO1AllNull = new MessageRequestDTO(null, null);
 
     private Message message1 = new Message(1L, "senderId1", "receiverId1", "valid message", instant1);
 
@@ -63,7 +63,7 @@ class MessageServiceImplTest {
             List.of(messageActToCor1, messageActToCor2, messageActToCor3, messageCorToAct1, messageCorToAct2, messageCorToAct3));
 
     @Test
-    @DisplayName("saveMessage returns saved message when passed valid messageDTO")
+    @DisplayName("saveMessage returns saved message when passed valid messageRequestDTO")
     void saveMessageWhenValid() {
         //Arrange
         when(mockMessageRepository.save(Mockito.any(Message.class))).thenReturn(message1);
@@ -71,7 +71,7 @@ class MessageServiceImplTest {
         //TODO mock when: mutual favourites repository check is made, returns acceptable
 
         //Act
-        Message savedMessage = messageServiceImpl.saveMessage(messageDTO1);
+        Message savedMessage = messageServiceImpl.saveMessage(messageRequestDTO1);
 
         //Assert
         assertAll(
@@ -84,21 +84,21 @@ class MessageServiceImplTest {
     }
 
     @Test
-    @DisplayName("saveMessage returns exception when passed null MessageDTO or MessageDTO with null fields")
+    @DisplayName("saveMessage returns exception when passed null MessageRequestDTO or MessageRequestDTO with null fields")
     void saveMessageWhenNull() {
         //Arrange
 
         //Act & Assert
         assertAll(
                 () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.saveMessage(null)),
-                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.saveMessage(messageDTO1NullSenderId)),
-                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.saveMessage(messageDTO1NullMessageBody)),
-                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.saveMessage(messageDTO1AllNull))
+                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.saveMessage(messageRequestDTO1NullSenderId)),
+                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.saveMessage(messageRequestDTO1NullMessageBody)),
+                () -> assertThrows(NullPointerException.class, () -> messageServiceImpl.saveMessage(messageRequestDTO1AllNull))
         );
     }
 
     @Test
-    @DisplayName("saveMessage returns exception when passed messageDTO when users are not mutual favourites")
+    @DisplayName("saveMessage returns exception when passed messageRequestDTO when users are not mutual favourites")
     void saveMessageWhenNotMutualFavourites() {
         //Arrange
         //TODO need to mock a query to favourites table for sender and receiver but this has not been built yet
