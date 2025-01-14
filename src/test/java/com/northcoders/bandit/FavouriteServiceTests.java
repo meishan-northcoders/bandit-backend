@@ -18,6 +18,4 @@ public class FavouriteServiceTests {
     @InjectMocks
     private FavouritesServiceImpl favouritesService;
 
-
-
 }
