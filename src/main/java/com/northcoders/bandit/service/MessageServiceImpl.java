@@ -3,6 +3,7 @@ package com.northcoders.bandit.service;
 import com.northcoders.bandit.model.CorrespondentRequestDTO;
 import com.northcoders.bandit.model.Message;
 import com.northcoders.bandit.model.MessageRequestDTO;
+import com.northcoders.bandit.model.MessageResponseDTO;
 import com.northcoders.bandit.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class MessageServiceImpl implements MessageService {
 
 
     @Override
-    public Message saveMessage(MessageRequestDTO messageRequestDTO) {
+    public MessageResponseDTO saveMessage(MessageRequestDTO messageRequestDTO) {
         //check if null or null attributes
         if (messageRequestDTO == null || messageRequestDTO.getReceiverId() == null || messageRequestDTO.getMessageBody() == null) {
             throw new NullPointerException("MessageRequestDTO cannot be null or have null attributes");
@@ -33,13 +34,23 @@ public class MessageServiceImpl implements MessageService {
         String messageBody = messageRequestDTO.getMessageBody();
         Instant createdAt = Instant.now();
 
-        Message message = new Message(null, senderId,receiverId , messageBody, createdAt);
+        Message message = new Message(null, senderId, receiverId, messageBody, createdAt);
 
-        return messageRepository.save(message);
+        Message savedMessage = messageRepository.save(message);
+
+        //convert Message to MessageResponseDTO
+        senderId = savedMessage.getSenderId();
+        receiverId = savedMessage.getReceiverId();
+        messageBody = savedMessage.getMessageBody();
+        createdAt = savedMessage.getCreatedAt();
+
+        MessageResponseDTO messageResponseDTO = new MessageResponseDTO(senderId, receiverId , messageBody, createdAt);
+
+        return messageResponseDTO;
     }
 
     @Override
-    public List<Message> getAllMessagesBetweenUsers(CorrespondentRequestDTO correspondentRequestDTO) {
+    public List<MessageResponseDTO> getAllMessagesBetweenUsers(CorrespondentRequestDTO correspondentRequestDTO) {
         //Check if null or null attributes
         if (correspondentRequestDTO == null || correspondentRequestDTO.getCorrespondentId() == null) {
             throw new NullPointerException("CorrespondentRequestDTO cannot be null or have null attributes");
@@ -53,7 +64,14 @@ public class MessageServiceImpl implements MessageService {
         List<String> senderIds = List.of(activeUserId, correspondentId);
         List<String> receiverIds = List.of(activeUserId, correspondentId);
 
-        return messageRepository.findAllBySenderIdInAndReceiverIdInOrderByCreatedAtDesc(senderIds, receiverIds);
+        List<Message> messages = messageRepository.findAllBySenderIdInAndReceiverIdInOrderByCreatedAtDesc(senderIds, receiverIds);
+
+        //convert List<Message> into List<MessageResponseDTO
+        List<MessageResponseDTO> messageResponseDTOList = messages.stream()
+                .map(m-> (new MessageResponseDTO(m.getSenderId(), m.getReceiverId(), m.getMessageBody(), m.getCreatedAt())))
+                .toList();
+
+        return messageResponseDTOList;
     }
 
     private String getActiveUserId() {
