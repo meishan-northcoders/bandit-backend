@@ -11,19 +11,24 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Bean
-    public FirebaseAuthFilter firebaseAuthFilter() {
-        return new FirebaseAuthFilter();
-    }
+//    @Bean
+//    public FirebaseAuthFilter firebaseAuthFilter() {
+//        return new FirebaseAuthFilter();
+//    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**").permitAll() // replace with wildcard to permit
+                        .requestMatchers(
+                                "/public/**",
+                                "/api/v1/**"
+                        )
+                        .permitAll() // replace with wildcard to permit
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(firebaseAuthFilter(),UsernamePasswordAuthenticationFilter.class);
+//                .addFilterBefore(firebaseAuthFilter(),UsernamePasswordAuthenticationFilter.class)
+                ;
         return http.build();
     }
 }
