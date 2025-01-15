@@ -10,6 +10,7 @@ import com.northcoders.bandit.service.ProfileManagerService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
@@ -42,6 +43,11 @@ public class ProfileManagerController {
 
         return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.updateProfile(profile)), HttpStatus.OK);
 
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<ProfileResponseDTO> getUserProfile(){
+        return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.getUserProfile()), HttpStatus.OK);
     }
 
     //TODO refactor to use firebase id - surely only delete OWN USER Profile?
