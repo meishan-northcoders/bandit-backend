@@ -3,17 +3,14 @@ package com.northcoders.bandit.filter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
-import com.northcoders.bandit.model.TestUser;
+import com.northcoders.bandit.model.FireBaseUser;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -22,16 +19,14 @@ import java.io.IOException;
 public class FirebaseAuthFilter extends OncePerRequestFilter {
 
     //can be removed depending on further changes
-    @Autowired
-    SecurityProperties restSecProps;
-
-
-    @Autowired
-    SecurityProperties securityProps;
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        String path = request.getRequestURI();
+        if (path.startsWith("/api/v1/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         verifyToken(request);
         filterChain.doFilter(request, response);
     }
@@ -47,8 +42,8 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
             e.printStackTrace();
             System.out.println("Firebase Exception:: "+ e.getLocalizedMessage());
         }
-        TestUser userProfile = firebaseTokenToUserDto(decodedToken);
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userProfile,
+        FireBaseUser fireBaseUser = firebaseTokenToUserDto(decodedToken);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(fireBaseUser,
                 null, null);
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -62,13 +57,16 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
         return authorization;
     }
 
-    private TestUser firebaseTokenToUserDto(FirebaseToken decodedToken) {
-        TestUser profile = null;
+    private FireBaseUser firebaseTokenToUserDto(FirebaseToken decodedToken) {
+        FireBaseUser fireBaseUser = new FireBaseUser();
         if (decodedToken != null) {
-            decodedToken.getUid();
-            decodedToken.getName();
+            fireBaseUser.setUserId(decodedToken.getUid());
+            fireBaseUser.setUserName(decodedToken.getName());
+            fireBaseUser.setEmail(decodedToken.getEmail());
+            fireBaseUser.setGooglePictureLink(decodedToken.getPicture());
+            fireBaseUser.setEmailVerified(decodedToken.isEmailVerified());
         }
-        return new TestUser(decodedToken.getName());
+        return fireBaseUser;
     }
 
 }
