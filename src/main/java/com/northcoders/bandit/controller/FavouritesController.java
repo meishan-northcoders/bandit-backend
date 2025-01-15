@@ -1,6 +1,7 @@
 package com.northcoders.bandit.controller;
 
 import com.northcoders.bandit.model.Favourites;
+import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.service.FavouritesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,30 +13,37 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/favourites")
+@RequestMapping("/api/v1/")
 public class FavouritesController {
 
     //MVP:
     private final FavouritesService favouritesService;
+    private final ProfileManagerController profileManagerController;
+
 
     // Some functions need refactoring to return profiles when integrated into system.
 
     @Autowired
-    public FavouritesController(FavouritesService favouritesService) {
+    public FavouritesController(FavouritesService favouritesService, ProfileManagerController profileManagerController) {
         this.favouritesService = favouritesService;
+        this.profileManagerController = profileManagerController;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Favourites>> getUserFavourites(Long id) {
-        return new ResponseEntity<>(favouritesService.getUserFavourites(id), HttpStatus.OK);
+    @GetMapping("/profiles/{id}")
+    public ResponseEntity<List<Profile>> getUserFavourites(@PathVariable String id) {
+        List<Favourites> getFavouritesFromId = favouritesService.getUserFavourites(id);
+                return profileManagerController.getUserFavourites(getFavouritesFromId);
+
     }
 
-    @PostMapping
-    public ResponseEntity<Favourites> addFavourite(Long id) {
-        return favouritesService.addFavourite(id);
+    @PostMapping("/{id}")
+    public ResponseEntity<Favourites> addFavourite(@PathVariable String id ) {
+        return new ResponseEntity<>(favouritesService.addFavourite(id),HttpStatus.OK);
     }
+
+
     @DeleteMapping
-    public void removeFavouriteById(Long id){
+    public void removeFavouriteById(String id){
         favouritesService.removeFavouriteById(id);
     }
 
@@ -44,9 +52,9 @@ public class FavouritesController {
 
     // Function to check if two users are mutually favourited:
 
-    public ResponseEntity<Boolean> areMutuallyFavourited(String uid1, String uid2){
-        return new ResponseEntity<>(favouritesService.areMutuallyFavourited(uid1, uid2), HttpStatus.OK);
-    }
+//    public ResponseEntity<Boolean> areMutuallyFavourited(String uid1, String uid2){
+//        return new ResponseEntity<>(favouritesService.areMutuallyFavourited(uid1, uid2), HttpStatus.OK);
+//    }
 
 
 

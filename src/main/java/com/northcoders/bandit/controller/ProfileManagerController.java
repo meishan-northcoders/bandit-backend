@@ -1,5 +1,6 @@
 package com.northcoders.bandit.controller;
 
+import com.northcoders.bandit.model.Favourites;
 import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.service.ProfileManagerService;
 import org.apache.coyote.Response;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/profiles")
@@ -34,6 +36,11 @@ public class ProfileManagerController {
             return new ResponseEntity<>("Successfully deleted profile with id :" + id, HttpStatus.OK);
         }
         return new ResponseEntity<>("Failed to delete profile with id :" + id,HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Profile>> getUserFavourites(List<Favourites> favourites){
+        return new ResponseEntity<>(profileManagerService.getUserFavourites(favourites), HttpStatus.OK);
     }
 
     //TODO discuss name scheme for filtered profiles (e.g. the recommended profiles based on service layer algorithm)

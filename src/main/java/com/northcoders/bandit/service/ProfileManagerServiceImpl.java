@@ -1,9 +1,6 @@
 package com.northcoders.bandit.service;
 
-import com.northcoders.bandit.model.Genre;
-import com.northcoders.bandit.model.Instrument;
-import com.northcoders.bandit.model.Profile;
-import com.northcoders.bandit.model.ProfileType;
+import com.northcoders.bandit.model.*;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
@@ -12,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ProfileManagerServiceImpl implements ProfileManagerService {
@@ -87,6 +81,15 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
         return filtered;
 
+    }
+
+    @Override
+    public List<Profile> getUserFavourites(List<Favourites> favourites) {
+        List<Profile> favouritesList = new ArrayList<>();
+        for (Favourites f : favourites){
+            favouritesList.add(profileManagerRepository.findById(f.getFavProfileId()).get());
+        }
+        return favouritesList;
     }
 
     private Profile getCurrentUser(){

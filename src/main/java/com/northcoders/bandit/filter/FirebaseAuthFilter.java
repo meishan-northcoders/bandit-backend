@@ -29,12 +29,27 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
     @Autowired
     SecurityProperties securityProps;
 
+//    @Override
+//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+//            throws ServletException, IOException {
+//        verifyToken(request);
+//        filterChain.doFilter(request, response);
+//    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        String path = request.getRequestURI();
+
+        if (path.startsWith("/api/v1/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         verifyToken(request);
         filterChain.doFilter(request, response);
     }
+
+
 
     private void verifyToken(HttpServletRequest request) {
         String session = null;

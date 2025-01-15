@@ -13,17 +13,63 @@ public class Favourites {
     Long favId;
 
     @Column
-    private String profileId;
+    private String favProfileId;
     @Column
     private String yrFavProfileId;
+    @Column
+    @Enumerated(EnumType.STRING)
+    LikedOrDisliked isLikedOrDisliked;
+
+    @ManyToOne
+    @JoinColumn(name = "profile_id", nullable=false)
+    private Profile profile;
+
 
     public Favourites() {
     }
 
     public Favourites(String profileId, String yrFavProfileId) {
-        this.profileId = profileId;
+        this.favProfileId = profileId;
         this.yrFavProfileId = yrFavProfileId;
     }
 
+    public String getFavProfileId() {
+        return favProfileId;
+    }
 
+    public void setFavProfileId(String favProfileId) {
+        this.favProfileId = favProfileId;
+    }
+
+    public Long getFavId() {
+        return favId;
+    }
+
+    public void setFavId(Long favId) {
+        this.favId = favId;
+    }
+
+    public String getYrFavProfileId() {
+        return yrFavProfileId;
+    }
+
+    public void setYrFavProfileId(String yrFavProfileId) {
+        this.yrFavProfileId = yrFavProfileId;
+    }
+
+    public LikedOrDisliked getIsLikedOrDisliked() {
+        return isLikedOrDisliked;
+    }
+
+    public void setIsLikedOrDisliked(LikedOrDisliked isLikedOrDisliked) {
+        this.isLikedOrDisliked = isLikedOrDisliked;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 }
