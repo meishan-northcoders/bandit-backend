@@ -1,9 +1,8 @@
 package com.northcoders.bandit.controller;
 
-import com.northcoders.bandit.model.Favourites;
+import com.northcoders.bandit.model.Favourite;
 import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.service.ProfileManagerService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +38,7 @@ public class ProfileManagerController {
     }
 
 
-    public ResponseEntity<List<Profile>> getUserFavourites(List<Favourites> favourites){
+    public ResponseEntity<List<Profile>> getUserFavourites(List<Favourite> favourites){
         return new ResponseEntity<>(profileManagerService.getUserFavourites(favourites), HttpStatus.OK);
     }
 

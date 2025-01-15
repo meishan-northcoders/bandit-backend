@@ -1,15 +1,12 @@
 package com.northcoders.bandit.service;
 
-import com.northcoders.bandit.model.Favourites;
-import com.northcoders.bandit.model.Profile;
+import com.northcoders.bandit.model.Favourite;
 import com.northcoders.bandit.repository.FavouritesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FavouritesServiceImpl implements FavouritesService {
@@ -24,14 +21,14 @@ public class FavouritesServiceImpl implements FavouritesService {
 
 
     @Override
-    public List<Favourites> getUserFavourites(@PathVariable String id) {
-        return favouritesRepository.findById(id).stream().toList();
+    public List<Favourite> getUserFavourites(@PathVariable String id) {
+        return favouritesRepository.findByFavProfileId(id).stream().toList();
         //return all the favourites of the people making the call
     }
 
     @Override
-    public Favourites addFavourite(String id){
-        Favourites accountToSave = favouritesRepository.findById(id).get();
+    public Favourite addFavourite(String id){
+        Favourite accountToSave = favouritesRepository.findById(id).get();
         favouritesRepository.save(accountToSave);
         return accountToSave;
     }

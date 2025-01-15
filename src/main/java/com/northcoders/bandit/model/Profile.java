@@ -34,7 +34,7 @@ public class Profile {
 
 
     @OneToMany(mappedBy = "profile")
-    private List<Favourites> favourites;
+    private List<Favourite> favourites;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
@@ -55,7 +55,7 @@ public class Profile {
     }
 
 
-    public Profile(String profile_id, String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments, List<Favourites> favourites) {
+    public Profile(String profile_id, String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments, List<Favourite> favourites) {
         this.profile_id = profile_id;
         this.img_url = img_url;
         this.profile_type = profile_type;

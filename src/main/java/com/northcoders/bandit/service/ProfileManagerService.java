@@ -1,6 +1,6 @@
 package com.northcoders.bandit.service;
 
-import com.northcoders.bandit.model.Favourites;
+import com.northcoders.bandit.model.Favourite;
 import com.northcoders.bandit.model.Profile;
 
 import java.util.ArrayList;
@@ -16,5 +16,5 @@ public interface ProfileManagerService {
 
     ArrayList<Profile> getFilteredProfiles();
 
-    List<Profile> getUserFavourites(List<Favourites> favourites);
+    List<Profile> getUserFavourites(List<Favourite> favourites);
  }

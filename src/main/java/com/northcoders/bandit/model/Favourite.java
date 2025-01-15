@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Table
 
-public class Favourites {
+public class Favourite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,10 +25,10 @@ public class Favourites {
     private Profile profile;
 
 
-    public Favourites() {
+    public Favourite() {
     }
 
-    public Favourites(String profileId, String yrFavProfileId) {
+    public Favourite(String profileId, String yrFavProfileId) {
         this.favProfileId = profileId;
         this.yrFavProfileId = yrFavProfileId;
     }

@@ -4,9 +4,7 @@ import com.northcoders.bandit.model.*;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -85,9 +83,9 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     }
 
     @Override
-    public List<Profile> getUserFavourites(List<Favourites> favourites) {
+    public List<Profile> getUserFavourites(List<Favourite> favourites) {
         List<Profile> favouritesList = new ArrayList<>();
-        for (Favourites f : favourites){
+        for (Favourite f : favourites){
             favouritesList.add(profileManagerRepository.findById(f.getFavProfileId()).get());
         }
         return favouritesList;

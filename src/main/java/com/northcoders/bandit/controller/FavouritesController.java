@@ -1,19 +1,17 @@
 package com.northcoders.bandit.controller;
 
-import com.northcoders.bandit.model.Favourites;
+import com.northcoders.bandit.model.Favourite;
 import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.service.FavouritesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/favourites")
 public class FavouritesController {
 
     //MVP:
@@ -29,14 +27,14 @@ public class FavouritesController {
         this.profileManagerController = profileManagerController;
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<List<Profile>> getUserFavourites(@PathVariable String id) {
-        List<Favourites> getFavouritesFromId = favouritesService.getUserFavourites(id);
-                return profileManagerController.getUserFavourites(getFavouritesFromId);
+        List<Favourite> getFavouriteFromId = favouritesService.getUserFavourites(id);
+                return profileManagerController.getUserFavourites(getFavouriteFromId);
     }
 
-    @PostMapping("{id}")
-    public ResponseEntity<Favourites> addFavourite(@PathVariable String id ) {
+    @PostMapping("/{id}")
+    public ResponseEntity<Favourite> addFavourite(@PathVariable String id ) {
         return new ResponseEntity<>(favouritesService.addFavourite(id),HttpStatus.OK);
     }
 
