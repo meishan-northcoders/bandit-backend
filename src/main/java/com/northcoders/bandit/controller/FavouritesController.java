@@ -29,14 +29,13 @@ public class FavouritesController {
         this.profileManagerController = profileManagerController;
     }
 
-    @GetMapping("/profiles/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<List<Profile>> getUserFavourites(@PathVariable String id) {
         List<Favourites> getFavouritesFromId = favouritesService.getUserFavourites(id);
                 return profileManagerController.getUserFavourites(getFavouritesFromId);
-
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("{id}")
     public ResponseEntity<Favourites> addFavourite(@PathVariable String id ) {
         return new ResponseEntity<>(favouritesService.addFavourite(id),HttpStatus.OK);
     }

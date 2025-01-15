@@ -48,6 +48,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
             return false;
     }
 
+
     @Override
     public ArrayList<Profile> getFilteredProfiles() {
 
@@ -64,7 +65,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
         for (int i = 0; i < 5; i++) {
             Profile profile = new Profile("test"+i, "test url", ProfileType.MUSICIAN,
-                    "test description", 0f, 0f, 100f, genres, instruments);
+                    "test description", 0f, 0f, 100f, genres, instruments, null);
             genres.forEach(genre ->{
                         Set<Profile> genreProfiles = new HashSet<>();
                         genreProfiles.add(profile);

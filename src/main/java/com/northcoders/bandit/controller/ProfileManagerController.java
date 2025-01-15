@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/profiles")
+@RequestMapping("/api/v1/profiles")
 public class ProfileManagerController {
 
     @Autowired
@@ -38,7 +38,7 @@ public class ProfileManagerController {
         return new ResponseEntity<>("Failed to delete profile with id :" + id,HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping
+
     public ResponseEntity<List<Profile>> getUserFavourites(List<Favourites> favourites){
         return new ResponseEntity<>(profileManagerService.getUserFavourites(favourites), HttpStatus.OK);
     }
@@ -49,6 +49,5 @@ public class ProfileManagerController {
     public ResponseEntity<ArrayList<Profile>> getFilteredProfiles(){
         return new ResponseEntity<>(profileManagerService.getFilteredProfiles(), HttpStatus.OK);
     }
-
 
 }
