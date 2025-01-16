@@ -6,6 +6,8 @@ public class ProfileRequestDTO {
 
     private String img_url;
 
+    private String userName;
+
     private ProfileType profile_type;
 
     private String description;
@@ -23,8 +25,9 @@ public class ProfileRequestDTO {
     public ProfileRequestDTO() {
     }
 
-    public ProfileRequestDTO(String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
+    public ProfileRequestDTO(String img_url, String userName,ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
         this.img_url = img_url;
+        this.userName = userName;
         this.profile_type = profile_type;
         this.description = description;
         this.lat = lat;
@@ -98,4 +101,11 @@ public class ProfileRequestDTO {
         this.instruments = instruments;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }

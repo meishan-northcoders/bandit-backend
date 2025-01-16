@@ -2,7 +2,6 @@ package com.northcoders.bandit.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
-
 import java.util.Set;
 
 @Entity
@@ -12,6 +11,12 @@ public class Profile {
     //Firebase will generate this id as a STRING
     @Id
     private String profile_id;
+
+    @Column
+    private String artist_id;
+
+    @Column
+    private String artist_name;
 
     @Column
     private String img_url;
@@ -50,8 +55,9 @@ public class Profile {
     }
 
 
-    public Profile(String profile_id, String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
+    public Profile(String profile_id, String muscian_id ,String artist_name,String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
         this.profile_id = profile_id;
+        this.artist_id = muscian_id;
         this.img_url = img_url;
         this.profile_type = profile_type;
         this.description = description;
@@ -60,6 +66,7 @@ public class Profile {
         this.max_distance = max_distance;
         this.genres = genres;
         this.instruments = instruments;
+        this.artist_name = artist_name;
     }
 
 

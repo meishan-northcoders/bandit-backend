@@ -2,6 +2,8 @@ package com.northcoders.bandit.model;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.Random;
+import java.util.UUID;
 
 
 public class MessageResponseDTO {
@@ -53,4 +55,28 @@ public class MessageResponseDTO {
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
+
+//    public static void main(String[] args) {
+////        UUID uuid = UUID.randomUUID();
+////        System.out.println(uuid+ "  "    +uuid.toString().length());
+//
+//        Random random = new Random();
+//        int randomInt = random.nextInt();
+//        String artist_id = "";
+//        StringBuilder sb = new StringBuilder();
+//        System.out.println(randomInt);
+//        for(int  i = 0 ; i<9 ; i++){
+//            if(i<4 || i ==8){
+//                char randomChar = (char) ('A' + random.nextInt(26));
+//                sb.append(randomChar);
+//            }
+//            if(i>=4 && i<8){
+//                int randomNumber = random.nextInt(100);
+//                sb.append(randomNumber);
+//            }
+//
+//        }
+//        System.out.println(sb.toString());
+//
+//    }
 }

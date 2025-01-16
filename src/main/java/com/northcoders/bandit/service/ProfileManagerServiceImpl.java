@@ -105,7 +105,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
         instruments.add(new Instrument("BASS", null));
 
         for (int i = 0; i < 5; i++) {
-            Profile profile = new Profile("test"+i, "test url", ProfileType.MUSICIAN,
+            Profile profile = new Profile("test"+i, "ABCD123X","Meishan","test url", ProfileType.MUSICIAN,
                     "test description", 0f, 0f, 100f, genres, instruments);
             genres.forEach(genre ->{
                         Set<Profile> genreProfiles = new HashSet<>();
