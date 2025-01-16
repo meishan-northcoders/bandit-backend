@@ -37,16 +37,16 @@ public class FavouritesTests {
         mockMvc = MockMvcBuilders.standaloneSetup(favouritesController).build();
     }
 
-    @Test
-    @DisplayName("getUserFavourites returns all of the specified favourites when given valid list")
-    public void getAllFavourites(){
-        //Arrange
-        List<Favourite> favouriteList = new ArrayList<>();
-        favouriteList.add(new Favourite("4sdytfjhgfrt6uyhgfrtyh", "7ygfr56ygfrde3edfgyui8uygf"));
-        favouriteList.add(new Favourite("4hhgjkjnhjnhbjjnhh", "4rtyfo76fo7689yp89b09"));
-        favouriteList.add(new Favourite("4hhgjkjnhjnhbjjnhh", "87uivgopotyhbgyhjbv"));
-        favouriteList.add(new Favourite("4hhgjkjnhjnhbjjnhh", "p98uygvcftyhgvfhbvgh5"));
-        favouriteList.add(new Favourite("4sdytfjhgfrt6uyhgfrtyh", "f98y87gvt76oft9786gv"));
-        favouriteList.add(new Favourite("4sdytfjhgfrt6uyhgfrtyh", "ftfi87i8ydcdrz43sdytv"));
-    }
+//    @Test
+//    @DisplayName("getUserFavourites returns all of the specified favourites when given valid list")
+//    public void getAllFavourites(){
+//        //Arrange
+//        List<Favourite> favouriteList = new ArrayList<>();
+//        favouriteList.add(new Favourite("4sdytfjhgfrt6uyhgfrtyh", "7ygfr56ygfrde3edfgyui8uygf"));
+//        favouriteList.add(new Favourite("4hhgjkjnhjnhbjjnhh", "4rtyfo76fo7689yp89b09"));
+//        favouriteList.add(new Favourite("4hhgjkjnhjnhbjjnhh", "87uivgopotyhbgyhjbv"));
+//        favouriteList.add(new Favourite("4hhgjkjnhjnhbjjnhh", "p98uygvcftyhgvfhbvgh5"));
+//        favouriteList.add(new Favourite("4sdytfjhgfrt6uyhgfrtyh", "f98y87gvt76oft9786gv"));
+//        favouriteList.add(new Favourite("4sdytfjhgfrt6uyhgfrtyh", "ftfi87i8ydcdrz43sdytv"));
+//    }
 }

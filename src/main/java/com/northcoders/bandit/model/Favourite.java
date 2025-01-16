@@ -28,6 +28,12 @@ public class Favourite {
     public Favourite() {
     }
 
+    public Favourite(Long favId, String profileId, String yrFavProfileId) {
+        this.favId = favId;
+        this.favProfileId = profileId;
+        this.yrFavProfileId = yrFavProfileId;
+    }
+
     public Favourite(String profileId, String yrFavProfileId) {
         this.favProfileId = profileId;
         this.yrFavProfileId = yrFavProfileId;

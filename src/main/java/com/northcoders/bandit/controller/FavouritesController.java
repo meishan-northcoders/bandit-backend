@@ -27,17 +27,21 @@ public class FavouritesController {
         this.profileManagerController = profileManagerController;
     }
 
+    @GetMapping
+    public ResponseEntity<List<Favourite>>getAllFavourites(){
+        return new ResponseEntity<>(favouritesService.getAllFavourites(), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<List<Profile>> getUserFavourites(@PathVariable String id) {
         List<Favourite> getFavouriteFromId = favouritesService.getUserFavourites(id);
                 return profileManagerController.getUserFavourites(getFavouriteFromId);
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<Favourite> addFavourite(@PathVariable String id ) {
-        return new ResponseEntity<>(favouritesService.addFavourite(id),HttpStatus.OK);
+    @PostMapping("/{yrFavProfileId}")
+    public ResponseEntity<Favourite> addFavourite(@PathVariable String yrFavProfileId) {
+        return new ResponseEntity<>(favouritesService.addFavourite(yrFavProfileId),HttpStatus.OK);
     }
-
 
     @DeleteMapping
     public void removeFavouriteById(String id){
