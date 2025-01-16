@@ -95,6 +95,8 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
         //Profile currentUser = getCurrentUser();
 
+        //get current logged-in user's profile, and perform operations to return relevant other profiles for user to swipe.
+
         //TODO firebase implementation in here, placeholder code to provide 5 profiles below:
         ArrayList<Profile> filtered = new ArrayList<>();
 
@@ -123,6 +125,11 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
         return filtered;
 
+    }
+
+    @Override
+    public Profile getUserProfile() {
+        return getCurrentUser();
     }
 
     private Profile getCurrentUser(){
