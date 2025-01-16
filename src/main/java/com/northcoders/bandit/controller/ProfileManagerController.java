@@ -12,6 +12,7 @@ import com.northcoders.bandit.service.UserInContextService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
@@ -27,17 +28,12 @@ public class ProfileManagerController {
     UserInContextService userInContextService;
 
     @GetMapping
-    public ResponseEntity<ArrayList<ProfileResponseDTO>> getAllProfiles(){
-        ArrayList<Profile> profiles = profileManagerService.getAllProfiles();
+    public ResponseEntity<ArrayList<Profile>> getAllProfiles(){
 
-        ArrayList<ProfileResponseDTO> profileResponseDTOs = new ArrayList<>();
-        profiles.forEach(profile -> {
-            profileResponseDTOs.add(ProfileResponseDTOMapper.profileToDTO(profile));
-        });
-
-        return new ResponseEntity<>(profileResponseDTOs, HttpStatus.OK);
+        return new ResponseEntity<>(profileManagerService.getAllProfiles(), HttpStatus.OK);
     }
 
+    //Current logged in user mappings:
     @PostMapping
     public ResponseEntity<ProfileResponseDTO> postProfile(@RequestBody ProfileRequestDTO profileRequestDTO){
         Profile profile = ProfileRequestDTOMapper.DTOToProfile(profileRequestDTO); //the profile will contain the id.
@@ -54,7 +50,12 @@ public class ProfileManagerController {
 
     }
 
-    //TODO refactor to use firebase id
+    @GetMapping("/user")
+    public ResponseEntity<ProfileResponseDTO> getUserProfile(){
+        return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.getUserProfile()), HttpStatus.OK);
+    }
+
+    //TODO refactor to use firebase id - surely only delete OWN USER Profile?
     @DeleteMapping
     public ResponseEntity<String> deleteProfile(@RequestHeader("Authorization")String header){
         FireBaseUser fireBaseUser = userInContextService.getcurrentUser();
@@ -69,16 +70,9 @@ public class ProfileManagerController {
     //TODO discuss name scheme for filtered profiles (e.g. the recommended profiles based on service layer algorithm)
     //I have kept no request param as filtering will take place using the user's firebase id entirely in backend service layer
     @GetMapping("/filtered")
-    public ResponseEntity<ArrayList<ProfileResponseDTO>> getFilteredProfiles(){
+    public ResponseEntity<ArrayList<Profile>> getFilteredProfiles(){
 
-        ArrayList<Profile> filteredProfiles = profileManagerService.getFilteredProfiles();
-
-        ArrayList<ProfileResponseDTO> filteredProfileDTOs = new ArrayList<>();
-        filteredProfiles.forEach(profile -> {
-            filteredProfileDTOs.add(ProfileResponseDTOMapper.profileToDTO(profile));
-        });
-
-        return new ResponseEntity<>(filteredProfileDTOs, HttpStatus.OK);
+        return new ResponseEntity<>(profileManagerService.getFilteredProfiles(), HttpStatus.OK);
     }
 
 

@@ -26,7 +26,7 @@ public class MessageController {
             return new ResponseEntity<>(savedMessageResponseDTO, HttpStatus.OK);
     }
 
-    @GetMapping
+    @PostMapping("/user")
     public ResponseEntity<List<MessageResponseDTO>> getMessagesBetweenUsers(@RequestBody CorrespondentRequestDTO correspondentRequestDTO) {
             List<MessageResponseDTO> messageResponseDTOsBetweenUsers = messageService.getAllMessagesBetweenUsers(correspondentRequestDTO);
             return new ResponseEntity<>(messageResponseDTOsBetweenUsers, HttpStatus.OK);
