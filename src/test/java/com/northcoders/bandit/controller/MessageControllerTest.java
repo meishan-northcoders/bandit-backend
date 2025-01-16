@@ -155,7 +155,7 @@ class MessageControllerTest {
 
         //Act & Assert
         mockMvcController.perform(
-                        get(messagesEndpointURI)
+                        post(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(correspondentRequestDTO1)))
                 .andExpect(status().isOk())
@@ -181,7 +181,7 @@ class MessageControllerTest {
 
         //Act & Assert
         mockMvcController.perform(
-                        get(messagesEndpointURI)
+                        post(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(correspondentRequestDTO1)))
                 .andExpect(status().isOk())
@@ -227,7 +227,7 @@ class MessageControllerTest {
 
         //Act & Assert
         mockMvcController.perform(
-                        get(messagesEndpointURI)
+                        post(messagesEndpointURI)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(correspondentRequestDTO1NullCorrespondentId)))
                 .andExpect(status().isNotAcceptable());
