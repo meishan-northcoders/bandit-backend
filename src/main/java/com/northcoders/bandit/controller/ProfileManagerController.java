@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/profiles")
@@ -47,8 +48,19 @@ public class ProfileManagerController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<ProfileResponseDTO> getUserProfile(){
-        return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.getUserProfile()), HttpStatus.OK);
+    public ResponseEntity<Optional<ProfileResponseDTO>> getUserProfile(){
+        Optional<ProfileResponseDTO> profileResponseDTO = profileManagerService.getUserProfile().map(profile ->
+                new ProfileResponseDTO(profile.getImg_url(),
+                        profile.getProfile_id(),
+                        profile.getProfile_type(),
+                        profile.getDescription(),
+                        profile.getLat(),
+                        profile.getLon(),
+                        profile.getMax_distance(),
+                        profile.getGenres(),
+                        profile.getInstruments()
+                ));
+        return new ResponseEntity<>(profileResponseDTO, HttpStatus.OK);
     }
 
     //TODO refactor to use firebase id - surely only delete OWN USER Profile?
@@ -70,6 +82,5 @@ public class ProfileManagerController {
 
         return new ResponseEntity<>(profileManagerService.getFilteredProfiles(), HttpStatus.OK);
     }
-
 
 }

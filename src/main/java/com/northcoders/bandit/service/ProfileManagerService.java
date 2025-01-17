@@ -4,6 +4,7 @@ import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.model.ProfileResponseDTO;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public interface ProfileManagerService {
 
@@ -17,5 +18,5 @@ public interface ProfileManagerService {
 
     ArrayList<Profile> getFilteredProfiles();
 
-    Profile getUserProfile();
+    Optional<Profile> getUserProfile();
 }

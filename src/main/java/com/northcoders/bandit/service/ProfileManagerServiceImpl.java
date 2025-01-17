@@ -28,6 +28,9 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     @Autowired
     ProfileManagerRepository profileManagerRepository;
 
+    @Autowired
+    private UserInContextService userInContextService;
+
     @Override
     public Profile postProfile(Profile profile) {
         System.out.println(profile.toString());
@@ -128,17 +131,18 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     }
 
     @Override
-    public Profile getUserProfile() {
+    public Optional<Profile> getUserProfile() {
         return getCurrentUser();
     }
 
-    private Profile getCurrentUser(){
-        String currentUserId = getAllProfiles().getFirst().getProfile_id(); //TODO get user id from firebase instance
-        Optional<Profile> currentUserOptional = profileManagerRepository.findById(currentUserId);
-        if(currentUserOptional.isPresent()){
-            return currentUserOptional.get();
-        }
-        throw new RuntimeException("No current user found with firebase id: " + currentUserId); //TODO create custom exception
+    private Optional<Profile> getCurrentUser(){
+        String currentUserId = userInContextService.getcurrentUser().getUserId(); //TODO get user id from firebase instance
+        Optional<Profile> currentUserOptional = profileManagerRepository.findByfirebaseId(userInContextService.getcurrentUser().getUserId());
+        return currentUserOptional;
+//        if(currentUserOptional.isPresent()){
+//            return currentUserOptional.get();
+//        }
+        //throw new RuntimeException("No current user found with firebase id: " + currentUserId); //TODO create custom exception
     }
 
 }

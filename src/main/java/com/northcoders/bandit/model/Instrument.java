@@ -22,7 +22,7 @@ public class Instrument {
     }
 
     public Instrument( String instType, Set<Profile> profiles) {
-        this.instrument = instType;
+        this.instrument = instType.toUpperCase();
         this.profiles = profiles;
     }
 
@@ -32,7 +32,7 @@ public class Instrument {
     }
 
     public void setInstrument(String instrument) {
-        this.instrument = instrument;
+        this.instrument = instrument.toUpperCase();
     }
 
     public Set<Profile> getProfiles() {
