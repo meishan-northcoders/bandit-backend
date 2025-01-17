@@ -34,8 +34,8 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     @Override
     public Profile postProfile(Profile profile) {
         System.out.println(profile.toString());
-
-        return profileManagerRepository.save(profile);
+        Optional<Profile> byfirebaseId = profileManagerRepository.findByfirebaseId(profile.getFirebaseId());
+        return byfirebaseId.orElseGet(() -> profileManagerRepository.save(profile));
     }
 
     @Override
@@ -139,10 +139,6 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
         String currentUserId = userInContextService.getcurrentUser().getUserId(); //TODO get user id from firebase instance
         Optional<Profile> currentUserOptional = profileManagerRepository.findByfirebaseId(userInContextService.getcurrentUser().getUserId());
         return currentUserOptional;
-//        if(currentUserOptional.isPresent()){
-//            return currentUserOptional.get();
-//        }
-        //throw new RuntimeException("No current user found with firebase id: " + currentUserId); //TODO create custom exception
     }
 
 }

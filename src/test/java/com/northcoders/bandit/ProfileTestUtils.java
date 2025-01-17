@@ -8,9 +8,9 @@ import java.util.Set;
 
 public class ProfileTestUtils {
 
-    public static Profile createTestProfile(long id){
+    public static Profile createTestProfile(String id){
         Profile test = new Profile();
-        test.setProfile_id("id");
+        test.setProfile_id(id);
         test.setProfile_type(ProfileType.MUSICIAN);
         test.setDescription("test");
         test.setImg_url("testurl");
@@ -48,7 +48,7 @@ public class ProfileTestUtils {
     }
 
     public static ArrayList<Profile> createTestProfileArray(){
-        Profile profile = createTestProfile(1L);
+        Profile profile = createTestProfile("1L");
         return new ArrayList<>();
     }
 }
