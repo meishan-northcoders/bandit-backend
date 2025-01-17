@@ -1,10 +1,15 @@
 package com.northcoders.bandit.model;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
 import java.util.Set;
 
 public class ProfileRequestDTO {
 
     private String img_url;
+
+    private String profileId; //generated within system and different from firebase user id.
 
     private String userName;
 
@@ -25,8 +30,9 @@ public class ProfileRequestDTO {
     public ProfileRequestDTO() {
     }
 
-    public ProfileRequestDTO(String img_url, String userName,ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
+    public ProfileRequestDTO(String img_url, String profileId, String userName, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
         this.img_url = img_url;
+        this.profileId = profileId;
         this.userName = userName;
         this.profile_type = profile_type;
         this.description = description;
@@ -36,7 +42,6 @@ public class ProfileRequestDTO {
         this.genres = genres;
         this.instruments = instruments;
     }
-
     public String getImg_url() {
         return img_url;
     }
@@ -107,5 +112,13 @@ public class ProfileRequestDTO {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(String profileId) {
+        this.profileId = profileId;
     }
 }

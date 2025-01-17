@@ -2,6 +2,7 @@ package com.northcoders.bandit.service;
 
 import com.northcoders.bandit.ProfileTestUtils;
 import com.northcoders.bandit.model.Profile;
+import com.northcoders.bandit.model.ProfileResponseDTO;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
@@ -58,7 +59,7 @@ class ProfileManagerServiceImplTest {
 
         when(profileManagerRepository.findAll()).thenReturn(expected);
 
-        ArrayList<Profile> actual = profileManagerService.getAllProfiles();
+        ArrayList<ProfileResponseDTO> actual = profileManagerService.getAllProfiles();
 
         assertThat(actual).hasSize(expected.size());
         assertThat(actual.getFirst()).isEqualTo(profile_1);

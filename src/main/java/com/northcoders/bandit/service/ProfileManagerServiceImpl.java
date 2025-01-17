@@ -1,13 +1,12 @@
 package com.northcoders.bandit.service;
 
-import com.northcoders.bandit.model.Genre;
-import com.northcoders.bandit.model.Instrument;
-import com.northcoders.bandit.model.Profile;
-import com.northcoders.bandit.model.ProfileType;
+import com.northcoders.bandit.mapper.ProfileResponseDTOMapper;
+import com.northcoders.bandit.model.*;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -37,10 +36,10 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     }
 
     @Override
-    public ArrayList<Profile> getAllProfiles() {
+    public ArrayList<ProfileResponseDTO> getAllProfiles() {
         //Peter - I have converted between Iterator and ArrayList here in Service Layer
-        ArrayList<Profile> profiles = new ArrayList<>();
-        profileManagerRepository.findAll().forEach(profiles::add);
+        ArrayList<ProfileResponseDTO> profiles = new ArrayList<>();
+        profileManagerRepository.findAll().forEach(profile -> profiles.add(ProfileResponseDTOMapper.profileToDTO(profile)));
         return profiles;
     }
 
@@ -81,10 +80,11 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(String id) {
-        Optional<Profile> profileOptional = profileManagerRepository.findById(id);
+        Optional<Profile> profileOptional = profileManagerRepository.findByfirebaseId(id);
         if(profileOptional.isPresent()){
-            profileManagerRepository.deleteById(id);
+            profileManagerRepository.deleteByfirebaseId(id);
             return true;
         }
             return false;

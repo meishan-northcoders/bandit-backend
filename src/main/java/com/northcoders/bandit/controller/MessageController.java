@@ -20,14 +20,14 @@ public class MessageController {
     private MessageService messageService;
 
     @PostMapping
-    public ResponseEntity<MessageResponseDTO> saveMessage(@RequestHeader("Authorization") String header, @RequestBody MessageRequestDTO messageRequestDTO) {
+    public ResponseEntity<MessageResponseDTO> saveMessage(@RequestHeader("Authorization") String authHeader, @RequestBody MessageRequestDTO messageRequestDTO) {
 
             MessageResponseDTO savedMessageResponseDTO = messageService.saveMessage(messageRequestDTO);
             return new ResponseEntity<>(savedMessageResponseDTO, HttpStatus.OK);
     }
 
     @PostMapping("/user")
-    public ResponseEntity<List<MessageResponseDTO>> getMessagesBetweenUsers(@RequestBody CorrespondentRequestDTO correspondentRequestDTO) {
+    public ResponseEntity<List<MessageResponseDTO>> getMessagesBetweenUsers(@RequestHeader("Authorization") String authHeader, @RequestBody CorrespondentRequestDTO correspondentRequestDTO) {
             List<MessageResponseDTO> messageResponseDTOsBetweenUsers = messageService.getAllMessagesBetweenUsers(correspondentRequestDTO);
             return new ResponseEntity<>(messageResponseDTOsBetweenUsers, HttpStatus.OK);
     }

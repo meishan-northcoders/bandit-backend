@@ -9,7 +9,6 @@ import java.util.Set;
 @Table(name = "instrument")
 public class Instrument {
 
-
     //TODO refactor into string for hashtag style extension in frontend
     @Id
     private String instrument;

@@ -54,11 +54,11 @@ class ProfileManagerControllerTest {
     @DisplayName("Tests get all profiles returns all profiles")
     void getAllProfiles() throws Exception {
         //Arrange
-        Profile profile_1 = ProfileTestUtils.createTestProfile(1L);
-        Profile profile_2 = ProfileTestUtils.createTestProfile(2L);
+        ProfileResponseDTO profile_1 = ProfileTestUtils.createTestProfileResponseDTO(1L);
+        ProfileResponseDTO profile_2 = ProfileTestUtils.createTestProfileResponseDTO(2L);
 
 
-        ArrayList<Profile> mockData = new ArrayList<>();
+        ArrayList<ProfileResponseDTO> mockData = new ArrayList<>();
 
         mockData.add(profile_1);
         mockData.add(profile_2);

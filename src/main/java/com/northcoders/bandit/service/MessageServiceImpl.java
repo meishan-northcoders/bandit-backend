@@ -6,6 +6,8 @@ import com.northcoders.bandit.model.Message;
 import com.northcoders.bandit.model.MessageRequestDTO;
 import com.northcoders.bandit.model.MessageResponseDTO;
 import com.northcoders.bandit.repository.MessageRepository;
+import org.apache.catalina.User;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Autowired
     private MessageRepository messageRepository;
+    @Autowired
+    private UserInContextService userInContextService;
 
 
 
@@ -76,7 +80,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     private String getActiveUserId() {
-        return "activeUserId1";
+        return userInContextService.getcurrentUser().getUserId();
     }
 
 }

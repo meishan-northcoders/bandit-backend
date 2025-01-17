@@ -1,6 +1,5 @@
 package com.northcoders.bandit.controller;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.northcoders.bandit.mapper.ProfileRequestDTOMapper;
 import com.northcoders.bandit.mapper.ProfileResponseDTOMapper;
 import com.northcoders.bandit.model.FireBaseUser;
@@ -9,10 +8,8 @@ import com.northcoders.bandit.model.ProfileRequestDTO;
 import com.northcoders.bandit.model.ProfileResponseDTO;
 import com.northcoders.bandit.service.ProfileManagerService;
 import com.northcoders.bandit.service.UserInContextService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
@@ -28,24 +25,23 @@ public class ProfileManagerController {
     UserInContextService userInContextService;
 
     @GetMapping
-    public ResponseEntity<ArrayList<Profile>> getAllProfiles(){
+    public ResponseEntity<ArrayList<ProfileResponseDTO>> getAllProfiles(@RequestHeader("Authorization") String authHeader){
 
         return new ResponseEntity<>(profileManagerService.getAllProfiles(), HttpStatus.OK);
     }
 
     //Current logged in user mappings:
     @PostMapping
-    public ResponseEntity<ProfileResponseDTO> postProfile(@RequestBody ProfileRequestDTO profileRequestDTO){
-        Profile profile = ProfileRequestDTOMapper.DTOToProfile(profileRequestDTO); //the profile will contain the id.
-
+    public ResponseEntity<ProfileResponseDTO> postProfile(@RequestHeader("Authorization") String authHeader, @RequestBody ProfileRequestDTO profileRequestDTO){
+        FireBaseUser fireBaseUser = userInContextService.getcurrentUser();
+        Profile profile = ProfileRequestDTOMapper.DTOToProfile(profileRequestDTO,fireBaseUser ); //the profile will contain the id.
         return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.postProfile(profile)), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<ProfileResponseDTO> putProfile(@RequestBody ProfileRequestDTO profileRequestDTO){
-
-        Profile profile = ProfileRequestDTOMapper.DTOToProfile(profileRequestDTO);
-
+    public ResponseEntity<ProfileResponseDTO> putProfile(@RequestHeader("Authorization") String authHeader, @RequestBody ProfileRequestDTO profileRequestDTO){
+        FireBaseUser fireBaseUser = userInContextService.getcurrentUser();
+        Profile profile = ProfileRequestDTOMapper.DTOToProfile(profileRequestDTO, fireBaseUser);
         return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.updateProfile(profile)), HttpStatus.OK);
 
     }

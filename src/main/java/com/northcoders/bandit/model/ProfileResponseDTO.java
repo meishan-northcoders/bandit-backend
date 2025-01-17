@@ -7,7 +7,7 @@ public class ProfileResponseDTO {
     private String img_url;
 
     private String userName;
-    private String artist_id;
+    private String profile_id;
 
     private ProfileType profile_type;
 
@@ -26,9 +26,9 @@ public class ProfileResponseDTO {
     public ProfileResponseDTO() {
     }
 
-    public ProfileResponseDTO(String img_url,String musician_id, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
+    public ProfileResponseDTO(String img_url,String profile_id, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
         this.img_url = img_url;
-        this.artist_id = musician_id;
+        this.profile_id = profile_id;
         this.profile_type = profile_type;
         this.description = description;
         this.lat = lat;
@@ -100,5 +100,21 @@ public class ProfileResponseDTO {
 
     public void setInstruments(Set<Instrument> instruments) {
         this.instruments = instruments;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getProfile_id() {
+        return profile_id;
+    }
+
+    public void setProfile_id(String profile_id) {
+        this.profile_id = profile_id;
     }
 }

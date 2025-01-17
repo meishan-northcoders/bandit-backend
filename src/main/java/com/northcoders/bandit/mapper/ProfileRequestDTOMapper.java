@@ -1,8 +1,8 @@
 package com.northcoders.bandit.mapper;
 
+import com.northcoders.bandit.model.FireBaseUser;
 import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.model.ProfileRequestDTO;
-import com.northcoders.bandit.model.ProfileResponseDTO;
 
 public class ProfileRequestDTOMapper {
 
@@ -24,22 +24,20 @@ public class ProfileRequestDTOMapper {
         return profileRequestDTO;
     }
 
-    public static Profile DTOToProfile(ProfileRequestDTO profileRequestDTO){
+    public static Profile DTOToProfile(ProfileRequestDTO profileRequestDTO, FireBaseUser fireBaseUser){
 
         Profile profile = new Profile();
-
-        tempIdCounter++;
-
-        profile.setProfile_id("replace this id with firebase id" + tempIdCounter);//TODO get id from firebase helper class
+        //tempIdCounter++;
+        profile.setFirebaseId(fireBaseUser.getUserId());
+        profile.setProfile_name(fireBaseUser.getUserName());
         profile.setDescription(profileRequestDTO.getDescription());
         profile.setProfile_type(profileRequestDTO.getProfile_type());
-        profile.setImg_url(profileRequestDTO.getImg_url());
+        profile.setImg_url(profileRequestDTO.getImg_url().isEmpty()? fireBaseUser.getGooglePictureLink() : profileRequestDTO.getImg_url());
         profile.setLat(profileRequestDTO.getLat());
         profile.setLon(profileRequestDTO.getLon());
         profile.setMax_distance(profileRequestDTO.getMax_distance());
         profile.setGenres(profileRequestDTO.getGenres());
         profile.setInstruments(profileRequestDTO.getInstruments());
-
         return profile;
 
     }

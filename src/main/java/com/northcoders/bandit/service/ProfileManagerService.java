@@ -9,7 +9,7 @@ public interface ProfileManagerService {
 
     Profile postProfile(Profile profile);
 
-    ArrayList<Profile> getAllProfiles();
+    ArrayList<ProfileResponseDTO> getAllProfiles();
 
     Profile updateProfile(Profile profile);
 

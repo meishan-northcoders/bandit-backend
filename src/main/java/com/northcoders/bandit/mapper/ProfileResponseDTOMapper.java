@@ -12,9 +12,10 @@ public class ProfileResponseDTOMapper {
     public static ProfileResponseDTO profileToDTO(Profile profile){
 
         ProfileResponseDTO profileResponseDTO = new ProfileResponseDTO();
-
+        profileResponseDTO.setProfile_id(profile.getProfile_id());
         profileResponseDTO.setDescription(profile.getDescription());
         profileResponseDTO.setProfile_type(profile.getProfile_type());
+        profileResponseDTO.setUserName(profile.getProfile_name());
         profileResponseDTO.setImg_url(profile.getImg_url());
         profileResponseDTO.setLat(profile.getLat());
         profileResponseDTO.setLon(profile.getLon());
