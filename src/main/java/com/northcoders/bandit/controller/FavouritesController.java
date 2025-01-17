@@ -15,6 +15,7 @@ import java.util.List;
 public class FavouritesController {
 
     //MVP:
+    // favourites
     private final FavouritesService favouritesService;
     private final ProfileManagerController profileManagerController;
 
@@ -43,8 +44,8 @@ public class FavouritesController {
         return new ResponseEntity<>(favouritesService.addFavourite(yrFavProfileId),HttpStatus.OK);
     }
 
-    @DeleteMapping
-    public void removeFavouriteById(String id){
+    @DeleteMapping("/{yrFavProfileId}")
+    public void removeFavouriteById(@RequestParam String id){
         favouritesService.removeFavouriteById(id);
     }
 

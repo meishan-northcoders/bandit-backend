@@ -1,7 +1,9 @@
 package com.northcoders.bandit.service;
 
 import com.northcoders.bandit.model.Favourite;
+import com.northcoders.bandit.model.LikedOrDisliked;
 import com.northcoders.bandit.repository.FavouritesRepository;
+import com.northcoders.bandit.repository.ProfileManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,12 +14,15 @@ import java.util.List;
 @Service
 public class FavouritesServiceImpl implements FavouritesService {
 
+    // Linked to favourites repository and profile repository
     @Autowired
     private final FavouritesRepository favouritesRepository;
+    private final ProfileManagerRepository profileManagerRepository;
 
     @Autowired
-    public FavouritesServiceImpl (FavouritesRepository favouritesRepository){
+    public FavouritesServiceImpl (FavouritesRepository favouritesRepository, ProfileManagerRepository profileManagerRepository){
         this.favouritesRepository = favouritesRepository;
+        this.profileManagerRepository = profileManagerRepository;
     }
 
     @Override
@@ -34,6 +39,8 @@ public class FavouritesServiceImpl implements FavouritesService {
         //return all the favourites of the people making the call
     }
 
+
+    // User swipes right; Add profile to favourites
     @Override
     public Favourite addFavourite(String yrFavProfileId ){
         String favProfileId = "test0"; // hardcoded, must delete for final build
@@ -42,6 +49,8 @@ public class FavouritesServiceImpl implements FavouritesService {
             Favourite favouriteToAdd = new Favourite();
             favouriteToAdd.setFavProfileId(favProfileId);
             favouriteToAdd.setYrFavProfileId(yrFavProfileId);
+            favouriteToAdd.setProfile(profileManagerRepository.findById(favProfileId).get());
+            favouriteToAdd.setIsLikedOrDisliked(LikedOrDisliked.LIKE);
             return favouritesRepository.save(favouriteToAdd);
         }
         return existsFavourite;
@@ -51,6 +60,8 @@ public class FavouritesServiceImpl implements FavouritesService {
     public void removeFavouriteById(String id){
         favouritesRepository.deleteByFavProfileId(id);
     }
+
+
 
     // Nice to have; will refactor after MVP is met;
     @Override

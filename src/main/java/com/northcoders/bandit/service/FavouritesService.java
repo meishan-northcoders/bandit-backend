@@ -8,7 +8,7 @@ public interface FavouritesService {
 
     List<Favourite> getUserFavourites(String id);
     Favourite addFavourite(String yrFavProfileId);
-    void removeFavouriteById(String id);
+    void removeFavouriteById(String favProfileId);
     boolean areMutuallyFavourited(String uid1, String uid2);
     List<Favourite> getAllFavourites();
 
