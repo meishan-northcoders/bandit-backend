@@ -10,7 +10,13 @@ public class Profile {
 
     //Firebase will generate this id as a STRING
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    /** Issue : profileID Generation issue
+     * @GeneratedValue(strategy = GenerationType.UUID)
+     * if id is annotated with generated,
+     * its value is generated at the time of save, and therefore
+     *  when trying to fetch the relationship between existing genre and profile(genre is the primary key in this case),
+     *  it fails and tries to save Genre as new value due to Cascade all.
+     *  */
     private String profile_id;
 
     @Column(name = "firebase_id")

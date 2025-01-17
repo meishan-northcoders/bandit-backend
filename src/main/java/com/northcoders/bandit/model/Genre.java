@@ -18,7 +18,7 @@ public class Genre {
     private Set<Profile> profiles;
 
     public Genre(String genre, Set<Profile> profiles) {
-        this.genre = genre;
+        this.genre = genre.toUpperCase();
         this.profiles = profiles;
     }
 
@@ -30,7 +30,7 @@ public class Genre {
     }
 
     public void setGenre(String genre) {
-        this.genre = genre;
+        this.genre = genre.toUpperCase();
     }
 
     public Set<Profile> getProfiles() {

@@ -4,6 +4,8 @@ import com.northcoders.bandit.model.FireBaseUser;
 import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.model.ProfileRequestDTO;
 
+import java.util.UUID;
+
 public class ProfileRequestDTOMapper {
 
     static int tempIdCounter;
@@ -26,6 +28,9 @@ public class ProfileRequestDTOMapper {
 
     public static Profile DTOToProfile(ProfileRequestDTO profileRequestDTO, FireBaseUser fireBaseUser){
         Profile profile = new Profile();
+        /**
+         * * to solve profileID Generation issue, setting uuid here, refer to #profileID Generation issue, described in Profile Entity */
+        profile.setProfile_id(UUID.randomUUID().toString());
         profile.setFirebaseId(fireBaseUser.getUserId());
         profile.setProfile_name(fireBaseUser.getUserName());
         profile.setDescription(profileRequestDTO.getDescription());
