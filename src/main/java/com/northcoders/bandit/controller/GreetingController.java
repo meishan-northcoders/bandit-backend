@@ -16,7 +16,7 @@ public class GreetingController {
     @Autowired
     UserInContextService userInContextService;
     @GetMapping("/greeting")
-    public ResponseEntity<?> getGreetings(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<?> getGreetings() {
         FireBaseUser user = userInContextService.getcurrentUser();
         if(user != null)
         {

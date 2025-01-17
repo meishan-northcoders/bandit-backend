@@ -25,9 +25,7 @@ public class ProfileRequestDTOMapper {
     }
 
     public static Profile DTOToProfile(ProfileRequestDTO profileRequestDTO, FireBaseUser fireBaseUser){
-
         Profile profile = new Profile();
-        //tempIdCounter++;
         profile.setFirebaseId(fireBaseUser.getUserId());
         profile.setProfile_name(fireBaseUser.getUserName());
         profile.setDescription(profileRequestDTO.getDescription());
@@ -39,6 +37,5 @@ public class ProfileRequestDTOMapper {
         profile.setGenres(profileRequestDTO.getGenres());
         profile.setInstruments(profileRequestDTO.getInstruments());
         return profile;
-
     }
 }
