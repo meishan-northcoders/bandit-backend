@@ -43,8 +43,9 @@ public class FavouritesController {
 
 
     @DeleteMapping
-    public void removeFavouriteById(String id){
-        favouritesService.removeFavouriteById(id);
+    public ResponseEntity<Void> removeFavourite(@RequestBody AddToFavouriteRequestDTO requestDTO){
+        favouritesService.removeFavourite(requestDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

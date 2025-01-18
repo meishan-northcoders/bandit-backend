@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface FavouritesRepository extends CrudRepository<Favourites,String> {
     List<Favourites> findAllByFavProfileId(String favProfileId);
+    Favourites findByFavProfileIdAndYrFavProfileId(String favProfileId, String yrFavProfileId);
 }

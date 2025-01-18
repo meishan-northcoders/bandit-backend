@@ -56,8 +56,16 @@ public class FavouritesServiceImpl implements FavouritesService {
     }
 
     @Override
-    public void removeFavouriteById(String id){
-        favouritesRepository.deleteById(id);
+    public void removeFavourite(AddToFavouriteRequestDTO requestDTO) {
+        String favProfileId = requestDTO.getFavProfileId();
+        String yrFavProfileId = requestDTO.getYrFavProfileId();
+
+        Favourites favourites = favouritesRepository.findByFavProfileIdAndYrFavProfileId(favProfileId, yrFavProfileId);
+        if (favourites == null) {
+            throw new InvalidDTOException(String.format("Favourites record not found. %s and %s", favProfileId, yrFavProfileId));
+        }
+
+        favouritesRepository.delete(favourites);
     }
 
     @Override
