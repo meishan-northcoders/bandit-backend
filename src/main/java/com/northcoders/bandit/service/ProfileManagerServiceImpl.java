@@ -5,6 +5,7 @@ import com.northcoders.bandit.model.*;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     public Profile postProfile(Profile profile) {
         System.out.println(profile.toString());
         Optional<Profile> byfirebaseId = profileManagerRepository.findByfirebaseId(profile.getFirebaseId());
+        if(byfirebaseId.isPresent()){
+            throw new EntityExistsException("Active profile already exists for the current user");
+        }
         return byfirebaseId.orElseGet(() -> profileManagerRepository.save(profile));
     }
 
@@ -63,7 +67,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
                 profile.setImg_url(existing.getImg_url());
             }
             if(profile.getLat() == 0){
-                profile.setLon(existing.getLon());
+                profile.setLat(existing.getLat());
             }
             if(profile.getLon() == 0){
                 profile.setLon(existing.getLon());
@@ -95,9 +99,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
     @Override
     public ArrayList<Profile> getFilteredProfiles() {
-
         //Profile currentUser = getCurrentUser();
-
         //get current logged-in user's profile, and perform operations to return relevant other profiles for user to swipe.
 
         //TODO firebase implementation in here, placeholder code to provide 5 profiles below:

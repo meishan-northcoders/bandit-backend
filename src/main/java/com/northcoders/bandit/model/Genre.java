@@ -3,6 +3,8 @@ package com.northcoders.bandit.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.Set;
 
@@ -11,6 +13,8 @@ import java.util.Set;
 public class Genre {
 
     @Id
+    @NotNull(message = "Genre cannot be empty")
+    @Pattern(regexp = "[a-zA-Z0-9- ]+", message = "Genre must not contain any special characters")
     private String genre;
 
     @JsonIgnore

@@ -32,10 +32,10 @@ public class ProfileRequestDTOMapper {
          * * to solve profileID Generation issue, setting uuid here, refer to #profileID Generation issue, described in Profile Entity */
         profile.setProfile_id(UUID.randomUUID().toString());
         profile.setFirebaseId(fireBaseUser.getUserId());
-        profile.setProfile_name(fireBaseUser.getUserName());
+        profile.setProfile_name((profileRequestDTO.getUserName()== null || profileRequestDTO.getUserName().isBlank())? fireBaseUser.getUserName(): profileRequestDTO.getUserName());
         profile.setDescription(profileRequestDTO.getDescription());
         profile.setProfile_type(profileRequestDTO.getProfile_type());
-        profile.setImg_url(profileRequestDTO.getImg_url().isEmpty()? fireBaseUser.getGooglePictureLink() : profileRequestDTO.getImg_url());
+        profile.setImg_url((profileRequestDTO.getImg_url()== null || profileRequestDTO.getImg_url().isBlank())? fireBaseUser.getGooglePictureLink() : profileRequestDTO.getImg_url());
         profile.setLat(profileRequestDTO.getLat());
         profile.setLon(profileRequestDTO.getLon());
         profile.setMax_distance(profileRequestDTO.getMax_distance());
