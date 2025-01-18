@@ -1,9 +1,9 @@
 package com.northcoders.bandit.controller;
 
 import com.northcoders.bandit.model.Favourites;
+import com.northcoders.bandit.model.Favourites;
 import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.service.ProfileManagerService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

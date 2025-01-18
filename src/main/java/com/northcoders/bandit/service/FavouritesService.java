@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface FavouritesService {
 
@@ -18,4 +17,7 @@ public interface FavouritesService {
     boolean areMutuallyFavourited(String uid1, String uid2);
 
     List<Favourites> getYrFavouritesProfileByFavProfileId(String favProfileId);
+
+    List<Favourites> getAllFavourites();
+
 }

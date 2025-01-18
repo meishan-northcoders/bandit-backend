@@ -5,7 +5,6 @@ import com.northcoders.bandit.model.*;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;

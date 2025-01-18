@@ -22,4 +22,5 @@ public interface ProfileManagerService {
     Profile findById(String profileId);
 
     List<Profile> getListOfFavProfile(String favProfileId);
+
  }
