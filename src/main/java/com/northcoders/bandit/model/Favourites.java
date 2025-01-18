@@ -3,22 +3,22 @@ package com.northcoders.bandit.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table
-
+@Table(name = "favourites")
 public class Favourites {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(updatable = false, nullable = false)
-    Long favId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long favId;
 
     @Column
     private String favProfileId;
+
     @Column
     private String yrFavProfileId;
+
     @Column
     @Enumerated(EnumType.STRING)
-    LikedOrDisliked isLikedOrDisliked;
+    private LikedOrDisliked isLikedOrDisliked;
 
     @ManyToOne
     @JoinColumn(name = "profile_id", nullable=false)

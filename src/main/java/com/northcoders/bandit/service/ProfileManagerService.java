@@ -17,4 +17,7 @@ public interface ProfileManagerService {
     ArrayList<Profile> getFilteredProfiles();
 
     List<Profile> getUserFavourites(List<Favourites> favourites);
+
+    boolean existsByProfileId(String profileId);
+    Profile findById(String profileId);
  }

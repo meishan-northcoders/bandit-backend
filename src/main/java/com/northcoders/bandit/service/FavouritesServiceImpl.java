@@ -1,6 +1,9 @@
 package com.northcoders.bandit.service;
 
+import com.northcoders.bandit.dto.request.AddToFavouriteRequestDTO;
+import com.northcoders.bandit.exception.InvalidDTOException;
 import com.northcoders.bandit.model.Favourites;
+import com.northcoders.bandit.model.LikedOrDisliked;
 import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.repository.FavouritesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,9 @@ public class FavouritesServiceImpl implements FavouritesService {
     private final FavouritesRepository favouritesRepository;
 
     @Autowired
+    private ProfileManagerService profileManagerService;
+
+    @Autowired
     public FavouritesServiceImpl (FavouritesRepository favouritesRepository){
         this.favouritesRepository = favouritesRepository;
     }
@@ -30,10 +36,23 @@ public class FavouritesServiceImpl implements FavouritesService {
     }
 
     @Override
-    public Favourites addFavourite(String id){
-        Favourites accountToSave = favouritesRepository.findById(id).get();
-        favouritesRepository.save(accountToSave);
-        return accountToSave;
+    public Favourites addFavourite(AddToFavouriteRequestDTO requestDTO){
+        String favProfileId = requestDTO.getFavProfileId();
+        String yrFavProfileId = requestDTO.getYrFavProfileId();
+
+        Profile profile = profileManagerService.findById(favProfileId);
+
+        if (!profileManagerService.existsByProfileId(yrFavProfileId)) {
+            throw new InvalidDTOException(String.format("Your Profile id %s not found", yrFavProfileId));
+        }
+
+        Favourites accountToSave = new Favourites();
+        accountToSave.setFavProfileId(favProfileId);
+        accountToSave.setYrFavProfileId(yrFavProfileId);
+        accountToSave.setIsLikedOrDisliked(LikedOrDisliked.DEFAULT);
+        accountToSave.setProfile(profile);
+
+        return favouritesRepository.save(accountToSave);
     }
 
     @Override

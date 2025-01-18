@@ -1,5 +1,6 @@
 package com.northcoders.bandit.controller;
 
+import com.northcoders.bandit.dto.request.AddToFavouriteRequestDTO;
 import com.northcoders.bandit.model.Favourites;
 import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.service.FavouritesService;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/favourites")
 public class FavouritesController {
 
     //MVP:
@@ -29,15 +30,15 @@ public class FavouritesController {
         this.profileManagerController = profileManagerController;
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<List<Profile>> getUserFavourites(@PathVariable String id) {
         List<Favourites> getFavouritesFromId = favouritesService.getUserFavourites(id);
                 return profileManagerController.getUserFavourites(getFavouritesFromId);
     }
 
-    @PostMapping("{id}")
-    public ResponseEntity<Favourites> addFavourite(@PathVariable String id ) {
-        return new ResponseEntity<>(favouritesService.addFavourite(id),HttpStatus.OK);
+    @PostMapping("")
+    public ResponseEntity<Favourites> addFavourite(@RequestBody AddToFavouriteRequestDTO requestDTO) {
+        return new ResponseEntity<>(favouritesService.addFavourite(requestDTO), HttpStatus.OK);
     }
 
 

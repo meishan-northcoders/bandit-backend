@@ -1,5 +1,6 @@
 package com.northcoders.bandit.service;
 
+import com.northcoders.bandit.exception.InvalidDTOException;
 import com.northcoders.bandit.model.*;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
@@ -102,4 +103,17 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
         throw new RuntimeException("No current user found with firebase id: " + currentUserId); //TODO create custom exception
     }
 
+    @Override
+    public boolean existsByProfileId(String profileId) {
+        return profileManagerRepository.existsById(profileId);
+    }
+
+    @Override
+    public Profile findById(String profileId) {
+        Optional<Profile> profileOptional = profileManagerRepository.findById(profileId);
+        if (!profileOptional.isPresent()) {
+            throw new InvalidDTOException(String.format("Profile id %s not found", profileId));
+        }
+        return profileOptional.get();
+    }
 }
