@@ -7,10 +7,12 @@ import com.northcoders.bandit.repository.InstrumentManagerRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfileManagerServiceImpl implements ProfileManagerService {
@@ -23,6 +25,10 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
     @Autowired
     ProfileManagerRepository profileManagerRepository;
+
+    @Lazy
+    @Autowired
+    private FavouritesService favouritesService;
 
     @Override
     public Profile postProfile(Profile profile) {
@@ -115,5 +121,20 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
             throw new InvalidDTOException(String.format("Profile id %s not found", profileId));
         }
         return profileOptional.get();
+    }
+
+    @Override
+    public List<Profile> getListOfFavProfile(String favProfileId) {
+        List<Favourites> favouritesList = favouritesService.getYrFavouritesProfileByFavProfileId(favProfileId);
+
+        if (favouritesList != null && !favouritesList.isEmpty()) {
+            Set<String> yrFavProfileIdSet = favouritesList.stream()
+                    .map(Favourites::getYrFavProfileId)
+                    .collect(Collectors.toSet());
+
+            return profileManagerRepository.findByProfileIdIn(yrFavProfileIdSet);
+        }
+
+        return List.of();
     }
 }

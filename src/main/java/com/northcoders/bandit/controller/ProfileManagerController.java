@@ -28,6 +28,13 @@ public class ProfileManagerController {
         return new ResponseEntity<>(profileManagerService.postProfile(profile), HttpStatus.OK);
     }
 
+    @GetMapping("/favourites/{favProfileId}")
+    public ResponseEntity<List<Profile>> getListOfFavProfile(@PathVariable(name = "favProfileId") String favProfileId) {
+        List<Profile> profileList = profileManagerService.getListOfFavProfile(favProfileId);
+
+        return new ResponseEntity<>(profileList, HttpStatus.OK);
+    }
+
     //TODO refactor to use firebase id
     @DeleteMapping
     public ResponseEntity<String> deleteProfile(@RequestParam(value = "id") String id){

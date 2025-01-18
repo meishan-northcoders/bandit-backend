@@ -20,4 +20,6 @@ public interface ProfileManagerService {
 
     boolean existsByProfileId(String profileId);
     Profile findById(String profileId);
+
+    List<Profile> getListOfFavProfile(String favProfileId);
  }

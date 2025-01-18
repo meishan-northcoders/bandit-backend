@@ -65,7 +65,10 @@ public class FavouritesServiceImpl implements FavouritesService {
         return false;
     }
 
+    @Override
+    public List<Favourites> getYrFavouritesProfileByFavProfileId(String favProfileId) {
+        List<Favourites> favouritesList = favouritesRepository.findAllByFavProfileId(favProfileId);
 
-
-
+        return favouritesList;
+    }
 }
