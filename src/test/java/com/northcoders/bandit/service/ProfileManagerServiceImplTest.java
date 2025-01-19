@@ -48,7 +48,7 @@ class ProfileManagerServiceImplTest {
 
         when(profileManagerRepository.save(profile)).thenReturn(profile);
 
-        Profile result = profileManagerService.postProfile(profile, "Looking for a guitarist");
+        Profile result = profileManagerService.postProfile(profile);
 
         assertThat(result.getProfile_id()).isEqualTo(1L);
         assertThat(result.getDescription()).isEqualTo(profile.getDescription());
@@ -78,11 +78,12 @@ class ProfileManagerServiceImplTest {
         String profileId = "CX405";
         Profile existingProfile =new Profile();
         existingProfile.setProfile_name("Vanessa");
+        existingProfile.setSearch_query("I am looking for a Guitarist in London");
         Profile updatedProfile  =new Profile();
         updatedProfile.setProfile_name("Vanessa Diaz");
         when(profileManagerRepository.findById(profileId)).thenReturn(Optional.of(existingProfile));
         when(profileManagerRepository.save(any(Profile.class))).thenReturn(updatedProfile);
-        Profile updProfile = profileManagerService.updateProfile(existingProfile, "I am looking for a Guitarist in London");
+        Profile updProfile = profileManagerService.updateProfile(existingProfile);
         assertEquals(updatedProfile,updProfile);
         verify(profileManagerRepository,times(1)).findById(profileId);
         verify(profileManagerRepository,times(1)).save(existingProfile);

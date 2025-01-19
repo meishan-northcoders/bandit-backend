@@ -4,14 +4,14 @@ import com.northcoders.bandit.mapper.ProfileResponseDTOMapper;
 import com.northcoders.bandit.model.*;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
+import com.northcoders.bandit.repository.ProfileManagementSearchRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
-import com.northcoders.bandit.repository.SearchPreferenceRepository;
 import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -27,46 +27,26 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     ProfileManagerRepository profileManagerRepository;
 
     @Autowired
-    private SearchPreferenceRepository searchPreferenceRepository;
-
-    @Autowired
     private UserInContextService userInContextService;
 
     @Autowired
     private OpenAIService openAIService;
 
+    @Autowired
+    private ProfileManagementSearchRepository profileManagementSearchRepository;
+
 
     @Override
-    public Profile postProfile(Profile profile, String searchQuery) {
+    public Profile postProfile(Profile profile) {
         System.out.println(profile.toString());
         Optional<Profile> byfirebaseId = profileManagerRepository.findByfirebaseId(profile.getFirebaseId());
-        if(byfirebaseId.isPresent()){
+        if (byfirebaseId.isPresent()) {
             throw new EntityExistsException("Active profile already exists for the current user");
         }
         Profile createdProfile = byfirebaseId.orElseGet(() -> profileManagerRepository.save(profile));
         updateProfileSearchVector(createdProfile);// vector of descriptions and other text fields
-        createSearchPreference(createdProfile, searchQuery);
+        createSearchPreferenceQuery(createdProfile, profile.getSearch_query());
         return createdProfile;
-    }
-
-    private void createSearchPreference(Profile createdProfile, String searchQuery) {
-        if (searchQuery == null || searchQuery.isBlank()) {
-            searchQuery = createdProfile.getCity() + " " + createdProfile.getCountry();
-            if (createdProfile.getGenres() != null && !createdProfile.getGenres().isEmpty()) {
-                String genres = String.join(" ", createdProfile.getGenres().stream().map(Genre::getGenre)
-                        .toList());
-                searchQuery = searchQuery + " " + genres;
-                searchQuery = searchQuery.toLowerCase();
-            }
-        }
-        SearchPreference searchPreference = new SearchPreference();
-        searchPreference.setProfile(createdProfile);
-        searchPreference.setProfileId(createdProfile.getProfile_id());
-        searchPreference.setSearchQuery(searchQuery);
-        createdProfile.setSearchPreference(searchPreference);
-        SearchPreference savedSearchPreference = searchPreferenceRepository.save(searchPreference);
-        String tsQuery = openAIService.buildTsQuery(searchQuery);
-        searchPreferenceRepository.updateTsQueryByProfileId(savedSearchPreference.getProfileId(), tsQuery);
     }
 
     private void updateProfileSearchVector(Profile profile) {
@@ -102,7 +82,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     }
 
     @Override
-    public Profile updateProfile(Profile profile, String searchQuery) {
+    public Profile updateProfile(Profile profile) {
 
         //not sure if this is necessary but have added anyway in case - merges the new and existing if any fields in new are null.
         Optional<Profile> existingOpt = profileManagerRepository.findById(profile.getProfile_id());
@@ -132,28 +112,38 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
             if (profile.getInstruments() == null) {
                 profile.setInstruments(existing.getInstruments());
             }
+            if (profile.getSearch_query() == null) {
+                profile.setSearch_query(existing.getSearch_query());
+            }
         }
 
         Profile savedProfile = profileManagerRepository.save(profile);
         updateProfileSearchVector(savedProfile);
 
-        Optional<SearchPreference> searchPreference = searchPreferenceRepository.findById(savedProfile.getProfile_id());
-
-        if (searchQuery != null) {
-            if (searchPreference.isEmpty()) {
-                createSearchPreference(savedProfile, searchQuery);
-            } else if (!searchQuery.equalsIgnoreCase(searchPreference.get().getSearchQuery())) {
-                updateSearchPreference(searchPreference.get(), searchQuery);
-            }
+        if (profile.getSearch_query() == null) {
+            createSearchPreferenceQuery(savedProfile, savedProfile.getSearch_query());
+        } else if (!profile.getSearch_query().equalsIgnoreCase(savedProfile.getSearch_query())) {
+            updateSearchPreferenceQuery(savedProfile, profile.getSearch_query());
         }
         return savedProfile;
     }
 
-    private void updateSearchPreference(SearchPreference searchPreference, String searchQuery) {
-        searchPreference.setSearchQuery(searchQuery);
-        SearchPreference savedSearchPreference = searchPreferenceRepository.save(searchPreference);
+    private void createSearchPreferenceQuery(Profile createdProfile, String searchQuery) {
+        if (searchQuery == null || searchQuery.isBlank()) {
+            searchQuery = createdProfile.getCity() + " " + createdProfile.getCountry();
+            if (createdProfile.getGenres() != null && !createdProfile.getGenres().isEmpty()) {
+                String genres = String.join(" ", createdProfile.getGenres().stream().map(Genre::getGenre)
+                        .toList());
+                searchQuery = searchQuery + " " + genres;
+                searchQuery = searchQuery.toLowerCase();
+            }
+        }
+        updateSearchPreferenceQuery(createdProfile, searchQuery);
+    }
+
+    private void updateSearchPreferenceQuery(Profile dbProfile, String searchQuery) {
         String tsQuery = openAIService.buildTsQuery(searchQuery);
-        searchPreferenceRepository.updateTsQueryByProfileId(savedSearchPreference.getProfileId(), tsQuery);
+        profileManagerRepository.updateSearchQuery(dbProfile.getProfile_id(), searchQuery, tsQuery);
     }
 
     @Override
@@ -168,39 +158,36 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     }
 
     @Override
-    public ArrayList<Profile> getFilteredProfiles() {
+    public List<Profile> getFilteredProfiles() {
         //Profile currentUser = getCurrentUser();
         //get current logged-in user's profile, and perform operations to return relevant other profiles for user to swipe.
+        Profile userProfile = getUserProfile().orElseThrow();
 
-        //TODO firebase implementation in here, placeholder code to provide 5 profiles below:
-        ArrayList<Profile> filtered = new ArrayList<>();
-//
-//        Set<Genre> genres = new HashSet<>();
-//        Set<Instrument> instruments = new HashSet<>();
-//
-//        genres.add(new Genre("ROCK", null));
-//        instruments.add(new Instrument("BASS", null));
-//
-//        for (int i = 0; i < 5; i++) {
-//            Profile profile = new Profile("test" + i, "ABCD123X", "Meishan", "test url", ProfileType.MUSICIAN,
-//                    "test description", 0f, 0f, 100f, "London", "UK", "Casual Advanced", genres, instruments);
-//            genres.forEach(genre -> {
-//                        Set<Profile> genreProfiles = new HashSet<>();
-//                        genreProfiles.add(profile);
-//                        genre.setProfiles(genreProfiles);
-//                    }
-//            );
-//            instruments.forEach(instrument -> {
-//                Set<Profile> instProfiles = new HashSet<>();
-//                instProfiles.add(profile);
-//                instrument.setProfiles(instProfiles);
-//            });
-//            filtered.add(profile);
-//        }
+        if (userProfile.getSearch_query() == null) {
+            return profileManagementSearchRepository.findProfilesLimit();
+        }
 
 
-        return filtered;
+        List<ProfileRankDTO> profilesWithRank = profileManagerRepository.findProfilesWithRank(userProfile.getProfile_id());
+        Optional<Float> maxRankOpt = profilesWithRank.stream().max(Comparator.comparing(ProfileRankDTO::getProfileRank))
+                .map(ProfileRankDTO::getProfileRank);
 
+
+        if (profilesWithRank.isEmpty()) {
+            //run alt query
+            String orQuery = userProfile.getSearch_query().replaceAll("&", "|");
+            List<Profile> profiles = profileManagementSearchRepository.findProfilesWithRankByQuery(orQuery);
+        } else {
+            Float maxRank = maxRankOpt.orElseThrow();
+            if (maxRank.compareTo(Float.valueOf("0.00001")) < 0) {
+                //run alt query
+                String orQuery = userProfile.getSearch_query().replaceAll("&", "|");
+                List<Profile> profiles = profileManagementSearchRepository.findProfilesWithRankByQuery(orQuery);
+                System.out.println(profiles);
+            }
+        }
+
+        return null;
     }
 
     @Override

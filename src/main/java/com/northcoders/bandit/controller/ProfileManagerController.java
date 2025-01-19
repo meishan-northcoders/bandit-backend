@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -38,14 +39,14 @@ public class ProfileManagerController {
     public ResponseEntity<ProfileResponseDTO> postProfile(@Valid @RequestBody ProfileRequestDTO profileRequestDTO, @RequestHeader("Authorization") String authHeader){
         FireBaseUser fireBaseUser = userInContextService.getcurrentUser();
         Profile profile = ProfileRequestDTOMapper.DTOToProfile(profileRequestDTO,fireBaseUser ); //the profile will contain the id.
-        return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.postProfile(profile, profileRequestDTO.getSearchQuery())), HttpStatus.OK);
+        return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.postProfile(profile)), HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<ProfileResponseDTO> putProfile(@RequestHeader("Authorization") String authHeader, @RequestBody ProfileRequestDTO profileRequestDTO){
         FireBaseUser fireBaseUser = userInContextService.getcurrentUser();
         Profile profile = ProfileRequestDTOMapper.DTOToProfile(profileRequestDTO, fireBaseUser);
-        return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.updateProfile(profile, profileRequestDTO.getSearchQuery())), HttpStatus.OK);
+        return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.updateProfile(profile)), HttpStatus.OK);
 
     }
 
@@ -60,7 +61,10 @@ public class ProfileManagerController {
                         profile.getLon(),
                         profile.getMax_distance(),
                         profile.getGenres(),
-                        profile.getInstruments()
+                        profile.getInstruments(),
+                        profile.getCity(),
+                        profile.getCountry(),
+                        profile.getSearch_query()
                 ));
         return new ResponseEntity<>(profileResponseDTO, HttpStatus.OK);
     }
@@ -80,7 +84,7 @@ public class ProfileManagerController {
     //TODO discuss name scheme for filtered profiles (e.g. the recommended profiles based on service layer algorithm)
     //I have kept no request param as filtering will take place using the user's firebase id entirely in backend service layer
     @GetMapping("/filtered")
-    public ResponseEntity<ArrayList<Profile>> getFilteredProfiles(){
+    public ResponseEntity<List<Profile>> getFilteredProfiles(){
 
         return new ResponseEntity<>(profileManagerService.getFilteredProfiles(), HttpStatus.OK);
     }

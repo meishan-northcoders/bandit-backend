@@ -81,7 +81,7 @@ class ProfileManagerControllerTest {
         //Arrange
         Profile profile = ProfileTestUtils.createTestProfile("C401");
 
-        when(profileManagerService.postProfile(any(Profile.class), anyString())).thenReturn(profile);
+        when(profileManagerService.postProfile(any(Profile.class))).thenReturn(profile);
         //Act
         //Assert
         this.mockMvcController.perform(post("/profile")

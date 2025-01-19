@@ -43,7 +43,7 @@ public class ProfileRequestDTOMapper {
         profile.setInstruments(profileRequestDTO.getInstruments());
         profile.setCity(profileRequestDTO.getCity());
         profile.setCountry(profileRequestDTO.getCountry());
-        // searchquery set will be happening in service layer
+        profile.setSearch_query(profileRequestDTO.getSearchQuery());
         return profile;
     }
 }

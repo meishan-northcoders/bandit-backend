@@ -23,7 +23,9 @@ public class ProfileResponseDTOMapper {
         profileResponseDTO.setMax_distance(profile.getLon());
         profileResponseDTO.setGenres(profile.getGenres());
         profileResponseDTO.setInstruments(profile.getInstruments());
-
+        profileResponseDTO.setCity(profile.getCity());
+        profileResponseDTO.setCountry(profile.getCountry());
+        profileResponseDTO.setSearchQuery(profile.getSearch_query());
         return profileResponseDTO;
     }
 

@@ -2,6 +2,8 @@ package com.northcoders.bandit.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
+
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -52,12 +54,17 @@ public class Profile {
     @Column
     private String profile_tags;
 
+    @Column
+    private String search_query;
+
+    @Transient
+    private Float profileRank;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinTable(name = "profile_genre",
-    joinColumns = @JoinColumn(name = "profile_id"),
-    inverseJoinColumns = @JoinColumn(name = "genre"))
+            joinColumns = @JoinColumn(name = "profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre"))
     private Set<Genre> genres;
 
     @ManyToMany(fetch = FetchType.EAGER) //I don't really understand FetchType but this prevents HttpMessageNotWritableException for Delete mapping
@@ -67,21 +74,6 @@ public class Profile {
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Set<Instrument> instruments;
 
-    @OneToOne(mappedBy = "profile")
-    private SearchPreference searchPreference;
-
-    public SearchPreference getSearchPreference() {
-        return searchPreference;
-    }
-
-    public void setSearchPreference(SearchPreference searchPreference) {
-        this.searchPreference = searchPreference;
-    }
-
-//    @OneToOne(fetch = FetchType.EAGER, mappedBy = "profile", optional =true)
-//    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-//    private SearchPreference searchPreference;
-
 
 
     public Profile() {
@@ -89,7 +81,7 @@ public class Profile {
     }
 
 
-    public Profile(String profile_id, String firebase_id , String profile_name, String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, String city, String country, String profileTags, Set<Genre> genres, Set<Instrument> instruments) {
+    public Profile(String profile_id, String firebase_id, String profile_name, String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, String city, String country, String profileTags, String searchQuery, Set<Genre> genres, Set<Instrument> instruments) {
         this.profile_id = profile_id;
         this.firebaseId = firebase_id;
         this.img_url = img_url;
@@ -101,11 +93,11 @@ public class Profile {
         this.city = city;
         this.country = country;
         profile_tags = profileTags;
+        search_query = searchQuery;
         this.genres = genres;
         this.instruments = instruments;
         this.profile_name = profile_name;
     }
-
 
 
     public String getProfile_id() {
@@ -236,7 +228,23 @@ public class Profile {
         this.profile_tags = profile_tags;
     }
 
-//    public SearchPreference getSearchPreference() {
+    public String getSearch_query() {
+        return search_query;
+    }
+
+    public void setSearch_query(String search_query) {
+        this.search_query = search_query;
+    }
+
+    public Float getProfileRank() {
+        return profileRank;
+    }
+
+    public void setProfileRank(Float profileRank) {
+        this.profileRank = profileRank;
+    }
+
+    //    public SearchPreference getSearchPreference() {
 //        return searchPreference;
 //    }
 //
