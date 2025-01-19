@@ -3,6 +3,7 @@ package com.northcoders.bandit.model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -31,6 +32,10 @@ public class Profile {
     @Column
     private float max_distance;
 
+
+    @OneToMany(mappedBy = "profile")
+    private List<Favourites> favourites;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinTable(name = "profile_genre",
@@ -50,7 +55,7 @@ public class Profile {
     }
 
 
-    public Profile(String profile_id, String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
+    public Profile(String profile_id, String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments, List<Favourites> favourites) {
         this.profile_id = profile_id;
         this.img_url = img_url;
         this.profile_type = profile_type;
@@ -60,6 +65,7 @@ public class Profile {
         this.max_distance = max_distance;
         this.genres = genres;
         this.instruments = instruments;
+        this.favourites = favourites;
     }
 
 

@@ -1,5 +1,7 @@
 package com.northcoders.bandit.controller;
 
+
+import com.northcoders.bandit.model.Favourites;
 import com.google.firebase.auth.FirebaseAuth;
 import com.northcoders.bandit.mapper.ProfileRequestDTOMapper;
 import com.northcoders.bandit.mapper.ProfileResponseDTOMapper;
@@ -7,16 +9,16 @@ import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.model.ProfileRequestDTO;
 import com.northcoders.bandit.model.ProfileResponseDTO;
 import com.northcoders.bandit.service.ProfileManagerService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/profiles")
+@RequestMapping("/api/v1/profiles")
 public class ProfileManagerController {
 
     @Autowired
@@ -45,12 +47,14 @@ public class ProfileManagerController {
 
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<ProfileResponseDTO> getUserProfile(){
-        return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.getUserProfile()), HttpStatus.OK);
+    @GetMapping("/favourites/{favProfileId}")
+    public ResponseEntity<List<Profile>> getListOfFavProfile(@PathVariable(name = "favProfileId") String favProfileId) {
+        List<Profile> profileList = profileManagerService.getListOfFavProfile(favProfileId);
+
+        return new ResponseEntity<>(profileList, HttpStatus.OK);
     }
 
-    //TODO refactor to use firebase id - surely only delete OWN USER Profile?
+    //TODO refactor to use firebase id
     @DeleteMapping
     public ResponseEntity<String> deleteProfile(@RequestParam(value = "id") String id){
         boolean isDeleted = profileManagerService.deleteById(id);
@@ -60,6 +64,11 @@ public class ProfileManagerController {
         return new ResponseEntity<>("Failed to delete profile with id :" + id,HttpStatus.NOT_FOUND);
     }
 
+
+    public ResponseEntity<List<Profile>> getUserFavourites(List<Favourites> favourites){
+        return new ResponseEntity<>(profileManagerService.getUserFavourites(favourites), HttpStatus.OK);
+    }
+
     //TODO discuss name scheme for filtered profiles (e.g. the recommended profiles based on service layer algorithm)
     //I have kept no request param as filtering will take place using the user's firebase id entirely in backend service layer
     @GetMapping("/filtered")
@@ -67,6 +76,5 @@ public class ProfileManagerController {
 
         return new ResponseEntity<>(profileManagerService.getFilteredProfiles(), HttpStatus.OK);
     }
-
 
 }

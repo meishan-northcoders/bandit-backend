@@ -1,21 +1,17 @@
 package com.northcoders.bandit.service;
 
-import com.northcoders.bandit.model.Genre;
-import com.northcoders.bandit.model.Instrument;
-import com.northcoders.bandit.model.Profile;
-import com.northcoders.bandit.model.ProfileType;
+import com.northcoders.bandit.exception.InvalidDTOException;
+import com.northcoders.bandit.model.*;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfileManagerServiceImpl implements ProfileManagerService {
@@ -28,6 +24,10 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
     @Autowired
     ProfileManagerRepository profileManagerRepository;
+
+    @Lazy
+    @Autowired
+    private FavouritesService favouritesService;
 
     @Override
     public Profile postProfile(Profile profile) {
@@ -90,6 +90,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
             return false;
     }
 
+
     @Override
     public ArrayList<Profile> getFilteredProfiles() {
 
@@ -106,7 +107,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
         for (int i = 0; i < 5; i++) {
             Profile profile = new Profile("test"+i, "test url", ProfileType.MUSICIAN,
-                    "test description", 0f, 0f, 100f, genres, instruments);
+                    "test description", 0f, 0f, 100f, genres, instruments, null);
             genres.forEach(genre ->{
                         Set<Profile> genreProfiles = new HashSet<>();
                         genreProfiles.add(profile);
@@ -125,6 +126,15 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
     }
 
+    @Override
+    public List<Profile> getUserFavourites(List<Favourites> favourites) {
+        List<Profile> favouritesList = new ArrayList<>();
+        for (Favourites f : favourites){
+            favouritesList.add(profileManagerRepository.findById(f.getFavProfileId()).get());
+        }
+        return favouritesList;
+    }
+
     private Profile getCurrentUser(){
         String currentUserId = getAllProfiles().getFirst().getProfile_id(); //TODO get user id from firebase instance
         Optional<Profile> currentUserOptional = profileManagerRepository.findById(currentUserId);
@@ -134,4 +144,32 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
         throw new RuntimeException("No current user found with firebase id: " + currentUserId); //TODO create custom exception
     }
 
+    @Override
+    public boolean existsByProfileId(String profileId) {
+        return profileManagerRepository.existsById(profileId);
+    }
+
+    @Override
+    public Profile findById(String profileId) {
+        Optional<Profile> profileOptional = profileManagerRepository.findById(profileId);
+        if (!profileOptional.isPresent()) {
+            throw new InvalidDTOException(String.format("Profile id %s not found", profileId));
+        }
+        return profileOptional.get();
+    }
+
+    @Override
+    public List<Profile> getListOfFavProfile(String favProfileId) {
+        List<Favourites> favouritesList = favouritesService.getYrFavouritesProfileByFavProfileId(favProfileId);
+
+        if (favouritesList != null && !favouritesList.isEmpty()) {
+            Set<String> yrFavProfileIdSet = favouritesList.stream()
+                    .map(Favourites::getYrFavProfileId)
+                    .collect(Collectors.toSet());
+
+            return profileManagerRepository.findByProfileIdIn(yrFavProfileIdSet);
+        }
+
+        return List.of();
+    }
 }
