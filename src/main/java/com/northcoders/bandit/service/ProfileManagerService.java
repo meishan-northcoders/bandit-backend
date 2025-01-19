@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface ProfileManagerService {
 
-    Profile postProfile(Profile profile);
+    Profile postProfile(Profile profile, String searchQuery);
 
     ArrayList<ProfileResponseDTO> getAllProfiles();
 
-    Profile updateProfile(Profile profile);
+    Profile updateProfile(Profile profile, String searchQuery);
 
     boolean deleteById(String id);
 

@@ -24,8 +24,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 
 @SpringBootTest
@@ -83,7 +81,7 @@ class ProfileManagerControllerTest {
         //Arrange
         Profile profile = ProfileTestUtils.createTestProfile("C401");
 
-        when(profileManagerService.postProfile(profile)).thenReturn(profile);
+        when(profileManagerService.postProfile(profile, profileRequestDTO.getSearchQuery())).thenReturn(profile);
         //Act
         //Assert
         this.mockMvcController.perform(post("/profile")

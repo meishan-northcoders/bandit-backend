@@ -7,7 +7,6 @@ import com.northcoders.bandit.model.ProfileResponseDTO;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
-import org.apache.catalina.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,7 +18,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.northcoders.bandit.model.ProfileType.MUSICIAN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -49,7 +47,7 @@ class ProfileManagerServiceImplTest {
 
         when(profileManagerRepository.save(profile)).thenReturn(profile);
 
-        Profile result = profileManagerService.postProfile(profile);
+        Profile result = profileManagerService.postProfile(profile, profileRequestDTO.getSearchQuery());
 
         assertThat(result.getProfile_id()).isEqualTo(1L);
         assertThat(result.getDescription()).isEqualTo(profile.getDescription());
@@ -83,7 +81,7 @@ class ProfileManagerServiceImplTest {
         updatedProfile.setProfile_name("Vanessa Diaz");
         when(profileManagerRepository.findById(profileId)).thenReturn(Optional.of(existingProfile));
         when(profileManagerRepository.save(any(Profile.class))).thenReturn(updatedProfile);
-        Profile updProfile = profileManagerService.updateProfile(existingProfile);
+        Profile updProfile = profileManagerService.updateProfile(existingProfile, profileRequestDTO.getSearchQuery());
         assertEquals(updatedProfile,updProfile);
         verify(profileManagerRepository,times(1)).findById(profileId);
         verify(profileManagerRepository,times(1)).save(existingProfile);

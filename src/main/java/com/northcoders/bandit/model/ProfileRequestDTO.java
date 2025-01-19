@@ -27,10 +27,12 @@ public class ProfileRequestDTO {
 
     private Set<Instrument> instruments;
 
+    private String searchQuery;
+
     public ProfileRequestDTO() {
     }
 
-    public ProfileRequestDTO(String img_url, String profileId, String userName, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
+    public ProfileRequestDTO(String img_url, String profileId, String userName, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments, String searchQuery) {
         this.img_url = img_url;
         this.profileId = profileId;
         this.userName = userName;
@@ -41,6 +43,7 @@ public class ProfileRequestDTO {
         this.max_distance = max_distance;
         this.genres = genres;
         this.instruments = instruments;
+        this.searchQuery = searchQuery;
     }
     public String getImg_url() {
         return img_url;
@@ -120,5 +123,13 @@ public class ProfileRequestDTO {
 
     public void setProfileId(String profileId) {
         this.profileId = profileId;
+    }
+
+    public String getSearchQuery() {
+        return searchQuery;
+    }
+
+    public void setSearchQuery(String searchQuery) {
+        this.searchQuery = searchQuery;
     }
 }

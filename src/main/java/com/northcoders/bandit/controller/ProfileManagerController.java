@@ -36,14 +36,14 @@ public class ProfileManagerController {
     public ResponseEntity<ProfileResponseDTO> postProfile(@RequestHeader("Authorization") String authHeader, @RequestBody ProfileRequestDTO profileRequestDTO){
         FireBaseUser fireBaseUser = userInContextService.getcurrentUser();
         Profile profile = ProfileRequestDTOMapper.DTOToProfile(profileRequestDTO,fireBaseUser ); //the profile will contain the id.
-        return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.postProfile(profile)), HttpStatus.OK);
+        return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.postProfile(profile, profileRequestDTO.getSearchQuery())), HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<ProfileResponseDTO> putProfile(@RequestHeader("Authorization") String authHeader, @RequestBody ProfileRequestDTO profileRequestDTO){
         FireBaseUser fireBaseUser = userInContextService.getcurrentUser();
         Profile profile = ProfileRequestDTOMapper.DTOToProfile(profileRequestDTO, fireBaseUser);
-        return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.updateProfile(profile)), HttpStatus.OK);
+        return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.updateProfile(profile, profileRequestDTO.getSearchQuery())), HttpStatus.OK);
 
     }
 

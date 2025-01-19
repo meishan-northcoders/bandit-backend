@@ -43,6 +43,16 @@ public class Profile {
     @Column
     private float max_distance;
 
+    @Column
+    private String city;
+
+    @Column
+    private String country;
+
+    @Column
+    private String profile_tags;
+
+
     @ManyToMany(fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinTable(name = "profile_genre",
@@ -57,12 +67,16 @@ public class Profile {
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Set<Instrument> instruments;
 
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "profile", optional = false)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private SearchPreference searchPreference;
+
     public Profile() {
 
     }
 
 
-    public Profile(String profile_id, String firebase_id ,String profile_name,String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments) {
+    public Profile(String profile_id, String firebase_id , String profile_name, String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, String city, String country, String profileTags, Set<Genre> genres, Set<Instrument> instruments) {
         this.profile_id = profile_id;
         this.firebaseId = firebase_id;
         this.img_url = img_url;
@@ -71,6 +85,9 @@ public class Profile {
         this.lat = lat;
         this.lon = lon;
         this.max_distance = max_distance;
+        this.city = city;
+        this.country = country;
+        profile_tags = profileTags;
         this.genres = genres;
         this.instruments = instruments;
         this.profile_name = profile_name;
@@ -180,5 +197,37 @@ public class Profile {
 
     public void setProfile_name(String profile_name) {
         this.profile_name = profile_name;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getProfile_tags() {
+        return profile_tags;
+    }
+
+    public void setProfile_tags(String profile_tags) {
+        this.profile_tags = profile_tags;
+    }
+
+    public SearchPreference getSearchPreference() {
+        return searchPreference;
+    }
+
+    public void setSearchPreference(SearchPreference searchPreference) {
+        this.searchPreference = searchPreference;
     }
 }
