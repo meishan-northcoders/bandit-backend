@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.swing.text.html.Option;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,12 +51,12 @@ public interface ProfileManagerRepository extends JpaRepository<Profile, String>
 
     @Query(value = """
              SELECT p.profile_id,
-                     ts_rank(profile_search_vector, to_tsquery('simple', :searchQuery)) AS profileRank
-              FROM profile
-              ORDER BY profileRank desc
-              LIMIT 20
+                    ts_rank(p.profile_search_vector,
+                            (SELECT regexp_replace(search_query_ts::text, '&', '|', 'g')::tsquery FROM profile WHERE profile_id = :profileId)) AS profileRank
+             FROM profile p
+             ORDER BY profileRank desc LIMIT 20
             """, nativeQuery = true)
-    List<Profile> findProfilesWithRankByQuery(@Param("searchQuery") String searchQuery);
+    List<ProfileRankDTO> findProfilesWithRankByOr(@Param("profileId") String profileId);
 
 
     @Query(value = """
@@ -63,5 +64,12 @@ public interface ProfileManagerRepository extends JpaRepository<Profile, String>
                FROM profile p LIMIT 20
             """, nativeQuery = true)
     List<Profile> findProfilesLimit();
+
+
+    @Query(value = """
+             SELECT *
+               FROM profile p where p.profile_id in (:profileIds)
+            """, nativeQuery = true)
+    List<Profile> findProfilesBy(List<String> profileIds);
 
 }

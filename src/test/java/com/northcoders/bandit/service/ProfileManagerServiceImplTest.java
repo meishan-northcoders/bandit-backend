@@ -14,10 +14,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,7 +56,7 @@ class ProfileManagerServiceImplTest {
         Profile profile_1 = ProfileTestUtils.createTestProfile("1L");
         Profile profile_2 = ProfileTestUtils.createTestProfile("2L");
 
-        Set<Profile> expected = new HashSet<>();
+        List<Profile> expected = new ArrayList<>();
 
         expected.add(profile_1);
         expected.add(profile_2);

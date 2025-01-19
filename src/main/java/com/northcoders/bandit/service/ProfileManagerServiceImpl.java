@@ -1,18 +1,22 @@
 package com.northcoders.bandit.service;
 
 import com.northcoders.bandit.mapper.ProfileResponseDTOMapper;
-import com.northcoders.bandit.model.*;
+import com.northcoders.bandit.model.Genre;
+import com.northcoders.bandit.model.Profile;
+import com.northcoders.bandit.model.ProfileRankDTO;
+import com.northcoders.bandit.model.ProfileResponseDTO;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
-import com.northcoders.bandit.repository.ProfileManagementSearchRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProfileManagerServiceImpl implements ProfileManagerService {
@@ -32,8 +36,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     @Autowired
     private OpenAIService openAIService;
 
-    @Autowired
-    private ProfileManagementSearchRepository profileManagementSearchRepository;
+
 
 
     @Override
@@ -164,7 +167,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
         Profile userProfile = getUserProfile().orElseThrow();
 
         if (userProfile.getSearch_query() == null) {
-            return profileManagementSearchRepository.findProfilesLimit();
+            return profileManagerRepository.findProfilesLimit();
         }
 
 
@@ -175,19 +178,23 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
         if (profilesWithRank.isEmpty()) {
             //run alt query
-            String orQuery = userProfile.getSearch_query().replaceAll("&", "|");
-            List<Profile> profiles = profileManagementSearchRepository.findProfilesWithRankByQuery(orQuery);
+            profilesWithRank = profileManagerRepository.findProfilesWithRankByOr(userProfile.getProfile_id());
         } else {
             Float maxRank = maxRankOpt.orElseThrow();
             if (maxRank.compareTo(Float.valueOf("0.00001")) < 0) {
                 //run alt query
-                String orQuery = userProfile.getSearch_query().replaceAll("&", "|");
-                List<Profile> profiles = profileManagementSearchRepository.findProfilesWithRankByQuery(orQuery);
-                System.out.println(profiles);
+                profilesWithRank = profileManagerRepository.findProfilesWithRankByOr(userProfile.getProfile_id());
             }
         }
 
-        return null;
+        List<Profile> profilesBy = profileManagerRepository.findProfilesBy(profilesWithRank.stream()
+                .map(ProfileRankDTO::getProfileId)
+                .toList());
+        if (profilesBy.isEmpty()) {
+            return profileManagerRepository.findProfilesLimit();
+
+        }
+        return profilesBy;
     }
 
     @Override
