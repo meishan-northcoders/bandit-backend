@@ -1,30 +1,33 @@
 package com.northcoders.bandit.model;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.Set;
 
 public class ProfileRequestDTO {
 
+    @Pattern(regexp = "^(http|https):\\/\\/.*$", message = "invalid url")
     private String img_url;
 
     private String profileId; //generated within system and different from firebase user id.
-
+    @Pattern(regexp = "[a-zA-Z0-9- ]+", message = "User Name must not contain any special characters")
     private String userName;
-
+    @NotNull(message = "Profile type cannot be empty")
     private ProfileType profile_type;
-
+    @NotNull(message = "Description type cannot be empty")
+    @Pattern(regexp = "[a-zA-Z0-9- ]+", message = "description must not contain any special characters")
     private String description;
-
+    @NotNull(message = "latitude cannot be empty")
     private float lat;
-
+    @NotNull(message = "longitude cannot be empty")
     private float lon;
 
     private float max_distance;
-
+    @NotNull(message = "Genre cannot be empty")
     private Set<Genre> genres;
-
+    @NotNull(message = "Instrument cannot be empty")
     private Set<Instrument> instruments;
 
     private String searchQuery;

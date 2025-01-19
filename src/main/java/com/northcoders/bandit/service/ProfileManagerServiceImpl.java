@@ -1,12 +1,13 @@
 package com.northcoders.bandit.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.northcoders.bandit.mapper.ProfileResponseDTOMapper;
 import com.northcoders.bandit.model.*;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
 import com.northcoders.bandit.repository.SearchPreferenceRepository;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,9 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     public Profile postProfile(Profile profile, String searchQuery) {
         System.out.println(profile.toString());
         Optional<Profile> byfirebaseId = profileManagerRepository.findByfirebaseId(profile.getFirebaseId());
+        if(byfirebaseId.isPresent()){
+            throw new EntityExistsException("Active profile already exists for the current user");
+        }
         Profile createdProfile = byfirebaseId.orElseGet(() -> profileManagerRepository.save(profile));
         updateProfileSearchVector(createdProfile);// vector of descriptions and other text fields
         createSearchPreference(createdProfile, searchQuery);
@@ -114,7 +118,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
                 profile.setImg_url(existing.getImg_url());
             }
             if (profile.getLat() == 0) {
-                profile.setLon(existing.getLon());
+                profile.setLat(existing.getLat());
             }
             if (profile.getLon() == 0) {
                 profile.setLon(existing.getLon());
@@ -165,9 +169,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
     @Override
     public ArrayList<Profile> getFilteredProfiles() {
-
         //Profile currentUser = getCurrentUser();
-
         //get current logged-in user's profile, and perform operations to return relevant other profiles for user to swipe.
 
         //TODO firebase implementation in here, placeholder code to provide 5 profiles below:

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,7 +48,7 @@ class ProfileManagerServiceImplTest {
 
         when(profileManagerRepository.save(profile)).thenReturn(profile);
 
-        Profile result = profileManagerService.postProfile(profile, profileRequestDTO.getSearchQuery());
+        Profile result = profileManagerService.postProfile(profile, "Looking for a guitarist");
 
         assertThat(result.getProfile_id()).isEqualTo(1L);
         assertThat(result.getDescription()).isEqualTo(profile.getDescription());

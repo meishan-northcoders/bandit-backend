@@ -8,10 +8,12 @@ import com.northcoders.bandit.model.ProfileRequestDTO;
 import com.northcoders.bandit.model.ProfileResponseDTO;
 import com.northcoders.bandit.service.ProfileManagerService;
 import com.northcoders.bandit.service.UserInContextService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -33,7 +35,7 @@ public class ProfileManagerController {
 
     //Current logged in user mappings:
     @PostMapping
-    public ResponseEntity<ProfileResponseDTO> postProfile(@RequestHeader("Authorization") String authHeader, @RequestBody ProfileRequestDTO profileRequestDTO){
+    public ResponseEntity<ProfileResponseDTO> postProfile(@Valid @RequestBody ProfileRequestDTO profileRequestDTO, @RequestHeader("Authorization") String authHeader){
         FireBaseUser fireBaseUser = userInContextService.getcurrentUser();
         Profile profile = ProfileRequestDTOMapper.DTOToProfile(profileRequestDTO,fireBaseUser ); //the profile will contain the id.
         return new ResponseEntity<>(ProfileResponseDTOMapper.profileToDTO(profileManagerService.postProfile(profile, profileRequestDTO.getSearchQuery())), HttpStatus.OK);
