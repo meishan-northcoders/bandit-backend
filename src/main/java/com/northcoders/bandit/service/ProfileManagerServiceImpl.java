@@ -40,14 +40,20 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
         System.out.println(profile.toString());
         Optional<Profile> byfirebaseId = profileManagerRepository.findByfirebaseId(profile.getFirebaseId());
         Profile createdProfile = byfirebaseId.orElseGet(() -> profileManagerRepository.save(profile));
-        updateProfileSearchVector(createdProfile);
+        updateProfileSearchVector(createdProfile);// vector of descriptions and other text fields
         createSearchPreference(createdProfile, searchQuery);
         return createdProfile;
     }
 
     private void createSearchPreference(Profile createdProfile, String searchQuery) {
-        if (searchQuery == null) {
-            return;
+        if (searchQuery == null || searchQuery.isBlank()) {
+            searchQuery = createdProfile.getCity() + " " + createdProfile.getCountry();
+            if (createdProfile.getGenres() != null && !createdProfile.getGenres().isEmpty()) {
+                String genres = String.join(" ", createdProfile.getGenres().stream().map(Genre::getGenre)
+                        .toList());
+                searchQuery = searchQuery + " " + genres;
+                searchQuery = searchQuery.toLowerCase();
+            }
         }
         SearchPreference searchPreference = new SearchPreference();
         searchPreference.setProfile(createdProfile);
@@ -67,6 +73,16 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
         }
         if (profile.getCity() != null) {
             tokens.add(profile.getCity().toLowerCase());
+        }
+        if (profile.getGenres() != null && !profile.getGenres().isEmpty()) {
+            String joinGenre = String.join(" ", profile.getGenres().stream()
+                    .map(genre -> genre.getGenre().toLowerCase()).toList());
+            tokens.add(joinGenre);
+        }
+        if (profile.getInstruments() != null && !profile.getInstruments().isEmpty()) {
+            String joinInstruments = String.join(" ", profile.getInstruments().stream()
+                    .map(instrument -> instrument.getInstrument().toLowerCase()).toList());
+            tokens.add(joinInstruments);
         }
         String tokenString = String.join(" ", tokens);
         profileManagerRepository.updateSearchVector(profile.getProfile_id(), tokenString);
@@ -156,29 +172,30 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
         //TODO firebase implementation in here, placeholder code to provide 5 profiles below:
         ArrayList<Profile> filtered = new ArrayList<>();
+//
+//        Set<Genre> genres = new HashSet<>();
+//        Set<Instrument> instruments = new HashSet<>();
+//
+//        genres.add(new Genre("ROCK", null));
+//        instruments.add(new Instrument("BASS", null));
+//
+//        for (int i = 0; i < 5; i++) {
+//            Profile profile = new Profile("test" + i, "ABCD123X", "Meishan", "test url", ProfileType.MUSICIAN,
+//                    "test description", 0f, 0f, 100f, "London", "UK", "Casual Advanced", genres, instruments);
+//            genres.forEach(genre -> {
+//                        Set<Profile> genreProfiles = new HashSet<>();
+//                        genreProfiles.add(profile);
+//                        genre.setProfiles(genreProfiles);
+//                    }
+//            );
+//            instruments.forEach(instrument -> {
+//                Set<Profile> instProfiles = new HashSet<>();
+//                instProfiles.add(profile);
+//                instrument.setProfiles(instProfiles);
+//            });
+//            filtered.add(profile);
+//        }
 
-        Set<Genre> genres = new HashSet<>();
-        Set<Instrument> instruments = new HashSet<>();
-
-        genres.add(new Genre("ROCK", null));
-        instruments.add(new Instrument("BASS", null));
-
-        for (int i = 0; i < 5; i++) {
-            Profile profile = new Profile("test" + i, "ABCD123X", "Meishan", "test url", ProfileType.MUSICIAN,
-                    "test description", 0f, 0f, 100f, "London", "UK", "Casual Advanced", genres, instruments);
-            genres.forEach(genre -> {
-                        Set<Profile> genreProfiles = new HashSet<>();
-                        genreProfiles.add(profile);
-                        genre.setProfiles(genreProfiles);
-                    }
-            );
-            instruments.forEach(instrument -> {
-                Set<Profile> instProfiles = new HashSet<>();
-                instProfiles.add(profile);
-                instrument.setProfiles(instProfiles);
-            });
-            filtered.add(profile);
-        }
 
         return filtered;
 
