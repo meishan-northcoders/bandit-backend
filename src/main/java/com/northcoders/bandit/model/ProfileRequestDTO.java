@@ -30,12 +30,21 @@ public class ProfileRequestDTO {
     @NotNull(message = "Instrument cannot be empty")
     private Set<Instrument> instruments;
 
+    @Pattern(regexp = "[a-zA-Z0-9', ]+", message = "search preference must not contain any special characters")
     private String searchQuery;
+    @NotNull(message = "city  cannot be empty")
+    @Pattern(regexp = "[a-zA-Z0-9- ]+", message = "city must not contain any special characters")
+    private String city;
+    @NotNull(message = "country  cannot be empty")
+    @Pattern(regexp = "[a-zA-Z0-9- ]+", message = "country must not contain any special characters")
+    private String country;
 
     public ProfileRequestDTO() {
     }
 
-    public ProfileRequestDTO(String img_url, String profileId, String userName, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments, String searchQuery) {
+    public ProfileRequestDTO(String img_url, String profileId, String userName, ProfileType profile_type,
+                             String description, float lat, float lon, float max_distance,
+                             Set<Genre> genres, Set<Instrument> instruments, String searchQuery, String city, String country) {
         this.img_url = img_url;
         this.profileId = profileId;
         this.userName = userName;
@@ -47,7 +56,10 @@ public class ProfileRequestDTO {
         this.genres = genres;
         this.instruments = instruments;
         this.searchQuery = searchQuery;
+        this.city = city;
+        this.country = country;
     }
+
     public String getImg_url() {
         return img_url;
     }
@@ -134,5 +146,21 @@ public class ProfileRequestDTO {
 
     public void setSearchQuery(String searchQuery) {
         this.searchQuery = searchQuery;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

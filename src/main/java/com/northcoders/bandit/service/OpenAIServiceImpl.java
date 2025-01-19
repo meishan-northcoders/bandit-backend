@@ -86,7 +86,7 @@ public class OpenAIServiceImpl implements OpenAIService {
                 .map(token -> token.replaceAll("\\p{Punct}", "").toLowerCase())
                 .filter(token -> !stopWords.contains(token))
                 .filter(str -> !str.isBlank())
-                .toList();
+                .collect(Collectors.toList());
         System.out.println("Filtered Tokens: " + filteredTokens);
         return filteredTokens;
     }

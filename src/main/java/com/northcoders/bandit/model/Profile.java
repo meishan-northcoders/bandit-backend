@@ -67,9 +67,22 @@ public class Profile {
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Set<Instrument> instruments;
 
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "profile", optional = false)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @OneToOne(mappedBy = "profile")
     private SearchPreference searchPreference;
+
+    public SearchPreference getSearchPreference() {
+        return searchPreference;
+    }
+
+    public void setSearchPreference(SearchPreference searchPreference) {
+        this.searchPreference = searchPreference;
+    }
+
+//    @OneToOne(fetch = FetchType.EAGER, mappedBy = "profile", optional =true)
+//    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+//    private SearchPreference searchPreference;
+
+
 
     public Profile() {
 
@@ -223,11 +236,11 @@ public class Profile {
         this.profile_tags = profile_tags;
     }
 
-    public SearchPreference getSearchPreference() {
-        return searchPreference;
-    }
-
-    public void setSearchPreference(SearchPreference searchPreference) {
-        this.searchPreference = searchPreference;
-    }
+//    public SearchPreference getSearchPreference() {
+//        return searchPreference;
+//    }
+//
+//    public void setSearchPreference(SearchPreference searchPreference) {
+//        this.searchPreference = searchPreference;
+//    }
 }

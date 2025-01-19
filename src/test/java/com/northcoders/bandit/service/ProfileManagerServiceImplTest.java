@@ -82,7 +82,7 @@ class ProfileManagerServiceImplTest {
         updatedProfile.setProfile_name("Vanessa Diaz");
         when(profileManagerRepository.findById(profileId)).thenReturn(Optional.of(existingProfile));
         when(profileManagerRepository.save(any(Profile.class))).thenReturn(updatedProfile);
-        Profile updProfile = profileManagerService.updateProfile(existingProfile, profileRequestDTO.getSearchQuery());
+        Profile updProfile = profileManagerService.updateProfile(existingProfile, "I am looking for a Guitarist in London");
         assertEquals(updatedProfile,updProfile);
         verify(profileManagerRepository,times(1)).findById(profileId);
         verify(profileManagerRepository,times(1)).save(existingProfile);

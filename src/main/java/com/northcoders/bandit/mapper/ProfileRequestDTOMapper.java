@@ -41,6 +41,9 @@ public class ProfileRequestDTOMapper {
         profile.setMax_distance(profileRequestDTO.getMax_distance());
         profile.setGenres(profileRequestDTO.getGenres());
         profile.setInstruments(profileRequestDTO.getInstruments());
+        profile.setCity(profileRequestDTO.getCity());
+        profile.setCountry(profileRequestDTO.getCountry());
+        // searchquery set will be happening in service layer
         return profile;
     }
 }

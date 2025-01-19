@@ -10,12 +10,23 @@ public class SearchPreference {
     private String profileId;
 
     @MapsId
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "profile_id", nullable = false)
     private Profile profile;
 
+
+
     @Column(name = "search_query")
     private String searchQuery;
+
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 
     public String getProfileId() {
         return profileId;
@@ -25,13 +36,13 @@ public class SearchPreference {
         this.profileId = profileId;
     }
 
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
+//    public Profile getProfile() {
+//        return profile;
+//    }
+//
+//    public void setProfile(Profile profile) {
+//        this.profile = profile;
+//    }
 
     public String getSearchQuery() {
         return searchQuery;
