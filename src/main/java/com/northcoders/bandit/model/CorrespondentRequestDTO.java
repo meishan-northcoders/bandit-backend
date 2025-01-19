@@ -1,13 +1,13 @@
 package com.northcoders.bandit.model;
 
-public class CorrespondentDTO {
+public class CorrespondentRequestDTO {
     private String correspondentId;
 
-    public CorrespondentDTO(String correspondentId) {
+    public CorrespondentRequestDTO(String correspondentId) {
         this.correspondentId = correspondentId;
     }
 
-    public CorrespondentDTO() {
+    public CorrespondentRequestDTO() {
     }
 
     public String getCorrespondentId() {

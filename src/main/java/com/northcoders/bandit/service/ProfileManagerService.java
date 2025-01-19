@@ -12,6 +12,8 @@ public interface ProfileManagerService {
 
     ArrayList<Profile> getAllProfiles();
 
+    Profile updateProfile(Profile profile);
+
     boolean deleteById(String id);
 
     ArrayList<Profile> getFilteredProfiles();
