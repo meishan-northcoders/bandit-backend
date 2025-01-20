@@ -46,4 +46,6 @@ public class ProfileRequestDTOMapper {
         profile.setSearch_query(profileRequestDTO.getSearchQuery());
         return profile;
     }
+
+
 }

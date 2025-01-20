@@ -3,6 +3,7 @@ package com.northcoders.bandit.service;
 import com.northcoders.bandit.ProfileTestUtils;
 import com.northcoders.bandit.model.FireBaseUser;
 import com.northcoders.bandit.model.Profile;
+import com.northcoders.bandit.model.ProfileRequestDTO;
 import com.northcoders.bandit.model.ProfileResponseDTO;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
@@ -73,14 +74,18 @@ class ProfileManagerServiceImplTest {
     @Test
     void testUpdateProfile() {
         String profileId = "CX405";
+        ProfileRequestDTO incomingProfile = new ProfileRequestDTO();
+        incomingProfile.setUserName("Vanessa Diaz");
+        incomingProfile.setSearchQuery("I am looking for a Guitarist in London");
         Profile existingProfile =new Profile();
         existingProfile.setProfile_name("Vanessa");
         existingProfile.setSearch_query("I am looking for a Guitarist in London");
         Profile updatedProfile  =new Profile();
         updatedProfile.setProfile_name("Vanessa Diaz");
-        when(profileManagerRepository.findById(profileId)).thenReturn(Optional.of(existingProfile));
+        updatedProfile.setSearch_query("I am looking for a Guitarist in London");
+        when(profileManagerRepository.findByfirebaseId(profileId)).thenReturn(Optional.of(existingProfile));
         when(profileManagerRepository.save(any(Profile.class))).thenReturn(updatedProfile);
-        Profile updProfile = profileManagerService.updateProfile(existingProfile);
+        Profile updProfile = profileManagerService.updateProfile(incomingProfile);
         assertEquals(updatedProfile,updProfile);
         verify(profileManagerRepository,times(1)).findById(profileId);
         verify(profileManagerRepository,times(1)).save(existingProfile);

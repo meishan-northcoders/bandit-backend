@@ -1,10 +1,8 @@
 package com.northcoders.bandit.service;
 
+import com.northcoders.bandit.mapper.ProfileRequestDTOMapper;
 import com.northcoders.bandit.mapper.ProfileResponseDTOMapper;
-import com.northcoders.bandit.model.Genre;
-import com.northcoders.bandit.model.Profile;
-import com.northcoders.bandit.model.ProfileRankDTO;
-import com.northcoders.bandit.model.ProfileResponseDTO;
+import com.northcoders.bandit.model.*;
 import com.northcoders.bandit.repository.GenreManagerRepository;
 import com.northcoders.bandit.repository.InstrumentManagerRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
@@ -83,51 +81,55 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     }
 
     @Override
-    public Profile updateProfile(Profile profile) {
+    public Profile updateProfile(ProfileRequestDTO profileRequestDTO) {
+            String userId = userInContextService.getcurrentUser().getUserId();
+            Profile existingProfile = profileManagerRepository.findByfirebaseId(userId).orElseThrow();
 
-        //not sure if this is necessary but have added anyway in case - merges the new and existing if any fields in new are null.
-        Optional<Profile> existingOpt = profileManagerRepository.findById(profile.getProfile_id());
-        if (existingOpt.isPresent()) {
-            Profile existing = existingOpt.get();
-            if (profile.getProfile_type() == null) {
-                profile.setProfile_type(existing.getProfile_type());
-            }
-            if (profile.getDescription() == null) {
-                profile.setDescription(existing.getDescription());
-            }
-            if (profile.getImg_url() == null) {
-                profile.setImg_url(existing.getImg_url());
-            }
-            if (profile.getLat() == 0) {
-                profile.setLat(existing.getLat());
-            }
-            if (profile.getLon() == 0) {
-                profile.setLon(existing.getLon());
-            }
-            if (profile.getMax_distance() == 0) {
-                profile.setMax_distance(existing.getMax_distance());
-            }
-            if (profile.getGenres() == null) {
-                profile.setGenres(existing.getGenres());
-            }
-            if (profile.getInstruments() == null) {
-                profile.setInstruments(existing.getInstruments());
-            }
-            if (profile.getSearch_query() == null) {
-                profile.setSearch_query(existing.getSearch_query());
-            }
+                if (profileRequestDTO.getProfile_type() != null ) {
+                    existingProfile.setProfile_type(profileRequestDTO.getProfile_type());
+                }
+                if (profileRequestDTO.getDescription() != null && !profileRequestDTO.getDescription().isBlank()) {
+                    existingProfile.setDescription(profileRequestDTO.getDescription());
+                }
+                if (profileRequestDTO.getImg_url() != null && !profileRequestDTO.getImg_url().isBlank()) {
+                    existingProfile.setImg_url(profileRequestDTO.getImg_url());
+                }
+                if (profileRequestDTO.getLat() !=0 ) {
+                    existingProfile.setLat(profileRequestDTO.getLat());
+                }
+                if (profileRequestDTO.getLon() != 0) {
+                    existingProfile.setLon(profileRequestDTO.getLon());
+                }
+                if (profileRequestDTO.getMax_distance() != 0) {
+                    existingProfile.setMax_distance(profileRequestDTO.getMax_distance());
+                }
+                if (profileRequestDTO.getGenres() != null) {
+                    existingProfile.setGenres(profileRequestDTO.getGenres());
+                }
+                if (profileRequestDTO.getInstruments() != null) {
+                    existingProfile.setInstruments(profileRequestDTO.getInstruments());
+                }
+                if (profileRequestDTO.getSearchQuery() != null && !profileRequestDTO.getSearchQuery().isBlank()) {
+                    existingProfile.setSearch_query(profileRequestDTO.getSearchQuery());
+                }
+                if (profileRequestDTO.getCity() != null && !profileRequestDTO.getCity().isBlank()) {
+                    existingProfile.setCity(profileRequestDTO.getCity());
+                }
+                if (profileRequestDTO.getCountry() != null && !profileRequestDTO.getCountry().isBlank()) {
+                    existingProfile.setCountry(profileRequestDTO.getCountry());
+                }
+
+                Profile savedProfile = profileManagerRepository.save(existingProfile);
+                updateProfileSearchVector(savedProfile);
+                if (savedProfile.getSearch_query() == null) {
+                    createSearchPreferenceQuery(savedProfile, savedProfile.getSearch_query());
+                } else if (!profileRequestDTO.getSearchQuery().equalsIgnoreCase(savedProfile.getSearch_query())) {
+                    updateSearchPreferenceQuery(savedProfile, profileRequestDTO.getSearchQuery());
+                }
+                return savedProfile;
+
+
         }
-
-        Profile savedProfile = profileManagerRepository.save(profile);
-        updateProfileSearchVector(savedProfile);
-
-        if (profile.getSearch_query() == null) {
-            createSearchPreferenceQuery(savedProfile, savedProfile.getSearch_query());
-        } else if (!profile.getSearch_query().equalsIgnoreCase(savedProfile.getSearch_query())) {
-            updateSearchPreferenceQuery(savedProfile, profile.getSearch_query());
-        }
-        return savedProfile;
-    }
 
     private void createSearchPreferenceQuery(Profile createdProfile, String searchQuery) {
         if (searchQuery == null || searchQuery.isBlank()) {

@@ -1,6 +1,7 @@
 package com.northcoders.bandit.service;
 
 import com.northcoders.bandit.model.Profile;
+import com.northcoders.bandit.model.ProfileRequestDTO;
 import com.northcoders.bandit.model.ProfileResponseDTO;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public interface ProfileManagerService {
 
     ArrayList<ProfileResponseDTO> getAllProfiles();
 
-    Profile updateProfile(Profile profile);
+    Profile updateProfile(ProfileRequestDTO profile);
 
     boolean deleteById(String id);
 
