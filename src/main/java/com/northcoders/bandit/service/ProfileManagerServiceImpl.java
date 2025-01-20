@@ -13,10 +13,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfileManagerServiceImpl implements ProfileManagerService {
@@ -167,7 +165,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
         Profile userProfile = getUserProfile().orElseThrow();
 
         if (userProfile.getSearch_query() == null) {
-            return profileManagerRepository.findProfilesLimit();
+            return profileManagerRepository.findProfilesLimit(userProfile.getProfile_id());
         }
 
 
@@ -187,11 +185,15 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
             }
         }
 
-        List<Profile> profilesBy = profileManagerRepository.findProfilesBy(profilesWithRank.stream()
-                .map(ProfileRankDTO::getProfileId)
-                .toList());
+        Map<String, Float> profileRankMap = profilesWithRank.stream().collect(Collectors.toMap(ProfileRankDTO::getProfileId, ProfileRankDTO::getProfileRank));
+
+        List<Profile> profilesBy = profileManagerRepository.findProfilesBy(profileRankMap.keySet()).stream()
+                .map(profile -> {
+                    profile.setProfileRank(profileRankMap.get(profile.getProfile_id()));
+                    return profile;
+                }).sorted(Comparator.comparing(Profile::getProfileRank, Comparator.reverseOrder())).toList();
         if (profilesBy.isEmpty()) {
-            return profileManagerRepository.findProfilesLimit();
+            return profileManagerRepository.findProfilesLimit(userProfile.getProfile_id());
 
         }
         return profilesBy;

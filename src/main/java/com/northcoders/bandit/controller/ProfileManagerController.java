@@ -64,7 +64,8 @@ public class ProfileManagerController {
                         profile.getInstruments(),
                         profile.getCity(),
                         profile.getCountry(),
-                        profile.getSearch_query()
+                        profile.getSearch_query(),
+                        profile.getProfileRank()
                 ));
         return new ResponseEntity<>(profileResponseDTO, HttpStatus.OK);
     }

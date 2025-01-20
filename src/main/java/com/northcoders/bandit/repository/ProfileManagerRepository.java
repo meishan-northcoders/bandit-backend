@@ -14,6 +14,7 @@ import javax.swing.text.html.Option;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface ProfileManagerRepository extends JpaRepository<Profile, String> {
@@ -43,7 +44,7 @@ public interface ProfileManagerRepository extends JpaRepository<Profile, String>
              SELECT p.profile_id,
               ts_rank(p.profile_search_vector,
                               (SELECT search_query_ts FROM profile WHERE profile_id = :profileId)) AS profileRank
-               FROM profile p
+               FROM profile p where p.profile_id != :profileId
                ORDER BY profileRank desc LIMIT 20
             """, nativeQuery = true)
     List<ProfileRankDTO> findProfilesWithRank(@Param("profileId") String profileId);
@@ -53,7 +54,7 @@ public interface ProfileManagerRepository extends JpaRepository<Profile, String>
              SELECT p.profile_id,
                     ts_rank(p.profile_search_vector,
                             (SELECT regexp_replace(search_query_ts::text, '&', '|', 'g')::tsquery FROM profile WHERE profile_id = :profileId)) AS profileRank
-             FROM profile p
+             FROM profile p where p.profile_id != :profileId
              ORDER BY profileRank desc LIMIT 20
             """, nativeQuery = true)
     List<ProfileRankDTO> findProfilesWithRankByOr(@Param("profileId") String profileId);
@@ -61,15 +62,15 @@ public interface ProfileManagerRepository extends JpaRepository<Profile, String>
 
     @Query(value = """
              SELECT *
-               FROM profile p LIMIT 20
+               FROM profile p where p.profile_id != :profileId LIMIT 20
             """, nativeQuery = true)
-    List<Profile> findProfilesLimit();
+    List<Profile> findProfilesLimit(@Param("profileId") String profileId);
 
 
     @Query(value = """
              SELECT *
                FROM profile p where p.profile_id in (:profileIds)
             """, nativeQuery = true)
-    List<Profile> findProfilesBy(List<String> profileIds);
+    List<Profile> findProfilesBy(Set<String> profileIds);
 
 }

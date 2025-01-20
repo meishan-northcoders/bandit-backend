@@ -29,11 +29,13 @@ public class ProfileResponseDTO {
 
     private String searchQuery;
 
+    private Float profileRank;
+
 
     public ProfileResponseDTO() {
     }
 
-    public ProfileResponseDTO(String img_url, String profile_id, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments, String city, String country, String searchQuery) {
+    public ProfileResponseDTO(String img_url, String profile_id, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments, String city, String country, String searchQuery, Float profileRank) {
         this.img_url = img_url;
         this.profile_id = profile_id;
         this.profile_type = profile_type;
@@ -46,6 +48,7 @@ public class ProfileResponseDTO {
         this.city = city;
         this.country = country;
         this.searchQuery = searchQuery;
+        this.profileRank = profileRank;
     }
 
     public String getImg_url() {
@@ -150,5 +153,13 @@ public class ProfileResponseDTO {
 
     public void setSearchQuery(String searchQuery) {
         this.searchQuery = searchQuery;
+    }
+
+    public Float getProfileRank() {
+        return profileRank;
+    }
+
+    public void setProfileRank(Float profileRank) {
+        this.profileRank = profileRank;
     }
 }
