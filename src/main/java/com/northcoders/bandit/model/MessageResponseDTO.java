@@ -2,6 +2,8 @@ package com.northcoders.bandit.model;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.Random;
+import java.util.UUID;
 
 
 public class MessageResponseDTO {
@@ -53,4 +55,5 @@ public class MessageResponseDTO {
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
+
 }

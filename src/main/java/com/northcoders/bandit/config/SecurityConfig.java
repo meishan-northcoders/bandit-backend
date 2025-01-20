@@ -21,8 +21,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/actuator/**",
-                                "/api/v1/**"
+                                "/actuator/**"
+                                //, "/api/v1/**"
                         )
                         .permitAll() // replace with wildcard to permit
                         .anyRequest().authenticated()

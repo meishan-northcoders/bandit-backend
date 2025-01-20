@@ -16,10 +16,10 @@ public class GreetingController {
     @Autowired
     UserInContextService userInContextService;
     @GetMapping("/greeting")
-    public ResponseEntity<?> getGreetings(@RequestHeader("Authorization") String authHeader) {
-        //System.out.println(authHeader);
+    public ResponseEntity<?> getGreetings() {
         FireBaseUser user = userInContextService.getcurrentUser();
-        if(user != null){
+        if(user != null)
+        {
             return new ResponseEntity<>(user,HttpStatus.OK);
         }
         return new ResponseEntity<>( "Hello World",HttpStatus.OK);

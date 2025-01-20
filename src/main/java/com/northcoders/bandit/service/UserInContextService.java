@@ -5,6 +5,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
+
 @Service
 public class UserInContextService {
     public FireBaseUser getcurrentUser()
@@ -22,5 +24,9 @@ public class UserInContextService {
         mockedFirebaseUser.setEmailVerified(true);
         return mockedFirebaseUser;
     }
+
+
+
+
 
 }

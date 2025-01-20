@@ -3,6 +3,7 @@ package com.northcoders.bandit.model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -12,7 +13,20 @@ public class Profile {
 
     //Firebase will generate this id as a STRING
     @Id
+    /** Issue : profileID Generation issue
+     * @GeneratedValue(strategy = GenerationType.UUID)
+     * if id is annotated with generated,
+     * its value is generated at the time of save, and therefore
+     *  when trying to fetch the relationship between existing genre and profile(genre is the primary key in this case),
+     *  it fails and tries to save Genre as new value due to Cascade all.
+     *  */
     private String profile_id;
+
+    @Column(name = "firebase_id")
+    private String firebaseId;
+
+    @Column
+    private String profile_name;
 
     @Column
     private String img_url;
@@ -36,6 +50,21 @@ public class Profile {
     @OneToMany(mappedBy = "profile")
     private List<Favourites> favourites;
 
+    @Column
+    private String city;
+
+    @Column
+    private String country;
+
+    @Column
+    private String profile_tags;
+
+    @Column
+    private String search_query;
+
+    @Transient
+    private Float profileRank;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinTable(name = "profile_genre",
@@ -55,16 +84,22 @@ public class Profile {
     }
 
 
-    public Profile(String profile_id, String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, Set<Genre> genres, Set<Instrument> instruments, List<Favourites> favourites) {
+    public Profile(String profile_id, String firebase_id, String profile_name, String img_url, ProfileType profile_type, String description, float lat, float lon, float max_distance, String city, String country, String profileTags, String searchQuery, Set<Genre> genres, Set<Instrument> instruments,List<Favourites> favourites) {
         this.profile_id = profile_id;
+        this.firebaseId = firebase_id;
         this.img_url = img_url;
         this.profile_type = profile_type;
         this.description = description;
         this.lat = lat;
         this.lon = lon;
         this.max_distance = max_distance;
+        this.city = city;
+        this.country = country;
+        this.profile_tags = profileTags;
+        this.search_query = searchQuery;
         this.genres = genres;
         this.instruments = instruments;
+        this.profile_name = profile_name;
         this.favourites = favourites;
     }
 
@@ -156,4 +191,69 @@ public class Profile {
     public void setInstruments(Set<Instrument> instruments) {
         this.instruments = instruments;
     }
+
+    public String getFirebaseId() {
+        return firebaseId;
+    }
+
+    public void setFirebaseId(String firebase_id) {
+        this.firebaseId = firebase_id;
+    }
+
+
+    public String getProfile_name() {
+        return profile_name;
+    }
+
+    public void setProfile_name(String profile_name) {
+        this.profile_name = profile_name;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getProfile_tags() {
+        return profile_tags;
+    }
+
+    public void setProfile_tags(String profile_tags) {
+        this.profile_tags = profile_tags;
+    }
+
+    public String getSearch_query() {
+        return search_query;
+    }
+
+    public void setSearch_query(String search_query) {
+        this.search_query = search_query;
+    }
+
+    public Float getProfileRank() {
+        return profileRank;
+    }
+
+    public void setProfileRank(Float profileRank) {
+        this.profileRank = profileRank;
+    }
+
+    //    public SearchPreference getSearchPreference() {
+//        return searchPreference;
+//    }
+//
+//    public void setSearchPreference(SearchPreference searchPreference) {
+//        this.searchPreference = searchPreference;
+//    }
 }

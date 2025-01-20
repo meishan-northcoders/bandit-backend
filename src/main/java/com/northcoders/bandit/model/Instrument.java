@@ -2,6 +2,8 @@ package com.northcoders.bandit.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.Set;
 
@@ -9,9 +11,9 @@ import java.util.Set;
 @Table(name = "instrument")
 public class Instrument {
 
-
     //TODO refactor into string for hashtag style extension in frontend
     @Id
+    @Pattern(regexp = "[a-zA-Z0-9- ]+", message = "Genre must not contain any special characters")
     private String instrument;
 
     @JsonIgnore
@@ -23,7 +25,7 @@ public class Instrument {
     }
 
     public Instrument( String instType, Set<Profile> profiles) {
-        this.instrument = instType;
+        this.instrument = instType.toUpperCase();
         this.profiles = profiles;
     }
 
@@ -33,7 +35,7 @@ public class Instrument {
     }
 
     public void setInstrument(String instrument) {
-        this.instrument = instrument;
+        this.instrument = instrument.toUpperCase();
     }
 
     public Set<Profile> getProfiles() {

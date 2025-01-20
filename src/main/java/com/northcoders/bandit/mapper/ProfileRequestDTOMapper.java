@@ -1,8 +1,10 @@
 package com.northcoders.bandit.mapper;
 
+import com.northcoders.bandit.model.FireBaseUser;
 import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.model.ProfileRequestDTO;
-import com.northcoders.bandit.model.ProfileResponseDTO;
+
+import java.util.UUID;
 
 public class ProfileRequestDTOMapper {
 
@@ -24,23 +26,26 @@ public class ProfileRequestDTOMapper {
         return profileRequestDTO;
     }
 
-    public static Profile DTOToProfile(ProfileRequestDTO profileRequestDTO){
-
+    public static Profile DTOToProfile(ProfileRequestDTO profileRequestDTO, FireBaseUser fireBaseUser){
         Profile profile = new Profile();
-
-        tempIdCounter++;
-
-        profile.setProfile_id("replace this id with firebase id" + tempIdCounter);//TODO get id from firebase helper class
+        /**
+         * * to solve profileID Generation issue, setting uuid here, refer to #profileID Generation issue, described in Profile Entity */
+        profile.setProfile_id(UUID.randomUUID().toString());
+        profile.setFirebaseId(fireBaseUser.getUserId());
+        profile.setProfile_name((profileRequestDTO.getUserName()== null || profileRequestDTO.getUserName().isBlank())? fireBaseUser.getUserName(): profileRequestDTO.getUserName());
         profile.setDescription(profileRequestDTO.getDescription());
         profile.setProfile_type(profileRequestDTO.getProfile_type());
-        profile.setImg_url(profileRequestDTO.getImg_url());
+        profile.setImg_url((profileRequestDTO.getImg_url()== null || profileRequestDTO.getImg_url().isBlank())? fireBaseUser.getGooglePictureLink() : profileRequestDTO.getImg_url());
         profile.setLat(profileRequestDTO.getLat());
         profile.setLon(profileRequestDTO.getLon());
         profile.setMax_distance(profileRequestDTO.getMax_distance());
         profile.setGenres(profileRequestDTO.getGenres());
         profile.setInstruments(profileRequestDTO.getInstruments());
-
+        profile.setCity(profileRequestDTO.getCity());
+        profile.setCountry(profileRequestDTO.getCountry());
+        profile.setSearch_query(profileRequestDTO.getSearchQuery());
         return profile;
-
     }
+
+
 }

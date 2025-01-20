@@ -24,8 +24,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 
 @SpringBootTest
@@ -54,11 +52,11 @@ class ProfileManagerControllerTest {
     @DisplayName("Tests get all profiles returns all profiles")
     void getAllProfiles() throws Exception {
         //Arrange
-        Profile profile_1 = ProfileTestUtils.createTestProfile(1L);
-        Profile profile_2 = ProfileTestUtils.createTestProfile(2L);
+        ProfileResponseDTO profile_1 = ProfileTestUtils.createTestProfileResponseDTO(1L);
+        ProfileResponseDTO profile_2 = ProfileTestUtils.createTestProfileResponseDTO(2L);
 
 
-        ArrayList<Profile> mockData = new ArrayList<>();
+        ArrayList<ProfileResponseDTO> mockData = new ArrayList<>();
 
         mockData.add(profile_1);
         mockData.add(profile_2);
@@ -81,9 +79,9 @@ class ProfileManagerControllerTest {
     @DisplayName("Tests post profile returns posted profile")
     void postProfile() throws Exception {
         //Arrange
-        Profile profile = ProfileTestUtils.createTestProfile(1L);
+        Profile profile = ProfileTestUtils.createTestProfile("C401");
 
-        when(profileManagerService.postProfile(profile)).thenReturn(profile);
+        when(profileManagerService.postProfile(any(Profile.class))).thenReturn(profile);
         //Act
         //Assert
         this.mockMvcController.perform(post("/profile")
@@ -97,14 +95,14 @@ class ProfileManagerControllerTest {
     @Test
     @DisplayName("Tests delete profile returns posted profile")
     void deleteProfile() throws Exception {
-//        Profile profile = ProfileTestUtils.createTestProfile(1L);
-//
-//        when(profileManagerService.deleteById(1L)).thenReturn(profile);
-//
-//        this.mockMvcController.perform(delete("/profile?id=1")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(mapper.writeValueAsString(profile)))
-//            .andExpect(MockMvcResultMatchers.status().isOk())
-//            .andReturn();
+        Profile profile = ProfileTestUtils.createTestProfile("1L");
+
+        when(profileManagerService.deleteById("1L")).thenReturn(true);
+
+        this.mockMvcController.perform(delete("/profile?id=1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(profile)))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
     }
 }
