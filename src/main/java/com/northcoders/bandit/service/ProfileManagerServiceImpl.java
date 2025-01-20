@@ -51,14 +51,14 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
             throw new EntityExistsException("Active profile already exists for the current user");
         }
         Profile createdProfile = byfirebaseId.orElseGet(() -> profileManagerRepository.save(profile));
-        updateProfileSearchVector(createdProfile);// vector of descriptions and other text fields
+        updateProfileSearchVector(createdProfile);// vector of descriptions and other text fields with number of times the word occurs
         createSearchPreferenceQuery(createdProfile, profile.getSearch_query());
         return createdProfile;
     }
 
     private void updateProfileSearchVector(Profile profile) {
         String profileDesc = profile.getProfile_tags() == null ? profile.getDescription() : profile.getDescription() + " " + profile.getProfile_tags();
-        List<String> tokens = openAIService.tokenize(profileDesc);
+        List<String> tokens = openAIService.tokenize(profileDesc); // create bag of words using english-tokens resource included in project and
         if (profile.getCountry() != null) {
             tokens.add(profile.getCountry().toLowerCase());
         }
@@ -74,6 +74,9 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
             String joinInstruments = String.join(" ", profile.getInstruments().stream()
                     .map(instrument -> instrument.getInstrument().toLowerCase()).toList());
             tokens.add(joinInstruments);
+        }
+        if(profile.getProfile_type() != null){
+            tokens.add(profile.getProfile_type().name());
         }
         String tokenString = String.join(" ", tokens);
         profileManagerRepository.updateSearchVector(profile.getProfile_id(), tokenString);
@@ -153,8 +156,10 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     }
 
     private void updateSearchPreferenceQuery(Profile dbProfile, String searchQuery) {
-        String tsQuery = openAIService.buildTsQuery(searchQuery);
+        String tsQuery = openAIService.buildTsQuery(searchQuery); //chat GPT to return query constructed
+        // to use POSTGRES TSQUERY ,eg: rock & drummer & ( manchester | london )
         profileManagerRepository.updateSearchQuery(dbProfile.getProfile_id(), searchQuery, tsQuery);
+        // storing my search_query_ts using native query
     }
 
     @Override
@@ -162,7 +167,12 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
     public boolean deleteById(String id) {
         Optional<Profile> profileOptional = profileManagerRepository.findByfirebaseId(id);
         if (profileOptional.isPresent()) {
-            profileManagerRepository.deleteByfirebaseId(id);
+            profileOptional.get().getGenres().clear();
+            profileOptional.get().getInstruments().clear();
+            profileManagerRepository.save(profileOptional.get()); // Update the database to remove join table entries
+
+            // Delete the profile
+            profileManagerRepository.delete(profileOptional.get());
             return true;
         }
             return false;
@@ -170,28 +180,26 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
     @Override
     public List<Profile> getFilteredProfiles() {
-        //Profile currentUser = getCurrentUser();
-        //get current logged-in user's profile, and perform operations to return relevant other profiles for user to swipe.
         Profile userProfile = getUserProfile().orElseThrow();
 
         if (userProfile.getSearch_query() == null) {
-            return profileManagerRepository.findProfilesLimit(userProfile.getProfile_id());
+            return profileManagerRepository.findProfilesLimit(userProfile.getProfile_id());  // max 20 records
         }
-
-
         List<ProfileRankDTO> profilesWithRank = profileManagerRepository.findProfilesWithRank(userProfile.getProfile_id());
-        Optional<Float> maxRankOpt = profilesWithRank.stream().max(Comparator.comparing(ProfileRankDTO::getProfileRank))
+        Optional<Float> maxRankOpt = profilesWithRank.stream()
+                .max(Comparator.comparing(ProfileRankDTO::getProfileRank))
                 .map(ProfileRankDTO::getProfileRank);
 
-
-        if (profilesWithRank.isEmpty()) {
+        if (profilesWithRank.isEmpty()) {   // fail safe , when for whatever reason we dont get data
             //run alt query
-            profilesWithRank = profileManagerRepository.findProfilesWithRankByOr(userProfile.getProfile_id());
+            profilesWithRank = profileManagerRepository.findProfilesWithRankByOr(userProfile.getProfile_id());  // instead of
+            // query with & on search query keys use | this time
         } else {
             Float maxRank = maxRankOpt.orElseThrow();
             if (maxRank.compareTo(Float.valueOf("0.00001")) < 0) {
                 //run alt query
-                profilesWithRank = profileManagerRepository.findProfilesWithRankByOr(userProfile.getProfile_id());
+                profilesWithRank = profileManagerRepository.findProfilesWithRankByOr(userProfile.getProfile_id()); // if rank
+                // exists but  signifies less similarities
             }
         }
 
@@ -204,7 +212,6 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
                 }).sorted(Comparator.comparing(Profile::getProfileRank, Comparator.reverseOrder())).toList();
         if (profilesBy.isEmpty()) {
             return profileManagerRepository.findProfilesLimit(userProfile.getProfile_id());
-
         }
         return profilesBy;
     }

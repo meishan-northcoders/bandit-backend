@@ -65,18 +65,18 @@ public class Profile {
     @Transient
     private Float profileRank;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    //@Cascade({org.hibernate.annotations.CascadeType.PERSIST, org.hibernate.annotations.CascadeType.MERGE})
     @JoinTable(name = "profile_genre",
     joinColumns = @JoinColumn(name = "profile_id"),
     inverseJoinColumns = @JoinColumn(name = "genre"))
     private Set<Genre> genres;
 
-    @ManyToMany(fetch = FetchType.EAGER) //I don't really understand FetchType but this prevents HttpMessageNotWritableException for Delete mapping
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST}) //I don't really understand FetchType but this prevents HttpMessageNotWritableException for Delete mapping
     @JoinTable(name = "profile_instrument",
             joinColumns = @JoinColumn(name = "profile_id"),
             inverseJoinColumns = @JoinColumn(name = "instrument_id"))
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    //@Cascade({org.hibernate.annotations.CascadeType.PERSIST, org.hibernate.annotations.CascadeType.MERGE})
     private Set<Instrument> instruments;
 
     public Profile() {

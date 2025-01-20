@@ -94,6 +94,7 @@ public class OpenAIServiceImpl implements OpenAIService {
 
     @Override
     public String buildTsQuery(String query) {
+
         ChatRequest chatRequest = ChatRequest.builder().model("gpt-4o-mini").temperature(0.0).maxCompletionTokens(2048)
                 .topP(1.0).frequencyPenalty(0.0).presencePenalty(0.0)
                 .message(ChatMessage.SystemMessage.of("Transform an input search sentence into a structured query using association operators: & (And), | (Or), and ! (Not). The generated query string should be compliant with Postgres TsQuery format.\n" +
@@ -141,7 +142,7 @@ public class OpenAIServiceImpl implements OpenAIService {
                         "  - \"don't want\" implies '!' with vocalist.\n" +
                         "- Constructed structure using operators: Energetic & Guitarist &  UK & ! Glasgow & ! vocalist\n" +
                         "\n" +
-                        "**Output:** Energetic & Guitarist &  UK & ! Glasgow & ! vocalist\n" +
+                        "**Output:** Energetic & Guitarist & UK & !Glasgow & !vocalist\n" +
                         "\n" +
                         "\n" +
                         "\n" +
@@ -152,7 +153,7 @@ public class OpenAIServiceImpl implements OpenAIService {
                         "\n" +
                         "**Input:** \"I am looking for a lead Vocalist for my band. I'm based of London. Search for anyone in Manchester or Glasgow as well. Also should have some Guitar playing skills.\"\n" +
                         "\n" +
-                        "**Output:**  Vocalist & (London | Manchester | Glasgow) &  Guitar\n" +
+                        "**Output:**  Vocalist & (London | Manchester | Glasgow) & Guitar\n" +
                         "\n" +
                         "**Input:** \"Looking for a lead Guitarist in Leeds. Also suggest someone else who can play drums and is from London.\"\n" +
                         "\n" +

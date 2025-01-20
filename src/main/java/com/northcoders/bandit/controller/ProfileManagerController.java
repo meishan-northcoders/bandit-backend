@@ -56,6 +56,7 @@ public class ProfileManagerController {
     public ResponseEntity<Optional<ProfileResponseDTO>> getUserProfile() {
         Optional<ProfileResponseDTO> profileResponseDTO = profileManagerService.getUserProfile().map(profile ->
                 new ProfileResponseDTO(profile.getImg_url(),
+                        profile.getProfile_name(),
                         profile.getProfile_id(),
                         profile.getProfile_type(),
                         profile.getDescription(),
@@ -102,6 +103,5 @@ public class ProfileManagerController {
 
         return new ResponseEntity<>(profileManagerService.getFilteredProfiles(), HttpStatus.OK);
     }
-
 
 }
