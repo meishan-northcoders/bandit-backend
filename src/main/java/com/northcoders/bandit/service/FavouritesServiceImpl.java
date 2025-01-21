@@ -7,6 +7,7 @@ import com.northcoders.bandit.model.LikedOrDisliked;
 import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.repository.FavouritesRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,11 @@ public class FavouritesServiceImpl implements FavouritesService {
 
     @Autowired
     private ProfileManagerService profileManagerService;
+
+    @Autowired
+    private UserInContextService userInContextService;
+    @Autowired
+    private ProfileManagerRepository profileManagerRepository;
 
     @Autowired
     public FavouritesServiceImpl (FavouritesRepository favouritesRepository){
@@ -51,20 +57,23 @@ public class FavouritesServiceImpl implements FavouritesService {
     // User swipes right; Add profile to favourites
     @Override
     public Favourites addFavourite(AddToFavouriteRequestDTO requestDTO){
-        String favProfileId = requestDTO.getFavProfileId();
-        String yrFavProfileId = requestDTO.getYrFavProfileId();
+        //String favProfileId = requestDTO.getFavProfileId();
+        String userId = userInContextService.getcurrentUser().getUserId();
+        Profile currUserProfile = profileManagerRepository.findByfirebaseId(userId).orElseThrow();
+        String currUserProfileId = currUserProfile.getProfile_id();
+        String likedFavProfileId = requestDTO.getYrFavProfileId();
 
-        Profile profile = profileManagerService.findById(favProfileId);
+       // Profile profile = profileManagerService.findById(favProfileId);
 
-        if (!profileManagerService.existsByProfileId(yrFavProfileId)) {
-            throw new InvalidDTOException(String.format("Your Profile id %s not found", yrFavProfileId));
+        if (!profileManagerService.existsByProfileId(likedFavProfileId)) {
+            throw new InvalidDTOException(String.format("Profile id you liked %s not found", likedFavProfileId));
         }
 
         Favourites accountToSave = new Favourites();
-        accountToSave.setFavProfileId(favProfileId);
-        accountToSave.setYrFavProfileId(yrFavProfileId);
-        accountToSave.setIsLikedOrDisliked(LikedOrDisliked.DEFAULT);
-        accountToSave.setProfile(profile);
+        accountToSave.setFavProfileId(currUserProfileId);
+        accountToSave.setYrFavProfileId(likedFavProfileId);
+        accountToSave.setIsLikedOrDisliked(LikedOrDisliked.LIKE);
+        accountToSave.setProfile(currUserProfile);
 
         return favouritesRepository.save(accountToSave);
     }

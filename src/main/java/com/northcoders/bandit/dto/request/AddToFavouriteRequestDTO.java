@@ -16,4 +16,6 @@ public class AddToFavouriteRequestDTO {
     public String getYrFavProfileId() {
         return yrFavProfileId;
     }
+
+
 }

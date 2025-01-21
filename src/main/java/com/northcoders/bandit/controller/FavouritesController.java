@@ -36,8 +36,8 @@ public class FavouritesController {
         return profileManagerController.getUserFavourites(getFavouritesFromId);
     }
 
-    @PostMapping("")
-    public ResponseEntity<Favourites> addFavourite(@RequestBody AddToFavouriteRequestDTO requestDTO) {
+    @PostMapping
+    public ResponseEntity<?> addFavourite(@RequestBody AddToFavouriteRequestDTO requestDTO) {
         return new ResponseEntity<>(favouritesService.addFavourite(requestDTO), HttpStatus.OK);
     }
 
