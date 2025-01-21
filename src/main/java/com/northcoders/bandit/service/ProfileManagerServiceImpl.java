@@ -120,9 +120,10 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
                 if (profileRequestDTO.getInstruments() != null) {
                     existingProfile.setInstruments(profileRequestDTO.getInstruments());
                 }
-                if (profileRequestDTO.getSearchQuery() != null && !profileRequestDTO.getSearchQuery().isBlank()) {
-                    existingProfile.setSearch_query(profileRequestDTO.getSearchQuery());
-                }
+                //doing this attribute update inside updateSearchPreferenceQuery
+//                if (profileRequestDTO.getSearchQuery() != null && !profileRequestDTO.getSearchQuery().isBlank()) {
+//                    existingProfile.setSearch_query(profileRequestDTO.getSearchQuery());
+//                }
                 if (profileRequestDTO.getCity() != null && !profileRequestDTO.getCity().isBlank()) {
                     existingProfile.setCity(profileRequestDTO.getCity());
                 }
@@ -132,7 +133,7 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
 
                 Profile savedProfile = profileManagerRepository.save(existingProfile);
                 updateProfileSearchVector(savedProfile);
-                if (savedProfile.getSearch_query() == null) {
+                if (savedProfile.getSearch_query() == null || savedProfile.getSearch_query().isBlank()) {
                     createSearchPreferenceQuery(savedProfile, savedProfile.getSearch_query());
                 } else if (!profileRequestDTO.getSearchQuery().equalsIgnoreCase(savedProfile.getSearch_query())) {
                     updateSearchPreferenceQuery(savedProfile, profileRequestDTO.getSearchQuery());
@@ -186,6 +187,10 @@ public class ProfileManagerServiceImpl implements ProfileManagerService {
             return profileManagerRepository.findProfilesLimit(userProfile.getProfile_id());  // max 20 records
         }
         List<ProfileRankDTO> profilesWithRank = profileManagerRepository.findProfilesWithRank(userProfile.getProfile_id());
+        boolean rankPresent = profilesWithRank.stream().anyMatch(p -> p.getProfileRank() != null);
+        if(!rankPresent){
+            return profileManagerRepository.findProfilesLimit(userProfile.getProfile_id());  // max 20 records
+        }
         Optional<Float> maxRankOpt = profilesWithRank.stream()
                 .max(Comparator.comparing(ProfileRankDTO::getProfileRank))
                 .map(ProfileRankDTO::getProfileRank);
