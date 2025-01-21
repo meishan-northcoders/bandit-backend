@@ -3,6 +3,8 @@ package com.northcoders.bandit.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.Set;
 
@@ -17,7 +19,8 @@ public class ProfileRequestDTO {
     @NotNull(message = "Profile type cannot be empty")
     private ProfileType profile_type;
     @NotNull(message = "Description type cannot be empty")
-    @Pattern(regexp = "[a-zA-Z0-9- ]+", message = "description must not contain any special characters")
+    @Size(max = 255, message = "Description cannot exceed 255 characters.")
+    @Pattern(regexp = "[a-zA-Z0-9-,.! ]+", message = "description must not contain any special characters")
     private String description;
     @NotNull(message = "latitude cannot be empty")
     private float lat;
@@ -30,7 +33,8 @@ public class ProfileRequestDTO {
     @NotNull(message = "Instrument cannot be empty")
     private Set<Instrument> instruments;
 
-    @Pattern(regexp = "[a-zA-Z0-9', ]+", message = "search preference must not contain any special characters")
+    @Pattern(regexp = "[a-zA-Z0-9-,.! ]+", message = "search preference must not contain any special characters")
+    @Size(max = 255, message = "Searchquery cannot exceed 255 characters.")
     private String searchQuery;
     @NotNull(message = "city  cannot be empty")
     @Pattern(regexp = "[a-zA-Z0-9- ]+", message = "city must not contain any special characters")
