@@ -1,11 +1,10 @@
 package com.northcoders.bandit.service;
 
 import com.northcoders.bandit.exception.InvalidDTOException;
-import com.northcoders.bandit.model.CorrespondentRequestDTO;
-import com.northcoders.bandit.model.Message;
-import com.northcoders.bandit.model.MessageRequestDTO;
-import com.northcoders.bandit.model.MessageResponseDTO;
+import com.northcoders.bandit.model.*;
 import com.northcoders.bandit.repository.MessageRepository;
+import com.northcoders.bandit.repository.ProfileManagerRepository;
+import jakarta.persistence.EntityExistsException;
 import org.apache.catalina.User;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Autowired
     private MessageRepository messageRepository;
+    @Autowired
+    private ProfileManagerRepository profileManagerRepository;
     @Autowired
     private UserInContextService userInContextService;
 
@@ -80,7 +81,13 @@ public class MessageServiceImpl implements MessageService {
     }
 
     private String getActiveUserId() {
-        return userInContextService.getcurrentUser().getUserId();
+        String firebaseId = userInContextService.getcurrentUser().getUserId();
+        Profile currentUserProfile = profileManagerRepository.findByfirebaseId(firebaseId).orElse(null);
+        if (currentUserProfile == null) {
+            throw new EntityExistsException("No profile found with provided Firebase ID");
+        } else {
+            return currentUserProfile.getProfile_id();
+        }
     }
 
 }
