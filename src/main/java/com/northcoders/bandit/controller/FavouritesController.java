@@ -29,11 +29,12 @@ public class FavouritesController {
         this.profileManagerController = profileManagerController;
     }
 
-//    @GetMapping("/{favProfileId}")
-//    public ResponseEntity<List<Profile>> getUserFavourites(@PathVariable(name = "favProfileId") String favProfileId) {
-//        List<Favourites> getFavouritesFromId = favouritesService.getUserFavourites(favProfileId);
-//        return profileManagerController.getUserFavourites(getFavouritesFromId);
-//    }
+    @GetMapping("/user")
+    public ResponseEntity<List<Profile>> getUserFavourites() {
+
+        List<Favourites> getFavouritesFromId = favouritesService.getUserFavourites();
+        return profileManagerController.getUserFavourites(getFavouritesFromId);
+    }
 
     @PostMapping("")
     public ResponseEntity<Favourites> addFavourite(@RequestBody AddToFavouriteRequestDTO requestDTO) {

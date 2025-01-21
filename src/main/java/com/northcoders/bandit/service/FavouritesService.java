@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface FavouritesService {
 
-    List<Favourites> getUserFavourites(String id);
+    List<Favourites> getUserFavourites();
     Favourites addFavourite(AddToFavouriteRequestDTO requestDTO);
     void removeFavourite(AddToFavouriteRequestDTO requestDTO);
     boolean areMutuallyFavourited(String uid1, String uid2);

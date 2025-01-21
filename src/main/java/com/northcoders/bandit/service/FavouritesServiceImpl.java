@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FavouritesServiceImpl implements FavouritesService {
@@ -38,8 +39,11 @@ public class FavouritesServiceImpl implements FavouritesService {
 
 
     @Override
-    public List<Favourites> getUserFavourites(@PathVariable String id) {
-        return favouritesRepository.findByFavProfileId(id).stream().toList();
+    public List<Favourites> getUserFavourites() {
+
+        Profile currentUser = profileManagerService.getUserProfile().get();
+
+        return favouritesRepository.findByFavProfileId(currentUser.getProfile_id()).stream().toList();
         //return all the favourites of the people making the call
     }
 
