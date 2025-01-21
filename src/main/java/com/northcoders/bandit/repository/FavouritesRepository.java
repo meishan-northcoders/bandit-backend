@@ -10,6 +10,7 @@ import java.util.List;
 public interface FavouritesRepository extends CrudRepository<Favourites,Long> {
     List<Favourites> findAllByFavProfileId(String favProfileId);
     Favourites findByFavProfileIdAndYrFavProfileId(String favProfileId, String yrFavProfileId);
+    List<Favourites> findByYrFavProfileId(String yrFavProfileId);
     List<Favourites> findByFavProfileId(String id);
     void deleteByFavProfileId(String id);
 

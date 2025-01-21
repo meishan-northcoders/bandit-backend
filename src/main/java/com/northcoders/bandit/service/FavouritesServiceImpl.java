@@ -49,7 +49,8 @@ public class FavouritesServiceImpl implements FavouritesService {
 
         Profile currentUser = profileManagerService.getUserProfile().get();
 
-        return favouritesRepository.findByFavProfileId(currentUser.getProfile_id()).stream().toList();
+
+        return favouritesRepository.findByYrFavProfileId(currentUser.getProfile_id());
         //return all the favourites of the people making the call
     }
 
@@ -64,16 +65,17 @@ public class FavouritesServiceImpl implements FavouritesService {
         String likedFavProfileId = requestDTO.getYrFavProfileId();
 
        // Profile profile = profileManagerService.findById(favProfileId);
-
         if (!profileManagerService.existsByProfileId(likedFavProfileId)) {
             throw new InvalidDTOException(String.format("Profile id you liked %s not found", likedFavProfileId));
         }
+        Profile likedProfile = profileManagerRepository.findById(likedFavProfileId).orElseThrow();
+
 
         Favourites accountToSave = new Favourites();
-        accountToSave.setFavProfileId(currUserProfileId);
-        accountToSave.setYrFavProfileId(likedFavProfileId);
+        accountToSave.setFavProfileId(likedFavProfileId);
+        accountToSave.setYrFavProfileId(currUserProfileId);
         accountToSave.setIsLikedOrDisliked(LikedOrDisliked.LIKE);
-        accountToSave.setProfile(currUserProfile);
+        accountToSave.setProfile(likedProfile);
 
         return favouritesRepository.save(accountToSave);
     }
