@@ -7,14 +7,13 @@ import com.northcoders.bandit.model.LikedOrDisliked;
 import com.northcoders.bandit.model.Profile;
 import com.northcoders.bandit.repository.FavouritesRepository;
 import com.northcoders.bandit.repository.ProfileManagerRepository;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class FavouritesServiceImpl implements FavouritesService {
@@ -64,20 +63,33 @@ public class FavouritesServiceImpl implements FavouritesService {
         String currUserProfileId = currUserProfile.getProfile_id();
         String likedFavProfileId = requestDTO.getYrFavProfileId();
 
-       // Profile profile = profileManagerService.findById(favProfileId);
-        if (!profileManagerService.existsByProfileId(likedFavProfileId)) {
-            throw new InvalidDTOException(String.format("Profile id you liked %s not found", likedFavProfileId));
+        //check likedFavProfileId isn't already liked by currUserProfileId
+        List<Favourites> currentUserFavourites = getUserFavourites();
+        AtomicBoolean hasLiked = new AtomicBoolean(false);
+        currentUserFavourites.forEach(favourite -> {
+            if(Objects.equals(favourite.getFavProfileId(), likedFavProfileId)){
+                //user has already liked this user, therefore we DON'T want to add them to the favourites
+                 hasLiked.set(true);
+            }
+        });
+
+        if(!hasLiked.get()){
+            if (!profileManagerService.existsByProfileId(likedFavProfileId)) {
+                throw new InvalidDTOException(String.format("Profile id you liked %s not found", likedFavProfileId));
+            }
+            Profile likedProfile = profileManagerRepository.findById(likedFavProfileId).orElseThrow();
+
+
+            Favourites accountToSave = new Favourites();
+            accountToSave.setFavProfileId(likedFavProfileId);
+            accountToSave.setYrFavProfileId(currUserProfileId);
+            accountToSave.setIsLikedOrDisliked(LikedOrDisliked.LIKE);
+            accountToSave.setProfile(likedProfile);
+
+            return favouritesRepository.save(accountToSave);
         }
-        Profile likedProfile = profileManagerRepository.findById(likedFavProfileId).orElseThrow();
+        return null;
 
-
-        Favourites accountToSave = new Favourites();
-        accountToSave.setFavProfileId(likedFavProfileId);
-        accountToSave.setYrFavProfileId(currUserProfileId);
-        accountToSave.setIsLikedOrDisliked(LikedOrDisliked.LIKE);
-        accountToSave.setProfile(likedProfile);
-
-        return favouritesRepository.save(accountToSave);
     }
 
     @Override

@@ -38,7 +38,11 @@ public class FavouritesController {
 
     @PostMapping
     public ResponseEntity<?> addFavourite(@RequestBody AddToFavouriteRequestDTO requestDTO) {
-        return new ResponseEntity<>(favouritesService.addFavourite(requestDTO), HttpStatus.OK);
+        if(favouritesService.addFavourite(requestDTO) != null){
+            return new ResponseEntity<>(favouritesService.addFavourite(requestDTO), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
     }
 
     @DeleteMapping
